@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
+import ImageUpload from '@/components/ImageUpload';
 
 export default function EditEbookPage() {
   const router = useRouter();
@@ -352,17 +353,12 @@ export default function EditEbookPage() {
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Cover Image URL</label>
-                <input
-                  type="url"
-                  name="coverImage"
-                  value={formData.coverImage}
-                  onChange={handleChange}
-                  placeholder="https://..."
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2C5F5D] focus:border-transparent"
-                />
-              </div>
+              <ImageUpload
+                label="Cover Image"
+                currentImageUrl={formData.coverImage}
+                onImageUploaded={(url) => setFormData(prev => ({ ...prev, coverImage: url }))}
+                folder="academos/ebooks/covers"
+              />
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Format</label>
