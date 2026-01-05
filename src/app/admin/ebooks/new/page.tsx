@@ -1,8 +1,91 @@
-import { requireAuth } from '@/lib/auth';
+'use client';
+
+import { useState, FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-export default async function NewEbookPage() {
-  await requireAuth();
+export default function NewEbookPage() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  // Form state
+  const [formData, setFormData] = useState({
+    title: '',
+    author: '',
+    category: '',
+    description: '',
+    publisher: '',
+    publishYear: '',
+    isbn: '',
+    pages: '',
+    language: 'Indonesia',
+    fileSize: '',
+    fileUrl: '',
+    coverImage: '',
+    availableOnline: true,
+    downloadable: true,
+    requiresLogin: false,
+    tags: '',
+    format: ['PDF'],
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target;
+    
+    if (type === 'checkbox') {
+      const checked = (e.target as HTMLInputElement).checked;
+      setFormData(prev => ({ ...prev, [name]: checked }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleFormatChange = (format: string, checked: boolean) => {
+    setFormData(prev => ({
+      ...prev,
+      format: checked
+        ? [...prev.format, format]
+        : prev.format.filter(f => f !== format)
+    }));
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      // Prepare data
+      const submitData = {
+        ...formData,
+        publishYear: formData.publishYear ? parseInt(formData.publishYear) : null,
+        pages: formData.pages ? parseInt(formData.pages) : null,
+        tags: formData.tags ? formData.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
+      };
+
+      const response = await fetch('/api/admin/ebooks', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submitData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to create ebook');
+      }
+
+      // Success - redirect to ebooks list
+      router.push('/admin/ebooks?success=created');
+      router.refresh();
+    } catch (err: any) {
+      setError(err.message || 'An error occurred');
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -25,8 +108,20 @@ export default async function NewEbookPage() {
 
       {/* Main Content */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Error Alert */}
+        {error && (
+          <div className="mb-6 bg-red-50 border border-red-200 text-red-800 rounded-lg p-4">
+            <div className="flex items-center gap-2">
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+              <span className="font-medium">{error}</span>
+            </div>
+          </div>
+        )}
+
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
-          <form className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             {/* Basic Information */}
             <div className="border-b border-gray-200 pb-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h2>
@@ -38,6 +133,9 @@ export default async function NewEbookPage() {
                   </label>
                   <input
                     type="text"
+                    name="title"
+                    value={formData.title}
+                    onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B05E3F] focus:border-transparent"
                     placeholder="Enter book title"
                     required
@@ -50,6 +148,9 @@ export default async function NewEbookPage() {
                   </label>
                   <input
                     type="text"
+                    name="author"
+                    value={formData.author}
+                    onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B05E3F] focus:border-transparent"
                     placeholder="Author name"
                     required
@@ -61,6 +162,9 @@ export default async function NewEbookPage() {
                     Category *
                   </label>
                   <select
+                    name="category"
+                    value={formData.category}
+                    onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B05E3F] focus:border-transparent"
                     required
                   >
@@ -83,6 +187,9 @@ export default async function NewEbookPage() {
                     Description *
                   </label>
                   <textarea
+                    name="description"
+                    value={formData.description}
+                    onChange={handleChange}
                     rows={4}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B05E3F] focus:border-transparent"
                     placeholder="Book description"
@@ -98,72 +205,92 @@ export default async function NewEbookPage() {
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Publisher
                   </label>
                   <input
                     type="text"
+                    name="publisher"
+                    value={formData.publisher}
+                    onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B05E3F] focus:border-transparent"
                     placeholder="Publisher name"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Publish Year
                   </label>
                   <input
                     type="number"
+                    name="publishYear"
+                    value={formData.publishYear}
+                    onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B05E3F] focus:border-transparent"
-                    placeholder="2024"
+                    placeholder="2026"
                     min="1900"
                     max="2100"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     ISBN
                   </label>
                   <input
                     type="text"
+                    name="isbn"
+                    value={formData.isbn}
+                    onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B05E3F] focus:border-transparent"
-                    placeholder="978-xxx-xxx-xxx-x"
+                    placeholder="978-xxx-xxx-xxx"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Pages
                   </label>
                   <input
                     type="number"
+                    name="pages"
+                    value={formData.pages}
+                    onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B05E3F] focus:border-transparent"
-                    placeholder="250"
+                    placeholder="0"
+                    min="0"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Language
                   </label>
                   <select
+                    name="language"
+                    value={formData.language}
+                    onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B05E3F] focus:border-transparent"
                   >
                     <option value="Indonesia">Indonesia</option>
                     <option value="English">English</option>
-                    <option value="Bilingual">Bilingual</option>
+                    <option value="Arabic">Arabic</option>
+                    <option value="Other">Other</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     File Size
                   </label>
                   <input
                     type="text"
+                    name="fileSize"
+                    value={formData.fileSize}
+                    onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B05E3F] focus:border-transparent"
-                    placeholder="e.g., 2.5 MB"
+                    placeholder="2.5 MB"
                   />
                 </div>
               </div>
@@ -175,94 +302,136 @@ export default async function NewEbookPage() {
               
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Cover Image
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Cover Image URL
                   </label>
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-[#B05E3F] transition-colors cursor-pointer">
-                    <div className="text-4xl mb-2">📁</div>
-                    <p className="text-sm text-gray-600 mb-1">Click to upload or drag and drop</p>
-                    <p className="text-xs text-gray-500">PNG, JPG up to 5MB</p>
-                    <input type="file" className="hidden" accept="image/*" />
+                  <input
+                    type="url"
+                    name="coverImage"
+                    value={formData.coverImage}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B05E3F] focus:border-transparent"
+                    placeholder="https://example.com/cover.jpg"
+                  />
+                  <p className="mt-1 text-xs text-gray-500">Image upload coming soon. Use URL for now.</p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    File URL
+                  </label>
+                  <input
+                    type="url"
+                    name="fileUrl"
+                    value={formData.fileUrl}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B05E3F] focus:border-transparent"
+                    placeholder="https://example.com/book.pdf"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Format
+                  </label>
+                  <div className="flex flex-wrap gap-4">
+                    {['PDF', 'EPUB', 'MOBI', 'Online'].map(format => (
+                      <label key={format} className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={formData.format.includes(format)}
+                          onChange={(e) => handleFormatChange(format, e.target.checked)}
+                          className="w-4 h-4 text-[#B05E3F] border-gray-300 rounded focus:ring-[#B05E3F]"
+                        />
+                        <span className="text-sm text-gray-700">{format}</span>
+                      </label>
+                    ))}
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="flex items-center gap-2">
-                      <input type="checkbox" className="w-4 h-4 text-[#B05E3F] border-gray-300 rounded focus:ring-[#B05E3F]" defaultChecked />
-                      <span className="text-sm font-medium text-gray-700">Available Online</span>
-                    </label>
-                  </div>
+                <div className="flex flex-col gap-3">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      name="availableOnline"
+                      checked={formData.availableOnline}
+                      onChange={handleChange}
+                      className="w-4 h-4 text-[#B05E3F] border-gray-300 rounded focus:ring-[#B05E3F]"
+                    />
+                    <span className="text-sm text-gray-700">Available Online</span>
+                  </label>
 
-                  <div>
-                    <label className="flex items-center gap-2">
-                      <input type="checkbox" className="w-4 h-4 text-[#B05E3F] border-gray-300 rounded focus:ring-[#B05E3F]" defaultChecked />
-                      <span className="text-sm font-medium text-gray-700">Downloadable</span>
-                    </label>
-                  </div>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      name="downloadable"
+                      checked={formData.downloadable}
+                      onChange={handleChange}
+                      className="w-4 h-4 text-[#B05E3F] border-gray-300 rounded focus:ring-[#B05E3F]"
+                    />
+                    <span className="text-sm text-gray-700">Downloadable</span>
+                  </label>
 
-                  <div>
-                    <label className="flex items-center gap-2">
-                      <input type="checkbox" className="w-4 h-4 text-[#B05E3F] border-gray-300 rounded focus:ring-[#B05E3F]" />
-                      <span className="text-sm font-medium text-gray-700">Requires Login</span>
-                    </label>
-                  </div>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      name="requiresLogin"
+                      checked={formData.requiresLogin}
+                      onChange={handleChange}
+                      className="w-4 h-4 text-[#B05E3F] border-gray-300 rounded focus:ring-[#B05E3F]"
+                    />
+                    <span className="text-sm text-gray-700">Requires Login</span>
+                  </label>
                 </div>
               </div>
             </div>
 
             {/* Tags */}
-            <div className="border-b border-gray-200 pb-6">
+            <div>
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Tags</h2>
-              <input
-                type="text"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B05E3F] focus:border-transparent"
-                placeholder="Enter tags separated by commas (e.g., novel, fiksi, sastra)"
-              />
-              <p className="text-sm text-gray-500 mt-2">Tags membantu pengguna menemukan buku ini</p>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Tags (comma separated)
+                </label>
+                <input
+                  type="text"
+                  name="tags"
+                  value={formData.tags}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B05E3F] focus:border-transparent"
+                  placeholder="filsafat, sejarah, pemikiran"
+                />
+              </div>
             </div>
 
-            {/* Submit Buttons */}
-            <div className="flex items-center justify-end gap-4 pt-4">
+            {/* Actions */}
+            <div className="flex items-center justify-between pt-6 border-t border-gray-200">
               <Link
                 href="/admin/ebooks"
                 className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
               >
                 Cancel
               </Link>
-              <button
-                type="button"
-                className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
-                onClick={() => alert('Save as draft functionality coming soon!')}
-              >
-                Save as Draft
-              </button>
+              
               <button
                 type="submit"
-                className="px-6 py-3 bg-[#B05E3F] text-white rounded-lg hover:bg-[#9A5035] transition-colors font-medium"
-                onClick={(e) => {
-                  e.preventDefault();
-                  alert('Publish functionality will be implemented with database integration!');
-                }}
+                disabled={loading}
+                className="px-6 py-3 bg-[#B05E3F] text-white rounded-lg hover:bg-[#9A5035] transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
-                Publish
+                {loading ? (
+                  <>
+                    <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    Creating...
+                  </>
+                ) : (
+                  'Create E-book'
+                )}
               </button>
             </div>
           </form>
-
-          {/* Info Note */}
-          <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <div className="flex gap-3">
-              <div className="text-2xl">ℹ️</div>
-              <div>
-                <h4 className="font-semibold text-blue-900 mb-1">Note</h4>
-                <p className="text-sm text-blue-800">
-                  Form ini saat ini hanya untuk demo UI. Untuk menyimpan data ke database, perlu implementasi backend dengan Prisma/MongoDB.
-                  Data saat ini masih hardcoded di <code className="bg-blue-100 px-1 rounded">/src/data/ebooks.ts</code>
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
       </main>
     </div>
