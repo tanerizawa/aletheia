@@ -68,12 +68,11 @@ export async function POST(request: NextRequest) {
       const coverImage = $body.find('img').first().attr('src');
       
       // Extract link baca buku (untuk mendapatkan ID buku)
-      const readLink = $body.find('a[href*="baca-buku"]').first().attr('href');
       const downloadLink = $body.find('a[href*="unduh"]').first().attr('href');
       
-      // Extract ID buku dari URL untuk fileUrl
-      const bookIdMatch = readLink?.match(/baca-buku\/(\d+)/);
-      const bookId = bookIdMatch ? bookIdMatch[1] : undefined;
+      // Extract ID buku dari URL untuk fileUrl (not used currently)
+      // const bookIdMatch = readLink?.match(/baca-buku\/(\d+)/);
+      // const bookId = bookIdMatch ? bookIdMatch[1] : undefined;
 
       if (title) {
         ebooks.push({

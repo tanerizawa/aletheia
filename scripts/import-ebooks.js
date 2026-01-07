@@ -2,14 +2,14 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 const fs = require('fs');
 const path = require('path');
-const { PrismaClient } = require('@prisma/client');
+// const { PrismaClient } = require('@prisma/client'); // not used in this script
 
 const https = require('https');
 const http = require('http');
 const { exec } = require('child_process');
 const { promisify } = require('util');
 const execAsync = promisify(exec);
-const prisma = new PrismaClient();
+// prisma client not used in this import helper script
 
 // Ebook data dari halaman
 const ebooks = [
@@ -124,7 +124,7 @@ async function importEbook(ebook, index) {
     
     const insertQuery = `INSERT INTO "Ebook" (id, title, slug, author, publisher, category, description, "coverImage", format, "fileSize", "fileUrl", "availableOnline", downloadable, tags, language, "createdAt", "updatedAt") VALUES ('${ebookId}', '${ebook.title.replace(/'/g, "''")}', '${slug}', '${ebook.author.replace(/'/g, "''")}', '${ebook.publisher.replace(/'/g, "''")}', 'Filsafat', '${description.replace(/'/g, "''")}', ${coverImage ? `'${coverImage}'` : 'NULL'}, ARRAY['PDF'], '${fileSizeMB} MB', '/ebooks/${slug}.pdf', true, true, ARRAY['filsafat', 'import'], 'Indonesia', NOW(), NOW()) ON CONFLICT (slug) DO NOTHING;`;
     
-    const result = await execAsync(`PGPASSWORD='academos_2026_secure' psql -h localhost -U academos_user -d academos_db -c "${insertQuery}"`).catch(err => {
+    await execAsync(`PGPASSWORD='academos_2026_secure' psql -h localhost -U academos_user -d academos_db -c "${insertQuery}"`).catch(err => {
       console.error(`  ⚠️  Database error: ${err.message}`);
       return { stdout: '', stderr: err.message };
     });

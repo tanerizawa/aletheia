@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { randomUUID } from 'crypto';
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 
@@ -89,7 +90,7 @@ export async function POST(request: NextRequest) {
     const ebook = await prisma.ebook.create({
       data: {
         title: data.title,
-        slug: `${slug}-${Date.now()}`,
+        slug: `${slug}-${randomUUID().replace(/-/g, '').slice(0,8)}`,
         author: data.author,
         publisher: data.publisher || null,
         publishYear: data.publishYear ? parseInt(data.publishYear) : null,

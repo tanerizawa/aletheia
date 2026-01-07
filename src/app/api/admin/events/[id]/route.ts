@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { randomUUID } from 'crypto';
 import { prisma } from '@/lib/prisma';
 import type { Prisma } from '@prisma/client';
 import { getSession } from '@/lib/auth';
@@ -77,7 +78,7 @@ export async function PATCH(
         where: { slug, id: { not: id } },
       });
       if (slugExists) {
-        slug = `${slug}-${Date.now()}`;
+        slug = `${slug}-${randomUUID().replace(/-/g, '').slice(0,8)}`;
       }
     }
 

@@ -25,7 +25,7 @@ async function fetchGoogleBooks(q) {
     if (!res.ok) throw new Error(`GB fetch ${res.status}`);
     const data = await res.json();
     return data.items && data.items.length ? data.items[0].volumeInfo : null;
-  } catch (e) {
+  } catch {
     return null;
   }
 }

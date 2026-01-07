@@ -6,7 +6,7 @@ dotenv.config({ path: process.env.DOTENV_PATH || '.env' });
 
 const { Pool } = require('pg');
 const fetch = globalThis.fetch || require('node-fetch');
-const path = require('path');
+// const path = require('path'); // unused in this script
 
 if (!process.env.DATABASE_URL) {
   console.error('Missing DATABASE_URL in environment. Please set it or add it to .env');
@@ -66,10 +66,10 @@ async function run() {
     try {
       let info = null;
       if (ebook.isbn) {
-        try { info = await fetchByIsbn(ebook.isbn); } catch (e) { info = null; }
+        try { info = await fetchByIsbn(ebook.isbn); } catch { info = null; }
       }
       if (!info && ebook.title) {
-        try { info = await fetchByTitle(ebook.title); } catch (e) { info = null; }
+        try { info = await fetchByTitle(ebook.title); } catch { info = null; }
       }
 
       if (!info) {

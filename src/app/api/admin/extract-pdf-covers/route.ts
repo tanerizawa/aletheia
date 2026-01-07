@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     try {
       const parsed = JSON.parse(stdout);
       return NextResponse.json({ success: true, results: parsed.results });
-    } catch (parseErr) {
+    } catch {
       return NextResponse.json({ success: true, output: stdout });
     }
   } catch (error) {

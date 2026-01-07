@@ -38,7 +38,7 @@ async function run() {
     try {
       const b = await res.body();
       entry.bodySize = b?.length ?? null;
-    } catch (e) {
+    } catch {
       entry.bodySize = null;
     }
     responses.push(entry);

@@ -23,7 +23,7 @@ export default function Breadcrumb() {
   ];
 
   let currentPath = '';
-  pathSegments.forEach((segment, index) => {
+  pathSegments.forEach((segment) => {
     currentPath += `/${segment}`;
     
     // Convert segment to readable label
@@ -42,12 +42,12 @@ export default function Breadcrumb() {
     <nav aria-label="Breadcrumb" className="bg-cream-soft-white border-b border-cream-warm">
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-3">
         <ol className="flex items-center space-x-2 text-sm">
-          {breadcrumbs.map((item, index) => {
-            const isLast = index === breadcrumbs.length - 1;
+          {breadcrumbs.map((item, idx) => {
+            const isLast = idx === breadcrumbs.length - 1;
             
             return (
               <li key={item.href} className="flex items-center">
-                {index > 0 && (
+                {idx > 0 && (
                   <svg 
                     className="w-4 h-4 mx-2 text-[#B05E3F]" 
                     fill="none" 

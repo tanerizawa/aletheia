@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { randomUUID } from 'crypto';
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 
@@ -115,7 +116,7 @@ export async function POST(request: NextRequest) {
 
     // Check if slug exists
     const existing = await prisma.event.findUnique({ where: { slug } });
-    const finalSlug = existing ? `${slug}-${Date.now()}` : slug;
+    const finalSlug = existing ? `${slug}-${randomUUID().replace(/-/g, '').slice(0,8)}` : slug;
 
     const event = await prisma.event.create({
       data: {
