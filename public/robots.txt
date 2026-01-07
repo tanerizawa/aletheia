@@ -1,8 +1,0 @@
-# Robots.txt for Rumah Aletheia
-# https://academos.or.id
-
-User-agent: *
-Allow: /
-
-# Sitemap
-Sitemap: https://academos.or.id/sitemap.xml
