@@ -9,22 +9,22 @@ export const metadata: Metadata = {
 
 export default function BelajarPage() {
   return (
-    <main className="flex-grow bg-cream-soft-white">
+    <main className="flex-grow bg-[#E8E3DB]">
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-[#2C5F5D] to-[#1F4E4C] py-16 border-b-4 border-[#B05E3F]">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex items-center gap-3 mb-4 text-cream-warm">
-            <div className="w-12 h-12 rounded-full bg-cream-soft-white/10 flex items-center justify-center">
+          <div className="flex items-center gap-3 mb-4 text-[#D4A574]">
+            <div className="w-12 h-12 rounded-full bg-[#E8E3DB]/10 flex items-center justify-center">
               <LightbulbIcon className="w-7 h-7 text-[#B05E3F]" />
             </div>
             <span className="text-sm uppercase tracking-wider font-serif">Ruang Belajar</span>
           </div>
           
-          <h1 className="font-serif text-5xl lg:text-6xl font-bold text-cream-soft-white mb-6">
+          <h1 className="font-serif text-5xl lg:text-6xl font-bold text-[#E8E3DB] mb-6">
             Pendidikan & Literasi
           </h1>
           
-          <p className="text-xl text-cream-warm max-w-3xl leading-relaxed">
+          <p className="text-xl text-[#D4A574] max-w-3xl leading-relaxed">
             Program pendidikan berkelanjutan — kursus, pelatihan, dan workshop untuk meningkatkan literasi, 
             keterampilan digital, dan pengembangan diri. Belajar tidak pernah berhenti
           </p>
@@ -118,7 +118,7 @@ export default function BelajarPage() {
             </p>
 
             <div className="grid md:grid-cols-2 gap-8">
-              <div className="bg-white border-2 border-cream-beige p-8 hover:border-[#B05E3F] hover:shadow-xl transition-all">
+              <div className="bg-white border-2 border-[#C4BDB2] p-8 hover:border-[#B05E3F] hover:shadow-xl transition-all">
                 <div className="flex items-start gap-4 mb-4">
                   <div className="w-12 h-12 rounded-full bg-[#B05E3F]/10 flex items-center justify-center flex-shrink-0">
                     <BookIcon className="w-6 h-6 text-[#B05E3F]" />
@@ -135,13 +135,13 @@ export default function BelajarPage() {
                     <div className="flex flex-wrap gap-2">
                       <span className="text-xs px-3 py-1 bg-[#B05E3F]/10 text-[#B05E3F] rounded-full">Gratis</span>
                       <span className="text-xs px-3 py-1 bg-[#2C5F5D]/10 text-[#2C5F5D] rounded-full">Semua Usia</span>
-                      <span className="text-xs px-3 py-1 bg-cream-beige text-[#7A7A7A] rounded-full">Max 20 peserta</span>
+                      <span className="text-xs px-3 py-1 bg-[#C4BDB2] text-[#7A7A7A] rounded-full">Max 20 peserta</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white border-2 border-cream-beige p-8 hover:border-[#2C5F5D] hover:shadow-xl transition-all">
+                <div className="bg-white border-2 border-[#C4BDB2] p-8 hover:border-[#2C5F5D] hover:shadow-xl transition-all">
                 <div className="flex items-start gap-4 mb-4">
                   <div className="w-12 h-12 rounded-full bg-[#2C5F5D]/10 flex items-center justify-center flex-shrink-0">
                     <SparklesIcon className="w-6 h-6 text-[#2C5F5D]" />
@@ -158,13 +158,13 @@ export default function BelajarPage() {
                     <div className="flex flex-wrap gap-2">
                       <span className="text-xs px-3 py-1 bg-[#B05E3F]/10 text-[#B05E3F] rounded-full">Gratis</span>
                       <span className="text-xs px-3 py-1 bg-[#2C5F5D]/10 text-[#2C5F5D] rounded-full">Usia 4-10 tahun</span>
-                      <span className="text-xs px-3 py-1 bg-cream-beige text-[#7A7A7A] rounded-full">Pendampingan ortu</span>
+                      <span className="text-xs px-3 py-1 bg-[#C4BDB2] text-[#7A7A7A] rounded-full">Pendampingan ortu</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white border-2 border-cream-beige p-8 hover:border-[#B05E3F] hover:shadow-xl transition-all">
+              <div className="bg-white border-2 border-[#C4BDB2] p-8 hover:border-[#B05E3F] hover:shadow-xl transition-all">
                 <div className="flex items-start gap-4 mb-4">
                   <div className="w-12 h-12 rounded-full bg-[#B05E3F]/10 flex items-center justify-center flex-shrink-0">
                     <PresentationIcon className="w-6 h-6 text-[#B05E3F]" />
@@ -181,13 +181,13 @@ export default function BelajarPage() {
                     <div className="flex flex-wrap gap-2">
                       <span className="text-xs px-3 py-1 bg-[#B05E3F]/10 text-[#B05E3F] rounded-full">Gratis</span>
                       <span className="text-xs px-3 py-1 bg-[#2C5F5D]/10 text-[#2C5F5D] rounded-full">Remaja & Dewasa</span>
-                      <span className="text-xs px-3 py-1 bg-cream-beige text-[#7A7A7A] rounded-full">Pendaftaran online</span>
+                      <span className="text-xs px-3 py-1 bg-[#C4BDB2] text-[#7A7A7A] rounded-full">Pendaftaran online</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white border-2 border-cream-beige p-8 hover:border-[#2C5F5D] hover:shadow-xl transition-all">
+              <div className="bg-white border-2 border-[#C4BDB2] p-8 hover:border-[#2C5F5D] hover:shadow-xl transition-all">
                 <div className="flex items-start gap-4 mb-4">
                   <div className="w-12 h-12 rounded-full bg-[#2C5F5D]/10 flex items-center justify-center flex-shrink-0">
                     <MonitorIcon className="w-6 h-6 text-[#2C5F5D]" />
@@ -204,7 +204,7 @@ export default function BelajarPage() {
                     <div className="flex flex-wrap gap-2">
                       <span className="text-xs px-3 py-1 bg-[#B05E3F]/10 text-[#B05E3F] rounded-full">Gratis</span>
                       <span className="text-xs px-3 py-1 bg-[#2C5F5D]/10 text-[#2C5F5D] rounded-full">Semua Usia</span>
-                      <span className="text-xs px-3 py-1 bg-cream-beige text-[#7A7A7A] rounded-full">Laptop disediakan</span>
+                      <span className="text-xs px-3 py-1 bg-[#C4BDB2] text-[#7A7A7A] rounded-full">Laptop disediakan</span>
                     </div>
                   </div>
                 </div>
@@ -223,7 +223,7 @@ export default function BelajarPage() {
                   1
                 </div>
                 <h3 className="font-serif text-xl font-bold mb-2">Daftar Anggota</h3>
-                <p className="text-cream-warm text-sm">
+                <p className="text-[#D4A574] text-sm">
                   Menjadi anggota perpustakaan gratis dengan membawa fotokopi KTP
                 </p>
               </div>
@@ -232,7 +232,7 @@ export default function BelajarPage() {
                   2
                 </div>
                 <h3 className="font-serif text-xl font-bold mb-2">Pilih Program</h3>
-                <p className="text-cream-warm text-sm">
+                <p className="text-[#D4A574] text-sm">
                   Lihat jadwal dan pilih program yang sesuai dengan minat Anda
                 </p>
               </div>
@@ -241,7 +241,7 @@ export default function BelajarPage() {
                   3
                 </div>
                 <h3 className="font-serif text-xl font-bold mb-2">Datang & Belajar</h3>
-                <p className="text-cream-warm text-sm">
+                <p className="text-[#D4A574] text-sm">
                   Hadir sesuai jadwal dan nikmati pengalaman belajar bersama komunitas
                 </p>
               </div>
@@ -307,22 +307,22 @@ export default function BelajarPage() {
       <section className="py-16 bg-gradient-to-r from-[#2C5F5D] to-[#1F4E4C]">
         <div className="max-w-4xl mx-auto px-6 lg:px-8 text-center">
           <LightbulbIcon className="w-16 h-16 text-[#D4A574] mx-auto mb-6" />
-          <h2 className="font-serif text-4xl font-bold text-cream-soft-white mb-6">
+          <h2 className="font-serif text-4xl font-bold text-[#E8E3DB] mb-6">
             Siap Memulai Perjalanan Belajar?
           </h2>
-          <p className="text-xl text-cream-warm mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-[#D4A574] mb-8 max-w-2xl mx-auto">
             Bergabunglah dengan ribuan pembelajar di Rumah Aletheia. Semua program gratis dan terbuka untuk umum!
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/kegiatan"
-              className="inline-block bg-[#B05E3F] text-cream-soft-white px-10 py-4 font-serif font-bold text-lg hover:bg-[#9A5035] transition-all border-2 border-[#B05E3F] shadow-lg"
+              className="inline-block bg-[#B05E3F] text-[#E8E3DB] px-10 py-4 font-serif font-bold text-lg hover:bg-[#9A5035] transition-all border-2 border-[#B05E3F] shadow-lg"
             >
               Lihat Jadwal Lengkap
             </Link>
             <Link
               href="/kontak"
-              className="inline-block bg-white text-[#1F4E4C] px-10 py-4 font-serif font-bold text-lg hover:bg-cream-soft-white transition-all border-2 border-white shadow-lg"
+              className="inline-block bg-white text-[#1F4E4C] px-10 py-4 font-serif font-bold text-lg hover:bg-[#E8E3DB] transition-all border-2 border-white shadow-lg"
             >
               Daftar Sekarang
             </Link>

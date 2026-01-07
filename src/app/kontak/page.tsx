@@ -15,14 +15,14 @@ interface ToastMessage {
 export default function KontakPage() {
   const [toast, setToast] = useState<ToastMessage | null>(null);
   return (
-    <main className="flex-grow bg-cream-soft-white">
+    <main className="flex-grow bg-[#E8E3DB]">
       <div className="bg-[#2C5F5D] py-16 border-b-4 border-[#B05E3F]">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="inline-block mb-4">
             <span className="text-[#B05E3F] text-sm uppercase tracking-[0.3em] font-serif font-bold">Resepsionis</span>
           </div>
-          <h1 className="font-serif text-5xl lg:text-6xl font-bold text-cream-soft-white mb-6">Hubungi Kami</h1>
-          <p className="text-xl text-cream-warm max-w-3xl leading-relaxed">
+          <h1 className="font-serif text-5xl lg:text-6xl font-bold text-[#E8E3DB] mb-6">Hubungi Kami</h1>
+          <p className="text-xl text-[#D4A574] max-w-3xl leading-relaxed">
             Kami siap membantu Anda dengan pertanyaan dan kebutuhan informasi
           </p>
         </div>
@@ -38,7 +38,7 @@ export default function KontakPage() {
               {/* Address */}
               <div className="flex items-start">
                 <div className="bg-[#2C5F5D] p-4 mr-6 flex-shrink-0">
-                  <svg className="w-7 h-7 text-cream-soft-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-7 h-7 text-[#E8E3DB]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
@@ -60,7 +60,7 @@ export default function KontakPage() {
               {/* Email */}
               <div className="flex items-start">
                 <div className="bg-[#2C5F5D] p-4 mr-6 flex-shrink-0">
-                  <svg className="w-7 h-7 text-cream-soft-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-7 h-7 text-[#E8E3DB]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                 </div>
@@ -78,7 +78,7 @@ export default function KontakPage() {
               {/* Phone */}
               <div className="flex items-start">
                 <div className="bg-[#2C5F5D] p-4 mr-6 flex-shrink-0">
-                  <svg className="w-7 h-7 text-cream-soft-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-7 h-7 text-[#E8E3DB]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                   </svg>
                 </div>
@@ -96,7 +96,7 @@ export default function KontakPage() {
               {/* Operating Hours */}
               <div className="flex items-start">
                 <div className="bg-[#2C5F5D] p-4 mr-6 flex-shrink-0">
-                  <svg className="w-7 h-7 text-cream-soft-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-7 h-7 text-[#E8E3DB]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
@@ -113,7 +113,7 @@ export default function KontakPage() {
               {/* Website */}
               <div className="flex items-start">
                 <div className="bg-[#2C5F5D] p-4 mr-6 flex-shrink-0">
-                  <svg className="w-7 h-7 text-cream-soft-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-7 h-7 text-[#E8E3DB]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
                   </svg>
                 </div>
@@ -165,7 +165,7 @@ export default function KontakPage() {
         </div>
 
         {/* Organization Info */}
-        <div className="mt-16 bg-gradient-to-r from-[#2C5F5D]/10 to-[#B05E3F]/10 border-2 border-cream-beige rounded-lg p-8">
+        <div className="mt-16 bg-gradient-to-r from-[#2C5F5D]/10 to-[#B05E3F]/10 border-2 border-[#C4BDB2] rounded-lg p-8">
           <h3 className="font-serif text-2xl font-bold text-[#1F4E4C] mb-4">
             {organization.name}
           </h3>

@@ -97,7 +97,7 @@ export default function AutoImageSelector({
   };
 
   return (
-    <div className="bg-[#FAF8F5] border border-cream-warm rounded-xl p-6">
+    <div className="bg-[#FAF8F5] border border-[#D4A574] rounded-xl p-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-serif font-bold text-gray-800">
           Auto-Generate Cover Image
@@ -105,7 +105,7 @@ export default function AutoImageSelector({
         <button
           onClick={generateImages}
           disabled={loading || !title}
-          className="flex items-center gap-2 px-4 py-2 bg-[#B05E3F] text-cream-soft-white rounded-lg hover:bg-[#944A2F] disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+          className="flex items-center gap-2 px-4 py-2 bg-[#B05E3F] text-[#FAF8F5] rounded-lg hover:bg-[#944A2F] disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
         >
           {loading ? (
             <>
@@ -146,7 +146,7 @@ export default function AutoImageSelector({
                   alt={image.description || 'Cover image'}
                   width={320}
                   height={160}
-                  className="w-full h-40 object-cover rounded-lg border-2 border-cream-warm group-hover:border-[#B05E3F] transition-colors"
+                  className="w-full h-40 object-cover rounded-lg border-2 border-[#D4A574] group-hover:border-[#B05E3F] transition-colors"
                 />
                 
                 <button

@@ -54,14 +54,14 @@ export default async function SearchEbooksPage({ searchParams }: SearchPageProps
   const ebookCategories: string[] = await getCategories();
 
   return (
-    <main className="flex-grow bg-cream-soft-white">
+    <main className="flex-grow bg-[#E8E3DB]">
       {/* Hero */}
       <section className="bg-gradient-to-br from-[#2C5F5D] to-[#1F4E4C] py-12 border-b-4 border-[#B05E3F]">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <h1 className="font-serif text-4xl font-bold text-cream-soft-white mb-4">
+          <h1 className="font-serif text-4xl font-bold text-[#FAF8F5] mb-4">
             Hasil Pencarian E-Book
           </h1>
-          <p className="text-cream-warm">
+          <p className="text-[#D4A574]">
             {query ? `Menampilkan hasil untuk: "${query}"` : "Masukkan kata kunci pencarian"}
           </p>
         </div>
@@ -78,7 +78,7 @@ export default async function SearchEbooksPage({ searchParams }: SearchPageProps
                 name="q"
                 defaultValue={query}
                 placeholder="Cari judul, penulis, atau kategori..."
-                className="w-full px-6 py-4 pr-14 rounded-lg border-2 border-cream-beige focus:outline-none focus:border-[#B05E3F] transition-all"
+                className="w-full px-6 py-4 pr-14 rounded-lg border-2 border-[#C4BDB2] focus:outline-none focus:border-[#B05E3F] transition-all"
               />
               <button
                 type="submit"
@@ -107,7 +107,7 @@ export default async function SearchEbooksPage({ searchParams }: SearchPageProps
                 <Link
                   key={ebook.id}
                   href={`/baca/${ebook.slug}`}
-                  className="group bg-white p-4 border-2 border-cream-beige hover:border-[#B05E3F] hover:shadow-lg transition-all"
+                  className="group bg-white p-4 border-2 border-[#C4BDB2] hover:border-[#B05E3F] hover:shadow-lg transition-all"
                 >
                   <div className="bg-gradient-to-br from-[#2C5F5D] to-[#B05E3F] h-48 mb-3 flex items-center justify-center group-hover:scale-105 transition-transform">
                     <BookIcon className="w-20 h-20 text-white/80" />
@@ -147,7 +147,7 @@ export default async function SearchEbooksPage({ searchParams }: SearchPageProps
               </p>
               <Link
                 href="/baca"
-                className="inline-block bg-[#B05E3F] text-cream-soft-white px-8 py-3 font-bold hover:bg-[#9A5035] transition-all"
+                className="inline-block bg-[#B05E3F] text-[#FAF8F5] px-8 py-3 font-bold hover:bg-[#9A5035] transition-all"
               >
                 Kembali ke Perpustakaan Digital
               </Link>
@@ -169,7 +169,7 @@ export default async function SearchEbooksPage({ searchParams }: SearchPageProps
                     <Link
                       key={cat}
                       href={`/baca/kategori/${cat.toLowerCase()}`}
-                      className="px-4 py-2 bg-white border-2 border-cream-beige hover:border-[#2C5F5D] text-[#1F4E4C] font-bold text-sm transition-all"
+                      className="px-4 py-2 bg-white border-2 border-[#C4BDB2] hover:border-[#2C5F5D] text-[#1F4E4C] font-bold text-sm transition-all"
                     >
                       {cat}
                     </Link>

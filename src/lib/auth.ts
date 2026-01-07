@@ -11,7 +11,7 @@ export interface AdminUser {
 }
 
 // Session cookie name
-const SESSION_COOKIE = 'admin-session';
+export const SESSION_COOKIE = 'admin-session';
 
 export function generateSessionId(): string {
   return Math.random().toString(36).substring(2) + Date.now().toString(36);
@@ -51,7 +51,7 @@ export async function login(username: string, password: string): Promise<{ succe
     const cookieStore = await cookies();
     cookieStore.set(SESSION_COOKIE, sessionToken, {
       httpOnly: true,
-      secure: true, // Always use secure since we're behind NGINX with SSL
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       maxAge: 60 * 60 * 24 * 7, // 7 days
       path: '/',
@@ -67,17 +67,28 @@ export async function login(username: string, password: string): Promise<{ succe
 }
 
 export async function logout(): Promise<void> {
-  const cookieStore = await cookies();
-  const sessionToken = cookieStore.get(SESSION_COOKIE)?.value;
-  
-  if (sessionToken) {
-    // Delete session from database
-    await prisma.session.delete({
-      where: { token: sessionToken },
-    }).catch(() => {
-      // Ignore error if session doesn't exist
-    });
-    cookieStore.delete(SESSION_COOKIE);
+  try {
+    const cookieStore = await cookies();
+    const sessionToken = cookieStore.get(SESSION_COOKIE)?.value;
+
+    if (sessionToken) {
+      // Delete session from database (safe-guarded)
+      try {
+        await prisma.session.delete({ where: { token: sessionToken } });
+      } catch (err) {
+        // ignore error if session not found or DB issue; log for debugging
+        console.warn('Warning: failed to delete session', err);
+      }
+
+      try {
+        cookieStore.delete(SESSION_COOKIE);
+      } catch (err) {
+        console.warn('Warning: failed to delete cookie', err);
+      }
+    }
+  } catch (err) {
+    console.error('Logout internal error:', err);
+    // swallow errors to avoid crashing callers
   }
 }
 

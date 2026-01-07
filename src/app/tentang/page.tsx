@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function TentangPage() {
   return (
-    <main className="flex-grow bg-cream-soft-white">
+    <main className="flex-grow bg-[#E8E3DB]">
       {/* Header */}
       <section className="bg-[#2C5F5D] py-16 border-b-4 border-[#B05E3F]">
         <div className="max-w-5xl mx-auto px-6 lg:px-8">
@@ -22,7 +22,7 @@ export default function TentangPage() {
           <div className="mb-6">
             <Image src="/logo.svg" alt="Rumah Aletheia - part of Academos" width={300} height={100} className="h-16 lg:h-20 w-auto" />
           </div>
-          <p className="text-xl text-cream-warm max-w-3xl leading-relaxed">
+          <p className="text-xl text-[#D4A574] max-w-3xl leading-relaxed">
             Perpustakaan komunitas di bawah naungan {organization.name}
           </p>
         </div>
@@ -52,22 +52,22 @@ export default function TentangPage() {
         <div className="mb-20">
           <h2 className="font-serif text-3xl font-bold text-[#1F4E4C] mb-8 text-center">Pelajari Lebih Lanjut</h2>
           <div className="grid md:grid-cols-2 gap-6">
-            <Link href="/tentang/academos" className="group bg-white border-2 border-cream-beige p-6 hover:border-[#2C5F5D] hover:shadow-xl transition-all">
+            <Link href="/tentang/academos" className="group bg-white border-2 border-[#C4BDB2] p-6 hover:border-[#2C5F5D] hover:shadow-xl transition-all">
               <h3 className="font-serif text-xl font-bold text-[#1F4E4C] mb-2 group-hover:text-[#2C5F5D]">PT Academos Pustaka Demokrasi</h3>
               <p className="text-sm text-gray-600 mb-3">Lembaga induk yang menaungi Rumah Aletheia dan unit layanan lainnya</p>
               <span className="text-[#B05E3F] text-sm font-semibold group-hover:underline">Selengkapnya →</span>
             </Link>
-            <Link href="/tentang/aletheia" className="group bg-white border-2 border-cream-beige p-6 hover:border-[#B05E3F] hover:shadow-xl transition-all">
+            <Link href="/tentang/aletheia" className="group bg-white border-2 border-[#C4BDB2] p-6 hover:border-[#B05E3F] hover:shadow-xl transition-all">
               <h3 className="font-serif text-xl font-bold text-[#1F4E4C] mb-2 group-hover:text-[#B05E3F]">Rumah Aletheia</h3>
               <p className="text-sm text-gray-600 mb-3">Perpustakaan komunitas dengan ribuan koleksi buku dan program literasi</p>
               <span className="text-[#B05E3F] text-sm font-semibold group-hover:underline">Selengkapnya →</span>
             </Link>
-            <Link href="/tentang/sejarah" className="group bg-white border-2 border-cream-beige p-6 hover:border-[#2C5F5D] hover:shadow-xl transition-all">
+            <Link href="/tentang/sejarah" className="group bg-white border-2 border-[#C4BDB2] p-6 hover:border-[#2C5F5D] hover:shadow-xl transition-all">
               <h3 className="font-serif text-xl font-bold text-[#1F4E4C] mb-2 group-hover:text-[#2C5F5D]">Sejarah & Perjalanan</h3>
               <p className="text-sm text-gray-600 mb-3">Timeline dan tonggak penting dalam perjalanan kami</p>
               <span className="text-[#B05E3F] text-sm font-semibold group-hover:underline">Selengkapnya →</span>
             </Link>
-            <Link href="/tentang/tim" className="group bg-white border-2 border-cream-beige p-6 hover:border-[#B05E3F] hover:shadow-xl transition-all">
+            <Link href="/tentang/tim" className="group bg-white border-2 border-[#C4BDB2] p-6 hover:border-[#B05E3F] hover:shadow-xl transition-all">
               <h3 className="font-serif text-xl font-bold text-[#1F4E4C] mb-2 group-hover:text-[#B05E3F]">Tim & Pengurus</h3>
               <p className="text-sm text-gray-600 mb-3">Kenali orang-orang di balik layanan kami</p>
               <span className="text-[#B05E3F] text-sm font-semibold group-hover:underline">Selengkapnya →</span>
@@ -85,9 +85,9 @@ export default function TentangPage() {
             </p>
           </article>
 
-          <article className="bg-[#2C5F5D] p-10 shadow-lg text-cream-soft-white">
+          <article className="bg-[#2C5F5D] p-10 shadow-lg text-[#FAF8F5]">
             <h2 className="font-serif text-3xl font-bold mb-6">Misi</h2>
-            <ul className="space-y-4 text-cream-warm">
+            <ul className="space-y-4 text-[#D4A574]">
               <li className="flex items-start">
                 <span className="text-[#B05E3F] mr-3 mt-1 flex-shrink-0">◆</span>
                 <span className="leading-relaxed">Menyediakan koleksi buku dan sumber informasi yang berkualitas dan beragam</span>

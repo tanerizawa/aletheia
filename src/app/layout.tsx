@@ -94,9 +94,30 @@ export default function RootLayout({
             }}
           />
         )}
+        {/*
+          Production Google Analytics (gtag) loader.
+          Controlled by `NEXT_PUBLIC_GA_ID`. If you don't want analytics,
+          leave that env var unset. This is a non-blocking, opt-in snippet.
+        */}
+        {/**
+          Temporarily disable analytics injection for local Lighthouse and audit runs.
+          This short-circuits the production GA snippet until we complete the
+          analytics gating verification. Remove `&& false` to re-enable.
+        */}
+        {process.env.NODE_ENV === "production" && process.env.NEXT_PUBLIC_GA_ID && process.env.NEXT_PUBLIC_DISABLE_ANALYTICS !== '1' && false && (
+          <>
+            <script async src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`} />
+            <script
+              // eslint-disable-next-line react/no-danger
+              dangerouslySetInnerHTML={{
+                __html: `window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', { send_page_view: true });`,
+              }}
+            />
+          </>
+        )}
       </head>
       <body
-        className={`${inter.variable} ${playfair.variable} ${sourceSans.variable} ${lora.variable} antialiased flex flex-col min-h-screen bg-cream-soft-white`}
+        className={`${inter.variable} ${playfair.variable} ${sourceSans.variable} ${lora.variable} antialiased flex flex-col min-h-screen bg-[#E8E3DB]`}
         style={{ fontFamily: "var(--font-source-sans), var(--font-inter), sans-serif" }}
       >
         <a href="#main-content" className="skip-to-content">

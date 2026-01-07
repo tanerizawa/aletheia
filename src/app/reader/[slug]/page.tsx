@@ -60,7 +60,7 @@ export default async function ReaderPage({ params }: PageProps) {
 
   if (!ebook.availableOnline) {
     return (
-      <div className="min-h-screen bg-cream-soft-white flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[#E8E3DB] flex items-center justify-center p-4">
         <div className="max-w-md text-center">
           <div className="mb-6">
             <svg

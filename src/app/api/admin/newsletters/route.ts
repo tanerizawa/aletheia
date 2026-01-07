@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { cookies } from 'next/headers';
+import { SESSION_COOKIE } from '@/lib/auth';
 
 async function verifyAuth() {
   const cookieStore = await cookies();
-  const token = cookieStore.get('admin_token')?.value;
+  const token = cookieStore.get(SESSION_COOKIE)?.value;
   
   if (!token) {
     return null;

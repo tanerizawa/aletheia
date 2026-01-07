@@ -34,14 +34,14 @@ export async function sendNewsletterWelcome(email: string) {
         <head>
           <meta charset="utf-8">
           <style>
-            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; }
+            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: var(--color-text-primary, #1A1A1A); }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #2C5F5D 0%, #3A7A77 100%); color: white; padding: 30px 20px; text-align: center; border-radius: 8px 8px 0 0; }
-            .content { background: #fff; padding: 30px 20px; border: 1px solid #e0e0e0; border-top: none; }
-            .footer { background: #f5f5f5; padding: 20px; text-align: center; font-size: 12px; color: #666; border-radius: 0 0 8px 8px; }
-            .button { display: inline-block; padding: 12px 30px; background: #B05E3F; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+            .header { background: linear-gradient(135deg, var(--teal-700, #2C5F5D) 0%, var(--teal-500, #3A7A77) 100%); color: var(--color-text-inverse, #FAF8F5); padding: 30px 20px; text-align: center; border-radius: 8px 8px 0 0; }
+            .content { background: var(--color-surface, #FFFFFF); padding: 30px 20px; border: 1px solid var(--color-border, #E0D6C8); border-top: none; }
+            .footer { background: var(--color-cream-soft-white, #F0EBE3); padding: 20px; text-align: center; font-size: 12px; color: var(--color-text-tertiary, #6A6A6A); border-radius: 0 0 8px 8px; }
+            .button { display: inline-block; padding: 12px 30px; background: var(--color-secondary, #B05E3F); color: var(--color-text-inverse, #FAF8F5); text-decoration: none; border-radius: 5px; margin: 20px 0; }
             h1 { margin: 0; font-size: 24px; }
-            .highlight { background: #FFF9E6; padding: 15px; border-left: 4px solid #B05E3F; margin: 20px 0; }
+            .highlight { background: var(--terra-100, #F5DDD3); padding: 15px; border-left: 4px solid var(--color-secondary, #B05E3F); margin: 20px 0; }
           </style>
         </head>
         <body>
@@ -77,7 +77,7 @@ export async function sendNewsletterWelcome(email: string) {
               <p><strong>Rumah Aletheia</strong><br>
               Jalan Patinggi, Desa Cibadak, Rawamerta, Karawang 41382<br>
               📧 ${ADMIN_EMAIL} | 🌐 <a href="https://academos.or.id">academos.or.id</a></p>
-              <p style="margin-top: 10px; font-size: 11px; color: #999;">
+              <p style="margin-top: 10px; font-size: 11px; color: var(--color-text-tertiary, #6A6A6A);">
                 Anda menerima email ini karena telah berlangganan newsletter kami.<br>
                 Untuk berhenti berlangganan, hubungi kami.
               </p>
@@ -128,15 +128,15 @@ export async function sendContactNotification(data: {
         <head>
           <meta charset="utf-8">
           <style>
-            body { font-family: monospace; line-height: 1.6; color: #333; background: #f5f5f5; padding: 20px; }
-            .container { max-width: 700px; margin: 0 auto; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-            .header { background: #B05E3F; color: white; padding: 20px; }
+            body { font-family: monospace; line-height: 1.6; color: var(--color-text-primary, #1A1A1A); background: var(--color-cream-soft-white, #F0EBE3); padding: 20px; }
+            .container { max-width: 700px; margin: 0 auto; background: var(--color-surface, #FFFFFF); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+            .header { background: var(--color-secondary, #B05E3F); color: var(--color-text-inverse, #FAF8F5); padding: 20px; }
             .content { padding: 30px; }
             .field { margin-bottom: 20px; }
-            .label { font-weight: bold; color: #666; font-size: 12px; text-transform: uppercase; margin-bottom: 5px; }
-            .value { background: #f9f9f9; padding: 12px; border-left: 3px solid #2C5F5D; margin-top: 5px; }
-            .message-box { background: #FFF9E6; padding: 20px; border: 1px solid #B05E3F; border-radius: 5px; white-space: pre-wrap; }
-            .action-button { display: inline-block; padding: 10px 25px; background: #2C5F5D; color: white; text-decoration: none; border-radius: 5px; margin-top: 20px; }
+            .label { font-weight: bold; color: var(--color-text-tertiary, #6A6A6A); font-size: 12px; text-transform: uppercase; margin-bottom: 5px; }
+            .value { background: var(--color-cream-soft-white, #F0EBE3); padding: 12px; border-left: 3px solid var(--color-primary, #2C5F5D); margin-top: 5px; }
+            .message-box { background: var(--terra-100, #F5DDD3); padding: 20px; border: 1px solid var(--color-secondary, #B05E3F); border-radius: 5px; white-space: pre-wrap; }
+            .action-button { display: inline-block; padding: 10px 25px; background: var(--color-primary, #2C5F5D); color: var(--color-text-inverse, #FAF8F5); text-decoration: none; border-radius: 5px; margin-top: 20px; }
           </style>
         </head>
         <body>
@@ -161,9 +161,9 @@ export async function sendContactNotification(data: {
                 <div class="message-box">${data.message}</div>
               </div>
               
-              <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 30px 0;">
+              <hr style="border: none; border-top: 1px solid var(--color-border, #E0D6C8); margin: 30px 0;">
               
-              <p style="color: #666; font-size: 14px;">
+              <p style="color: var(--color-text-tertiary, #6A6A6A); font-size: 14px;">
                 💡 <strong>Tip:</strong> Klik tombol di bawah untuk membalas via admin panel,<br>
                 atau langsung reply email ini untuk membalas ke <code>${data.email}</code>
               </p>

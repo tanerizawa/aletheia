@@ -1,262 +1,701 @@
 @import "tailwindcss";
 @import "../styles/tokens.css";
 
+/* ============================================
+   NEUROSCIENCE-DRIVEN CSS DESIGN SYSTEM
+   Based on Cognitive Psychology & Brain Science
+   ============================================
+   
+   Core Principles Applied:
+   1. Cognitive Load Management (Minimize mental effort)
+   2. Gestalt Principles (Pattern recognition)
+   3. Attention Management (Visual hierarchy)
+   4. Emotional Design (Trust & engagement)
+   5. Memory & Recognition (Familiar patterns)
+   6. System 1 & 2 Thinking (Fast & slow processing)
+   ============================================ */
+
 :root {
-  /* Font Variables - Next.js optimized fonts */
+  /* ============================================
+     TYPOGRAPHY - COGNITIVE READABILITY
+     ============================================ */
+  
+  /* Font families optimized for reading comprehension */
   --font-display: var(--font-playfair), 'Playfair Display', serif;
   --font-body: var(--font-source-sans), 'Source Sans 3', var(--font-inter), sans-serif;
   --font-accent: var(--font-lora), 'Lora', serif;
   
-  /* Legacy support - will be deprecated */
-  --color-teal: var(--teal-700);
-  --color-teal-dark: var(--teal-900);
-  --color-teal-light: var(--teal-500);
-  --color-terracotta: var(--terra-700);
-  --color-terracotta-dark: var(--terra-900);
-  --color-terracotta-light: var(--terra-500);
-  --color-cream: var(--cream-200);
-  --color-cream-dark: var(--cream-400);
-  --color-cream-darker: var(--cream-700);
-  --color-text-primary: var(--color-text-primary);
-  --color-text-secondary: var(--color-text-secondary);
+  /* NEUROSCIENCE: Optimal line-height reduces cognitive load
+     Research shows 1.5-1.6 for body text improves reading speed */
+  --line-height-body: 1.6;
+  --line-height-heading: 1.2;
   
-  --background: var(--color-background);
-  --foreground: var(--color-text-primary);
-}
-
-/* Skip to Content Link - Accessibility */
-.skip-to-content {
-  position: absolute;
-  left: -9999px;
-  z-index: 999;
-  padding: 1em;
-  background-color: var(--color-terracotta);
-  color: white;
-  text-decoration: none;
-  border-radius: 0 0 0.25em 0;
-  font-weight: bold;
-}
-
-.skip-to-content:focus {
-  left: 0;
-  top: 0;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-body);
-  --font-serif: var(--font-display);
-  --font-mono: var(--font-mono);
+  /* NEUROSCIENCE: Letter spacing affects word recognition speed
+     Slight tracking improves readability for digital screens */
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.05em;
   
-  /* Custom Colors - Use design tokens */
-  --color-primary: var(--teal-700);
-  --color-primary-dark: var(--teal-900);
-  --color-secondary: var(--terra-700);
-  --color-secondary-dark: var(--terra-900);
-  --color-neutral: var(--cream-200);
+  /* ============================================
+     COLOR SYSTEM - EMOTIONAL & PERCEPTUAL DESIGN
+     ============================================ */
   
-  /* Soft Cream Palette - MUCH SOFTER & WARMER colors */
-  --color-cream-soft-white: #E8E3DB;  /* Was #FAF8F5 - Now much darker, warmer */
-  --color-cream-warm: #D4CFC4;        /* Was #F0EBE3 - Now softer */
-  --color-cream-beige: #C4BDB2;       /* Was #E8DED0 - Now muted */
-  --color-terra-light: #D4A574;       /* Was #E8A87C - Now warmer, less bright */
-  --color-terra-warm: #B8825A;        /* Was #C67B5D - Now deeper */
+  /* NEUROSCIENCE: Color affects emotion & trust
+     Teal = Calm, trust, focus (reduces anxiety)
+     Cream = Warmth, comfort, approachability
+     Terra = Energy, action, warmth (for CTAs) */
+  
+  /* Background - Light mode (reduces eye strain) */
+  --color-background: var(--cream-200);        /* Soft, non-fatiguing */
+  --color-background-subtle: var(--cream-300); /* Subtle contrast for depth */
+  --color-surface: #ffffff;                     /* Pure white for content cards */
+  --color-surface-elevated: #fefefe;           /* Slightly elevated surfaces */
+  
+  /* Text Colors - WCAG AAA Compliant (7:1 ratio) */
+  --color-text-primary: var(--teal-900);       /* Maximum contrast - critical info */
+  --color-text-secondary: var(--teal-700);     /* High contrast - body text */
+  --color-text-tertiary: var(--teal-600);      /* Medium contrast - supporting text */
+  --color-text-muted: var(--teal-500);         /* Low emphasis - metadata */
+  
+  /* Text on Dark Backgrounds */
+  --color-text-inverse: var(--cream-200);           /* Maximum readability */
+  --color-text-inverse-secondary: var(--cream-300); /* Supporting text */
+  --color-text-inverse-tertiary: var(--cream-400);  /* Tertiary text */
+  
+  /* Brand Colors - Emotional Association */
+  --color-primary: var(--teal-700);            /* Trust, calmness */
+  --color-primary-dark: var(--teal-900);       /* Authority, depth */
+  --color-primary-light: var(--teal-500);      /* Lightness, accessibility */
+  
+  --color-secondary: var(--terra-700);         /* Warmth, energy */
+  --color-secondary-dark: var(--terra-900);    /* Strength, grounding */
+  --color-secondary-light: var(--terra-500);   /* Approachability */
+  
+  /* Accent Colors - Von Restorff Effect (Isolation Effect) */
+  --color-accent: var(--terra-600);            /* Stands out for CTAs */
+  --color-accent-warm: var(--terra-700);       /* Warm emphasis */
+  --color-accent-soft: var(--terra-400);       /* Soft highlight */
+  
+  /* State Colors - Immediate Feedback Principle */
+  --color-success: #10b981;                    /* Green = positive action complete */
+  --color-warning: #f59e0b;                    /* Yellow = caution, attention needed */
+  --color-error: #ef4444;                      /* Red = stop, error, danger */
+  --color-info: var(--teal-600);               /* Blue-teal = information, neutral */
+  
+  /* Border & Shadow - Depth Perception */
+  --color-border: var(--cream-400);
+  --color-border-strong: var(--teal-700);
+  --color-border-accent: var(--terra-700);
+  
+  /* ============================================
+     SPACING - GESTALT PRINCIPLES
+     ============================================ */
+  
+  /* NEUROSCIENCE: Law of Proximity
+     Elements close together are perceived as related */
+  --space-1: 0.25rem;   /* 4px - tight grouping */
+  --space-2: 0.5rem;    /* 8px - related elements */
+  --space-3: 0.75rem;   /* 12px - close proximity */
+  --space-4: 1rem;      /* 16px - standard spacing */
+  --space-6: 1.5rem;    /* 24px - section separation */
+  --space-8: 2rem;      /* 32px - major sections */
+  --space-12: 3rem;     /* 48px - distinct sections */
+  --space-16: 4rem;     /* 64px - page sections */
+  
+  /* ============================================
+     TRANSITIONS - TEMPORAL PERCEPTION
+     ============================================ */
+  
+  /* NEUROSCIENCE: 100-300ms feels instant
+     300-1000ms feels natural
+     >1000ms feels slow */
+  --duration-instant: 100ms;  /* Immediate feedback */
+  --duration-fast: 200ms;     /* Quick interactions */
+  --duration-normal: 300ms;   /* Standard transitions */
+  --duration-slow: 500ms;     /* Deliberate animations */
+  
+  /* Easing - Natural motion perception */
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.6, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  
+  /* ============================================
+     ELEVATION - DEPTH PERCEPTION
+     ============================================ */
+  
+  /* NEUROSCIENCE: Shadows create depth hierarchy
+     Brain processes depth before reading content */
+  --shadow-sm: 0 1px 2px 0 rgba(44, 95, 93, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(44, 95, 93, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(44, 95, 93, 0.15);
+  --shadow-xl: 0 20px 25px -5px rgba(44, 95, 93, 0.2);
+  
+  /* Focus shadow - high visibility */
+  --shadow-focus: 0 0 0 3px rgba(176, 94, 63, 0.15);
 }
 
 /* ============================================
-   BASE STYLES
+   BASE STYLES - COGNITIVE OPTIMIZATION
    ============================================ */
 
 body {
   background: var(--color-background);
   color: var(--color-text-primary);
   font-family: var(--font-body);
-  font-weight: var(--font-normal);
-  line-height: var(--leading-relaxed);
+  font-weight: 400;
+  line-height: var(--line-height-body); /* 1.6 optimal for reading */
+  letter-spacing: var(--letter-spacing-normal);
+  
+  /* Anti-aliasing for screen readability */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  
+  /* NEUROSCIENCE: Smooth transitions reduce cognitive jarring */
   transition: background-color var(--duration-normal) var(--ease-in-out);
 }
 
-/* Typography */
+/* ============================================
+   TYPOGRAPHY - INFORMATION HIERARCHY
+   ============================================ */
+
+/* NEUROSCIENCE: Visual hierarchy guides attention
+   Size contrast helps brain process importance quickly (System 1) */
+
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
-  font-weight: var(--font-bold);
-  line-height: var(--leading-tight);
-  color: var(--teal-900);
-  letter-spacing: -0.02em;
+  font-weight: 700;
+  line-height: var(--line-height-heading); /* Tighter for headings */
+  color: var(--color-text-primary);
+  letter-spacing: var(--letter-spacing-tight); /* Improves display font readability */
   margin-bottom: var(--space-4);
+  
+  /* NEUROSCIENCE: Slightly bolder improves scannability */
+  font-weight: 600;
 }
 
-h1 { font-size: var(--text-5xl); }
-h2 { font-size: var(--text-4xl); }
-h3 { font-size: var(--text-3xl); }
-h4 { font-size: var(--text-2xl); }
-h5 { font-size: var(--text-xl); }
-h6 { font-size: var(--text-lg); }
+/* Size scale based on Major Third (1.25) ratio
+   Creates clear hierarchy without overwhelming */
+h1 { 
+  font-size: clamp(2rem, 5vw, 3rem);      /* 32-48px - Main page title */
+  margin-bottom: var(--space-6);
+}
+h2 { 
+  font-size: clamp(1.5rem, 4vw, 2.25rem); /* 24-36px - Major sections */
+  margin-bottom: var(--space-4);
+}
+h3 { 
+  font-size: clamp(1.25rem, 3vw, 1.875rem); /* 20-30px - Subsections */
+}
+h4 { 
+  font-size: clamp(1.125rem, 2.5vw, 1.5rem); /* 18-24px - Minor sections */
+}
+h5 { 
+  font-size: clamp(1rem, 2vw, 1.25rem);      /* 16-20px - Small headings */
+}
+h6 { 
+  font-size: 1rem;                            /* 16px - Labels */
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide); /* Better for uppercase */
+  font-weight: 600;
+}
 
+/* NEUROSCIENCE: Paragraph spacing aids reading comprehension
+   Optimal line length: 50-75 characters */
 p {
   margin-bottom: var(--space-4);
-  line-height: var(--leading-relaxed);
+  line-height: var(--line-height-body);
+  color: var(--color-text-secondary); /* Slightly softer for reduced eye strain */
+  max-width: 65ch; /* Optimal reading width */
 }
 
-/* Utility Classes */
-.font-display { font-family: var(--font-display); }
-.font-serif { font-family: var(--font-display); }
-.font-body { font-family: var(--font-body); }
-.font-accent { font-family: var(--font-accent); }
-.font-lora { font-family: var(--font-accent); }
-.font-mono { font-family: var(--font-mono); }
-
-/* Magazine-style accents */
-.border-accent {
-  border-color: var(--terra-700);
+/* Lead paragraph - draws attention */
+.lead {
+  font-size: 1.25rem;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-6);
 }
 
-.bg-pattern {
-  background-image: 
-    linear-gradient(rgba(44, 95, 93, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(44, 95, 93, 0.03) 1px, transparent 1px);
-  background-size: 20px 20px;
+/* Small text - less important information */
+.text-small {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-text-tertiary);
 }
 
 /* ============================================
-   SMOOTH SCROLLING & NAVIGATION
+   HERO SECTION - ATTENTION CAPTURE
    ============================================ */
 
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 80px;
+/* NEUROSCIENCE: First 50ms determines emotional response
+   Gradient creates depth, warm overlay reduces harsh contrast */
+
+:root {
+  --hero-grad-1: var(--teal-700);
+  --hero-grad-2: var(--teal-800);
+  --hero-grad-3: var(--teal-900);
+  --hero-border: var(--terra-700);
+  
+  /* Text colors optimized for dark background */
+  --hero-title-color: var(--cream-200);
+  --hero-subtitle-color: var(--cream-300);
+  --hero-lead-color: var(--cream-400);
+  --hero-accent-color: var(--terra-400);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
+.hero-outer {
+  position: relative;
+  overflow: hidden;
+  background-image: linear-gradient(
+    135deg, 
+    var(--hero-grad-1), 
+    var(--hero-grad-2), 
+    var(--hero-grad-3)
+  );
+  border-bottom: 4px solid var(--hero-border);
+  
+  /* NEUROSCIENCE: Pattern creates visual interest without distraction */
+  background-size: 400% 400%;
+}
+
+/* Subtle animated gradient (optional - draws attention) */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-outer {
+    animation: gradient-shift 15s ease infinite;
   }
 }
 
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.hero-outer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  /* Very subtle overlay - doesn't interfere with contrast */
+  background: linear-gradient(
+    180deg, 
+    rgba(240, 235, 227, 0.05), 
+    rgba(240, 235, 227, 0.02)
+  );
+  mix-blend-mode: overlay;
+}
+
+.hero-inner { 
+  max-width: 72rem; 
+  margin-left: auto; 
+  margin-right: auto; 
+  padding: var(--space-16) var(--space-6);
+}
+
+/* NEUROSCIENCE: Label creates context before main message */
+.hero-label { 
+  color: var(--hero-accent-color);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+  text-transform: uppercase;
+  letter-spacing: 0.15em; /* Wide spacing for uppercase readability */
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* Main title - maximum attention */
+.hero-title { 
+  color: var(--hero-title-color);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); /* Improves readability */
+  margin-bottom: var(--space-6);
+}
+
+.hero-subtitle {
+  color: var(--hero-subtitle-color);
+  font-size: 1.5rem;
+  margin-bottom: var(--space-4);
+}
+
+/* Lead text - supporting information */
+.hero-lead { 
+  color: var(--hero-lead-color);
+  max-width: 48rem;
+  line-height: 1.75;
+  font-size: 1.125rem;
+}
+
 /* ============================================
-   FOCUS STATES & ACCESSIBILITY
+   UTILITY CLASSES - COGNITIVE SHORTCUTS
    ============================================ */
 
-*:focus-visible {
-  outline: 2px solid var(--terra-700);
-  outline-offset: 2px;
-  border-radius: var(--radius-sm);
-}
+/* Font families */
+.font-display { font-family: var(--font-display); }
+.font-body { font-family: var(--font-body); }
+.font-accent { font-family: var(--font-accent); }
 
-button:focus-visible,
-a:focus-visible {
-  outline: 2px solid var(--terra-700);
-  outline-offset: 3px;
-}
+/* Text hierarchy - light backgrounds */
+.text-primary { color: var(--color-text-primary); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-tertiary { color: var(--color-text-tertiary); }
+.text-muted { color: var(--color-text-muted); }
 
-/* ============================================
-   FORM INPUTS
-   ============================================ */
-
-input[type="text"],
-input[type="email"],
-input[type="tel"],
-input[type="search"],
-input[type="password"],
-textarea,
-select {
-  transition: all var(--duration-normal) var(--ease-in-out);
-  font-family: var(--font-body);
-}
-
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="tel"]:focus,
-input[type="search"]:focus,
-input[type="password"]:focus,
-textarea:focus,
-select:focus {
-  outline: none;
-  border-color: var(--terra-700);
-  box-shadow: 0 0 0 3px rgba(176, 94, 63, 0.1);
-  transform: translateY(-1px);
-}
+/* Text hierarchy - dark backgrounds */
+.text-inverse { color: var(--color-text-inverse); }
+.text-inverse-secondary { color: var(--color-text-inverse-secondary); }
+.text-inverse-tertiary { color: var(--color-text-inverse-tertiary); }
 
 /* ============================================
-   INTERACTIVE ELEMENTS
+   BUTTONS - ACTION & FEEDBACK
    ============================================ */
 
-button,
-a[class*="inline-block"],
-.interactive {
-  transition: all var(--duration-normal) var(--ease-in-out);
+/* NEUROSCIENCE: Button design affects decision-making speed
+   Von Restorff Effect: Make primary action stand out */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1;
   cursor: pointer;
+  border: none;
+  
+  /* NEUROSCIENCE: Immediate feedback - brain needs <100ms response */
+  transition: all var(--duration-fast) var(--ease-in-out);
+  
+  /* Prevents text selection on double-click */
+  user-select: none;
+  
+  /* Focus visible for keyboard users */
+  outline: none;
 }
 
-button:active,
-a[class*="inline-block"]:active,
-.interactive:active {
-  transform: translateY(1px);
+.btn:focus-visible {
+  box-shadow: var(--shadow-focus);
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 2px;
 }
 
-button:disabled,
-.interactive:disabled {
+/* Primary button - main action (Von Restorff Effect) */
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-2px); /* Subtle lift */
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-primary:active {
+  transform: translateY(0); /* Feedback: button pressed */
+  box-shadow: var(--shadow-sm);
+}
+
+/* Secondary button - alternative action */
+.btn-secondary {
+  background: var(--color-secondary);
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-secondary:hover {
+  background: var(--color-secondary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Outline button - less prominent */
+.btn-outline {
+  background: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  box-shadow: none;
+}
+
+.btn-outline:hover {
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  border-color: var(--color-primary);
+}
+
+/* Ghost button - minimal emphasis */
+.btn-ghost {
+  background: transparent;
+  color: var(--color-text-primary);
+  box-shadow: none;
+}
+
+.btn-ghost:hover {
+  background: var(--color-background-subtle);
+}
+
+/* Disabled state - clear visual feedback */
+.btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  transform: none;
+  transform: none !important;
+  box-shadow: none !important;
 }
 
 /* ============================================
-   CARDS & HOVER EFFECTS
+   FORMS - COGNITIVE EASE
    ============================================ */
 
-article,
+/* NEUROSCIENCE: Form design affects completion rates
+   Clear feedback reduces anxiety and errors */
+
+.form-group {
+  margin-bottom: var(--space-6);
+}
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-2);
+  font-size: 0.875rem;
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  border: 2px solid var(--color-border);
+  border-radius: 0.5rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.5;
+  
+  /* NEUROSCIENCE: Smooth transitions feel natural */
+  transition: all var(--duration-normal) var(--ease-in-out);
+}
+
+/* Placeholder - guides without overwhelming */
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: var(--color-text-muted);
+  opacity: 1;
+}
+
+/* Focus state - clear feedback */
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+  outline: none;
+  border-color: var(--color-secondary);
+  box-shadow: var(--shadow-focus);
+  transform: translateY(-1px); /* Subtle lift */
+}
+
+/* Error state - immediate attention */
+.form-input.error,
+.form-textarea.error {
+  border-color: var(--color-error);
+}
+
+.form-error {
+  color: var(--color-error);
+  font-size: 0.875rem;
+  margin-top: var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Success state - positive reinforcement */
+.form-input.success,
+.form-textarea.success {
+  border-color: var(--color-success);
+}
+
+/* Disabled state */
+.form-input:disabled,
+.form-textarea:disabled,
+.form-select:disabled {
+  background: var(--color-background-subtle);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* ============================================
+   CARDS - GESTALT GROUPING
+   ============================================ */
+
+/* NEUROSCIENCE: Cards group related information
+   Law of Common Region: Elements in same container are related */
+
 .card {
+  background: var(--color-surface);
+  border-radius: 1rem;
+  padding: var(--space-6);
+  box-shadow: var(--shadow-sm);
+  
+  /* Smooth interaction */
   transition: 
     transform var(--duration-normal) var(--ease-smooth),
     box-shadow var(--duration-normal) var(--ease-smooth);
 }
 
-article:hover,
 .card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-4px); /* Lift effect */
+  box-shadow: var(--shadow-lg);
+}
+
+/* Card with border */
+.card-bordered {
+  border: 2px solid var(--color-border);
+}
+
+/* Elevated card - more prominence */
+.card-elevated {
+  box-shadow: var(--shadow-md);
+}
+
+.card-elevated:hover {
+  box-shadow: var(--shadow-xl);
 }
 
 /* ============================================
-   LINKS
+   LINKS - AFFORDANCE & FEEDBACK
    ============================================ */
 
+/* NEUROSCIENCE: Color & underline signal clickability
+   Brain recognizes patterns quickly */
+
 a {
-  color: inherit;  /* Inherit color from parent or component classes */
+  color: var(--color-primary);
   text-decoration: none;
   transition: color var(--duration-fast) var(--ease-in-out);
+  
+  /* Subtle underline on hover improves affordance */
+  position: relative;
+}
+
+a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: currentColor;
+  transition: width var(--duration-normal) var(--ease-in-out);
 }
 
 a:hover {
-  color: var(--terra-700);
+  color: var(--color-secondary);
 }
 
-a[class*="hover:border"] {
-  transition: border-color var(--duration-normal) var(--ease-in-out);
+a:hover::after {
+  width: 100%;
 }
 
-/* Loading animation */
-@keyframes pulse-slow {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
+/* Link in dark context */
+.hero-outer a,
+.bg-dark a {
+  color: var(--color-text-inverse-tertiary);
 }
 
-.animate-pulse-slow {
-  animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+.hero-outer a:hover,
+.bg-dark a:hover {
+  color: var(--hero-accent-color);
 }
 
-/* Fade in animation */
+/* External link indicator */
+a[target="_blank"]::before {
+  content: '↗';
+  display: inline-block;
+  margin-right: 0.25em;
+  font-size: 0.85em;
+  opacity: 0.7;
+}
+
+/* ============================================
+   FOCUS STATES - ACCESSIBILITY
+   ============================================ */
+
+/* NEUROSCIENCE: Clear focus improves navigation confidence */
+
+*:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+/* Focus on dark backgrounds */
+.hero-outer *:focus-visible,
+.bg-dark *:focus-visible {
+  outline-color: var(--cream-400);
+}
+
+/* ============================================
+   LOADING & SKELETON STATES
+   ============================================ */
+
+/* NEUROSCIENCE: Loading feedback reduces perceived wait time
+   Brain tolerates delays better with visual feedback */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-background-subtle) 0%,
+    var(--cream-400) 50%,
+    var(--color-background-subtle) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+  border-radius: 0.5rem;
+}
+
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Loading spinner */
+.spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid var(--color-background-subtle);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================
+   ANIMATIONS - NATURAL MOTION
+   ============================================ */
+
+/* NEUROSCIENCE: Natural motion feels familiar
+   Reduces cognitive load, increases trust */
+
+/* Fade in - subtle entrance */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -265,18 +704,14 @@ a[class*="hover:border"] {
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.6s ease-out;
-}
-
-.animate-fadeIn {
-  animation: fadeIn 0.6s ease-out;
+  animation: fadeIn 0.5s var(--ease-smooth);
 }
 
 /* Slide in from left */
 @keyframes slideInLeft {
   from {
     opacity: 0;
-    transform: translateX(-30px);
+    transform: translateX(-20px);
   }
   to {
     opacity: 1;
@@ -285,27 +720,61 @@ a[class*="hover:border"] {
 }
 
 .animate-slide-in-left {
-  animation: slideInLeft 0.5s ease-out;
+  animation: slideInLeft 0.4s var(--ease-smooth);
 }
 
-/* Icon bounce on hover */
-@keyframes bounce-subtle {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
-}
-
-.group:hover .animate-bounce-subtle {
-  animation: bounce-subtle 0.6s ease-in-out;
-}
-
-/* Toast Animations */
-@keyframes slideIn {
+/* Scale in - attention grabbing */
+@keyframes scaleIn {
   from {
-    transform: translateX(100%);
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s var(--ease-smooth);
+}
+
+/* Stagger children - sequential attention */
+.stagger-children > * {
+  animation: fadeIn 0.5s var(--ease-smooth);
+}
+
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 100ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 200ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 300ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 400ms; }
+
+/* ============================================
+   TOAST NOTIFICATIONS - FEEDBACK
+   ============================================ */
+
+/* NEUROSCIENCE: Immediate feedback creates trust */
+
+.toast {
+  position: fixed;
+  bottom: var(--space-6);
+  right: var(--space-6);
+  background: var(--color-surface);
+  padding: var(--space-4) var(--space-6);
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow-xl);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 300px;
+  z-index: 1000;
+  animation: slideInRight 0.3s var(--ease-smooth);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(400px);
     opacity: 0;
   }
   to {
@@ -314,14 +783,174 @@ a[class*="hover:border"] {
   }
 }
 
-@keyframes slideOut {
-  from {
-    transform: translateX(0);
-    opacity: 1;
-  }
-  to {
-    transform: translateX(100%);
-    opacity: 0;
+.toast-success {
+  border-left: 4px solid var(--color-success);
+}
+
+.toast-error {
+  border-left: 4px solid var(--color-error);
+}
+
+.toast-warning {
+  border-left: 4px solid var(--color-warning);
+}
+
+.toast-info {
+  border-left: 4px solid var(--color-info);
+}
+
+/* ============================================
+   PROGRESSIVE DISCLOSURE
+   ============================================ */
+
+/* NEUROSCIENCE: Reduce initial cognitive load
+   Show information when needed (Hick's Law) */
+
+details {
+  border: 2px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  user-select: none;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+summary::after {
+  content: '+';
+  font-size: 1.5rem;
+  transition: transform var(--duration-normal) var(--ease-in-out);
+}
+
+details[open] summary::after {
+  transform: rotate(45deg);
+}
+
+details[open] {
+  border-color: var(--color-primary);
+}
+
+/* ============================================
+   ACCESSIBILITY - INCLUSIVITY
+   ============================================ */
+
+/* Skip to content */
+.skip-to-content {
+  position: absolute;
+  left: -9999px;
+  z-index: 9999;
+  padding: var(--space-3) var(--space-6);
+  background: var(--color-secondary);
+  color: var(--color-text-inverse);
+  text-decoration: none;
+  border-radius: 0 0 0.5rem 0;
+  font-weight: 600;
+}
+
+.skip-to-content:focus {
+  left: 0;
+  top: 0;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --color-text-primary: #000000;
+    --color-background: #ffffff;
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    border: 2px solid currentColor;
+  }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+  
+  .hero-outer {
+    background: white !important;
+    border-bottom: 2px solid black;
+  }
+  
+  .btn,
+  .card {
+    box-shadow: none !important;
+    border: 1px solid #ccc;
+  }
+  
+  a {
+    text-decoration: underline;
+    color: black;
+  }
+  
+  /* Hide interactive elements */
+  .toast,
+  .skip-to-content {
+    display: none !important;
+  }
+}
+
+/* ============================================
+   DARK MODE (Optional Future Enhancement)
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+  /* Uncomment to enable automatic dark mode
+  
+  :root {
+    --color-background: var(--teal-900);
+    --color-background-subtle: var(--teal-800);
+    --color-surface: var(--teal-800);
+    --color-text-primary: var(--cream-200);
+    --color-text-secondary: var(--cream-300);
+    --color-text-tertiary: var(--cream-400);
+  }
+  
+  .card {
+    background: var(--teal-800);
+  }
+  
+  .form-input,
+  .form-textarea,
+  .form-select {
+    background: var(--teal-900);
+    border-color: var(--teal-700);
+    color: var(--cream-200);
+  }
+  
+  */
+}

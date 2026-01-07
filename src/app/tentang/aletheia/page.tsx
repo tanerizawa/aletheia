@@ -11,20 +11,20 @@ export const metadata: Metadata = {
 export default function AletheiaPage() {
 
   return (
-    <main className="flex-grow bg-cream-soft-white">
+    <main className="flex-grow bg-[#E8E3DB]">
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-[#2C5F5D] to-[#1F4E4C] py-16 border-b-4 border-[#B05E3F]">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex items-center gap-3 mb-4 text-cream-warm">
+          <div className="flex items-center gap-3 mb-4 text-[#D4A574]">
             <BookIcon className="w-8 h-8" />
             <span className="text-sm uppercase tracking-wider font-serif">Perpustakaan</span>
           </div>
           
-          <h1 className="font-serif text-5xl lg:text-6xl font-bold text-cream-soft-white mb-6">
+          <h1 className="font-serif text-5xl lg:text-6xl font-bold text-[#FAF8F5] mb-6">
             {library.name}
           </h1>
           
-          <p className="text-xl text-cream-warm max-w-3xl leading-relaxed">
+          <p className="text-xl text-[#D4A574] max-w-3xl leading-relaxed">
             Lebih dari sekadar perpustakaan — sebuah rumah bagi pencinta ilmu, ruang berdialog, dan komunitas pembelajar yang tumbuh bersama
           </p>
         </div>
@@ -61,7 +61,7 @@ export default function AletheiaPage() {
           <div className="grid md:grid-cols-2 gap-8 mb-12">
             <div className="bg-gradient-to-br from-[#2C5F5D] to-[#1F4E4C] p-10 text-white shadow-xl">
               <h3 className="font-serif text-3xl font-bold mb-6 border-b-2 border-[#B05E3F] pb-3">Visi Kami</h3>
-              <p className="text-cream-warm leading-relaxed text-lg italic">
+              <p className="text-[#D4A574] leading-relaxed text-lg italic">
                 Menjadi rumah literasi yang inklusif, inspiratif, dan berkelanjutan — tempat setiap orang menemukan 
                 pengetahuan, menumbuhkan imajinasi, dan mengembangkan potensi diri melalui kekuatan membaca.
               </p>
@@ -127,7 +127,7 @@ export default function AletheiaPage() {
 
           {/* Impact Metrics - Social Proof */}
           <div className="bg-gradient-to-r from-[#1F4E4C] to-[#2C5F5D] p-12 mb-12 text-center shadow-2xl">
-            <h3 className="font-serif text-3xl font-bold text-cream-soft-white mb-3">
+            <h3 className="font-serif text-3xl font-bold text-[#FAF8F5] mb-3">
               Dampak Kami di Komunitas
             </h3>
             <p className="text-cream-warm mb-8 max-w-2xl mx-auto">

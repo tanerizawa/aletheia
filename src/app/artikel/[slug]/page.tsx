@@ -162,11 +162,11 @@ export default async function ArtikelDetailPage({ params }: PageProps) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#2C5F5D] via-[#1F4E4C] to-[#1A3D3B] pt-32 pb-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <DocumentIcon className="w-32 h-32 mx-auto mb-6 text-cream-soft-white/60" />
-          <h1 className="text-4xl font-serif font-bold text-cream-soft-white mb-4">
+          <DocumentIcon className="w-32 h-32 mx-auto mb-6 text-[#FAF8F5]/60" />
+          <h1 className="text-4xl font-serif font-bold text-[#FAF8F5] mb-4">
             Artikel Tidak Ditemukan
           </h1>
-          <p className="text-xl text-cream-warm/80 mb-8">
+          <p className="text-xl text-[#D4A574]/80 mb-8">
             Maaf, artikel yang Anda cari tidak tersedia.
           </p>
           <Link
@@ -204,12 +204,12 @@ export default async function ArtikelDetailPage({ params }: PageProps) {
           </div>
 
           {/* Title */}
-          <h1 className="text-4xl md:text-5xl font-serif font-bold text-cream-soft-white mb-6 leading-tight">
+          <h1 className="text-4xl md:text-5xl font-serif font-bold text-[#FAF8F5] mb-6 leading-tight">
             {article.title}
           </h1>
 
           {/* Metadata */}
-          <div className="flex flex-wrap items-center gap-6 text-cream-warm/80">
+          <div className="flex flex-wrap items-center gap-6 text-[#D4A574]/80">
             <div className="flex items-center gap-2">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -264,7 +264,7 @@ export default async function ArtikelDetailPage({ params }: PageProps) {
                 {article.tags.map((tag: string) => (
                   <span
                     key={tag}
-                    className="px-3 py-1 bg-cream-soft-white text-gray-700 rounded-full text-sm hover:bg-cream-warm transition-colors cursor-pointer"
+                    className="px-3 py-1 bg-[#E8E3DB] text-gray-700 rounded-full text-sm hover:bg-[#D4A574] transition-colors cursor-pointer"
                   >
                     #{tag}
                   </span>
