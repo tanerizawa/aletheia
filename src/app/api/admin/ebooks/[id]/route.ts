@@ -58,29 +58,32 @@ export async function PATCH(
       return NextResponse.json({ error: 'Ebook not found' }, { status: 404 });
     }
 
+    // Build update data object with only defined fields
+    const updateData: any = {};
+
+    if (data.title !== undefined) updateData.title = data.title;
+    if (data.author !== undefined) updateData.author = data.author;
+    if (data.publisher !== undefined) updateData.publisher = data.publisher;
+    if (data.publishYear !== undefined) updateData.publishYear = parseInt(data.publishYear);
+    if (data.category !== undefined) updateData.category = data.category;
+    if (data.description !== undefined) updateData.description = data.description;
+    if (data.coverImage !== undefined) updateData.coverImage = data.coverImage;
+    if (data.format !== undefined) updateData.format = data.format;
+    if (data.pages !== undefined) updateData.pages = parseInt(data.pages);
+    if (data.language !== undefined) updateData.language = data.language;
+    if (data.isbn !== undefined) updateData.isbn = data.isbn;
+    if (data.fileUrl !== undefined) updateData.fileUrl = data.fileUrl;
+    if (data.fileSize !== undefined) updateData.fileSize = data.fileSize;
+    if (data.availableOnline !== undefined) updateData.availableOnline = data.availableOnline;
+    if (data.requiresLogin !== undefined) updateData.requiresLogin = data.requiresLogin;
+    if (data.downloadable !== undefined) updateData.downloadable = data.downloadable;
+    if (data.tags !== undefined) updateData.tags = data.tags;
+    if (data.rating !== undefined) updateData.rating = parseFloat(data.rating);
+
     // Update ebook
     const ebook = await prisma.ebook.update({
       where: { id },
-      data: {
-        title: data.title !== undefined ? data.title : undefined,
-        author: data.author !== undefined ? data.author : undefined,
-        publisher: data.publisher !== undefined ? data.publisher : undefined,
-        publishYear: data.publishYear !== undefined ? parseInt(data.publishYear) : undefined,
-        category: data.category !== undefined ? data.category : undefined,
-        description: data.description !== undefined ? data.description : undefined,
-        coverImage: data.coverImage !== undefined ? data.coverImage : undefined,
-        format: data.format !== undefined ? data.format : undefined,
-        pages: data.pages !== undefined ? parseInt(data.pages) : undefined,
-        language: data.language !== undefined ? data.language : undefined,
-        isbn: data.isbn !== undefined ? data.isbn : undefined,
-        fileUrl: data.fileUrl !== undefined ? data.fileUrl : undefined,
-        fileSize: data.fileSize !== undefined ? data.fileSize : undefined,
-        availableOnline: data.availableOnline !== undefined ? data.availableOnline : undefined,
-        requiresLogin: data.requiresLogin !== undefined ? data.requiresLogin : undefined,
-        downloadable: data.downloadable !== undefined ? data.downloadable : undefined,
-        tags: data.tags !== undefined ? data.tags : undefined,
-        rating: data.rating !== undefined ? parseFloat(data.rating) : undefined,
-      },
+      data: updateData,
     });
 
     return NextResponse.json({ success: true, ebook });
