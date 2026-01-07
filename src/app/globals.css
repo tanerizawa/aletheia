@@ -1,0 +1,327 @@
+@import "tailwindcss";
+@import "../styles/tokens.css";
+
+:root {
+  /* Font Variables - Next.js optimized fonts */
+  --font-display: var(--font-playfair), 'Playfair Display', serif;
+  --font-body: var(--font-source-sans), 'Source Sans 3', var(--font-inter), sans-serif;
+  --font-accent: var(--font-lora), 'Lora', serif;
+  
+  /* Legacy support - will be deprecated */
+  --color-teal: var(--teal-700);
+  --color-teal-dark: var(--teal-900);
+  --color-teal-light: var(--teal-500);
+  --color-terracotta: var(--terra-700);
+  --color-terracotta-dark: var(--terra-900);
+  --color-terracotta-light: var(--terra-500);
+  --color-cream: var(--cream-200);
+  --color-cream-dark: var(--cream-400);
+  --color-cream-darker: var(--cream-700);
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  
+  --background: var(--color-background);
+  --foreground: var(--color-text-primary);
+}
+
+/* Skip to Content Link - Accessibility */
+.skip-to-content {
+  position: absolute;
+  left: -9999px;
+  z-index: 999;
+  padding: 1em;
+  background-color: var(--color-terracotta);
+  color: white;
+  text-decoration: none;
+  border-radius: 0 0 0.25em 0;
+  font-weight: bold;
+}
+
+.skip-to-content:focus {
+  left: 0;
+  top: 0;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-body);
+  --font-serif: var(--font-display);
+  --font-mono: var(--font-mono);
+  
+  /* Custom Colors - Use design tokens */
+  --color-primary: var(--teal-700);
+  --color-primary-dark: var(--teal-900);
+  --color-secondary: var(--terra-700);
+  --color-secondary-dark: var(--terra-900);
+  --color-neutral: var(--cream-200);
+  
+  /* Soft Cream Palette - MUCH SOFTER & WARMER colors */
+  --color-cream-soft-white: #E8E3DB;  /* Was #FAF8F5 - Now much darker, warmer */
+  --color-cream-warm: #D4CFC4;        /* Was #F0EBE3 - Now softer */
+  --color-cream-beige: #C4BDB2;       /* Was #E8DED0 - Now muted */
+  --color-terra-light: #D4A574;       /* Was #E8A87C - Now warmer, less bright */
+  --color-terra-warm: #B8825A;        /* Was #C67B5D - Now deeper */
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+
+body {
+  background: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-weight: var(--font-normal);
+  line-height: var(--leading-relaxed);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color var(--duration-normal) var(--ease-in-out);
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: var(--font-bold);
+  line-height: var(--leading-tight);
+  color: var(--teal-900);
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-4);
+}
+
+h1 { font-size: var(--text-5xl); }
+h2 { font-size: var(--text-4xl); }
+h3 { font-size: var(--text-3xl); }
+h4 { font-size: var(--text-2xl); }
+h5 { font-size: var(--text-xl); }
+h6 { font-size: var(--text-lg); }
+
+p {
+  margin-bottom: var(--space-4);
+  line-height: var(--leading-relaxed);
+}
+
+/* Utility Classes */
+.font-display { font-family: var(--font-display); }
+.font-serif { font-family: var(--font-display); }
+.font-body { font-family: var(--font-body); }
+.font-accent { font-family: var(--font-accent); }
+.font-lora { font-family: var(--font-accent); }
+.font-mono { font-family: var(--font-mono); }
+
+/* Magazine-style accents */
+.border-accent {
+  border-color: var(--terra-700);
+}
+
+.bg-pattern {
+  background-image: 
+    linear-gradient(rgba(44, 95, 93, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(44, 95, 93, 0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* ============================================
+   SMOOTH SCROLLING & NAVIGATION
+   ============================================ */
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ============================================
+   FOCUS STATES & ACCESSIBILITY
+   ============================================ */
+
+*:focus-visible {
+  outline: 2px solid var(--terra-700);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--terra-700);
+  outline-offset: 3px;
+}
+
+/* ============================================
+   FORM INPUTS
+   ============================================ */
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="search"],
+input[type="password"],
+textarea,
+select {
+  transition: all var(--duration-normal) var(--ease-in-out);
+  font-family: var(--font-body);
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+input[type="search"]:focus,
+input[type="password"]:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--terra-700);
+  box-shadow: 0 0 0 3px rgba(176, 94, 63, 0.1);
+  transform: translateY(-1px);
+}
+
+/* ============================================
+   INTERACTIVE ELEMENTS
+   ============================================ */
+
+button,
+a[class*="inline-block"],
+.interactive {
+  transition: all var(--duration-normal) var(--ease-in-out);
+  cursor: pointer;
+}
+
+button:active,
+a[class*="inline-block"]:active,
+.interactive:active {
+  transform: translateY(1px);
+}
+
+button:disabled,
+.interactive:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ============================================
+   CARDS & HOVER EFFECTS
+   ============================================ */
+
+article,
+.card {
+  transition: 
+    transform var(--duration-normal) var(--ease-smooth),
+    box-shadow var(--duration-normal) var(--ease-smooth);
+}
+
+article:hover,
+.card:hover {
+  transform: translateY(-4px);
+}
+
+/* ============================================
+   LINKS
+   ============================================ */
+
+a {
+  color: inherit;  /* Inherit color from parent or component classes */
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-in-out);
+}
+
+a:hover {
+  color: var(--terra-700);
+}
+
+a[class*="hover:border"] {
+  transition: border-color var(--duration-normal) var(--ease-in-out);
+}
+
+/* Loading animation */
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* Slide in from left */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.5s ease-out;
+}
+
+/* Icon bounce on hover */
+@keyframes bounce-subtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.group:hover .animate-bounce-subtle {
+  animation: bounce-subtle 0.6s ease-in-out;
+}
+
+/* Toast Animations */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+

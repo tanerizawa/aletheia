@@ -1,0 +1,166 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// User model for authentication
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  password  String    // Hashed with bcrypt
+  name      String?
+  role      Role      @default(EDITOR)
+  sessions  Session[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+// Session model for authentication
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@index([userId])
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+  VIEWER
+}
+
+// Ebook model
+model Ebook {
+  id              String   @id @default(cuid())
+  title           String
+  slug            String   @unique
+  author          String
+  publisher       String?
+  publishYear     Int?
+  category        String
+  description     String   @db.Text
+  coverImage      String?
+  format          String[]
+  pages           Int?
+  language        String   @default("Indonesia")
+  isbn            String?
+  fileUrl         String?
+  fileSize        String?
+  availableOnline Boolean  @default(true)
+  requiresLogin   Boolean  @default(false)
+  downloadable    Boolean  @default(true)
+  tags            String[]
+  addedDate       DateTime @default(now())
+  rating          Float?
+  views           Int      @default(0)
+  downloads       Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// Article model
+model Article {
+  id            String        @id @default(cuid())
+  slug          String        @unique
+  title         String
+  excerpt       String
+  content       String        @db.Text
+  coverImage    String?
+  category      String
+  authorId      String
+  author        ArticleAuthor @relation(fields: [authorId], references: [id])
+  publishedDate DateTime      @default(now())
+  updatedDate   DateTime?
+  readTime      Int
+  tags          String[]
+  views         Int           @default(0)
+  likes         Int           @default(0)
+  featured      Boolean       @default(false)
+  published     Boolean       @default(false)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model ArticleAuthor {
+  id       String    @id @default(cuid())
+  name     String
+  role     String
+  avatar   String?
+  articles Article[]
+}
+
+// Event model
+model Event {
+  id                     String       @id @default(cuid())
+  slug                   String       @unique
+  title                  String
+  description            String       @db.Text
+  type                   String
+  status                 EventStatus
+  startDate              DateTime
+  endDate                DateTime?
+  time                   String
+  location               String
+  organizer              String
+  maxParticipants        Int?
+  registeredParticipants Int          @default(0)
+  registrationDeadline   DateTime?
+  contactPerson          String?
+  contactPhone           String?
+  coverImage             String?
+  photos                 EventPhoto[]
+  tags                   String[]
+  featured               Boolean      @default(false)
+  createdAt              DateTime     @default(now())
+  updatedAt              DateTime     @updatedAt
+}
+
+enum EventStatus {
+  UPCOMING
+  ONGOING
+  COMPLETED
+}
+
+model EventPhoto {
+  id           String   @id @default(cuid())
+  eventId      String
+  event        Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  url          String
+  caption      String
+  photographer String?
+  takenDate    DateTime
+  createdAt    DateTime @default(now())
+}
+
+// Newsletter Subscriber model
+model NewsletterSubscriber {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  subscribedAt DateTime @default(now())
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// Contact Message model
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String   @db.Text
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
