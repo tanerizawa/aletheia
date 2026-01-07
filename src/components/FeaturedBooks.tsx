@@ -1,6 +1,7 @@
-'use client';
+"use client";
 
 import { useState, useEffect } from 'react';
+import OptimizedImage from './OptimizedImage';
 
 interface Book {
   id: number;
@@ -111,10 +112,12 @@ export default function FeaturedBooks() {
                 >
                   <div className="flex items-end justify-center w-full">
                     {book.coverImage ? (
-                      <img
+                      <OptimizedImage
                         src={book.coverImage}
                         alt={book.title}
-                        className="w-40 h-60 object-cover rounded-md shadow-2xl hover:scale-105 transform transition-all -rotate-[1deg]"
+                        width={160}
+                        height={240}
+                        className="rounded-md shadow-2xl hover:scale-105 transform transition-all -rotate-[1deg]"
                       />
                     ) : (
                       <div className="w-40 h-60 bg-cream-200 rounded-md flex items-center justify-center text-sm text-gray-700 shadow-xl -rotate-[1deg] p-2 text-center">

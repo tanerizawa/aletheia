@@ -82,10 +82,12 @@ export default function StatsShowcase() {
 
   useEffect(() => {
     if (hasAnimated) return;
+    if (!stats || stats.length === 0) return; // wait for stats to load
 
     const duration = 2000; // 2 seconds
     const steps = 60;
     const interval = duration / steps;
+    const timers: NodeJS.Timeout[] = [];
 
     stats.forEach((stat, index) => {
       let current = 0;
@@ -108,10 +110,16 @@ export default function StatsShowcase() {
           });
         }
       }, interval);
+
+      timers.push(timer);
     });
 
     setHasAnimated(true);
-  }, [hasAnimated]);
+
+    return () => {
+      timers.forEach(t => clearInterval(t));
+    };
+  }, [hasAnimated, stats]);
 
   return (
     <section className="py-16 lg:py-20 bg-[#2C5F5D]" aria-labelledby="stats-heading">

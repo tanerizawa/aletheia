@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { BookIcon } from '@/components/icons';
+import OptimizedImage from './OptimizedImage';
 
 interface EbookCoverImageProps {
   src: string | null;
@@ -15,11 +16,12 @@ export default function EbookCoverImage({ src, alt, title }: EbookCoverImageProp
 
   useEffect(() => {
     if (!src) return;
-    
-    // Reset states when src changes
-    setImageError(false);
-    setImageLoaded(false);
-    
+    // Reset states when src changes — perform asynchronously to avoid
+    // synchronous setState inside effect which can cause cascading renders
+    const resetId = setTimeout(() => {
+      setImageError(false);
+      setImageLoaded(false);
+    }, 0);
     const img = new Image();
     img.src = src;
     
@@ -32,6 +34,7 @@ export default function EbookCoverImage({ src, alt, title }: EbookCoverImageProp
     };
     
     return () => {
+      clearTimeout(resetId);
       img.onload = null;
       img.onerror = null;
     };
@@ -56,13 +59,16 @@ export default function EbookCoverImage({ src, alt, title }: EbookCoverImageProp
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white/60"></div>
         </div>
       )}
-      <img
-        src={src}
-        alt={alt}
-        className={`w-full h-full object-cover transition-opacity duration-500 ${
-          imageLoaded ? 'opacity-100' : 'opacity-0'
-        }`}
-      />
+      <div className={`w-full h-full ${imageLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-500`}>
+        <OptimizedImage
+          src={src}
+          alt={alt}
+          width={400}
+          height={533}
+          className="w-full h-full object-cover"
+          priority={false}
+        />
+      </div>
     </div>
   );
 }

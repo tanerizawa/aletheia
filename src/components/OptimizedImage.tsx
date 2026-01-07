@@ -77,22 +77,27 @@ export default function OptimizedImage({
   // Check if external URL (needs unoptimized flag)
   const isExternal = src.startsWith('http://') || src.startsWith('https://');
 
-  const imageProps = {
-    src,
-    alt,
-    className: `${className} ${isLoading ? 'blur-sm' : 'blur-0'} transition-all duration-300`,
-    onLoad: () => setIsLoading(false),
-    onError: () => setHasError(true),
-    placeholder: (blurDataURL || defaultBlurDataURL) ? ('blur' as const) : undefined,
-    blurDataURL: blurDataURL || defaultBlurDataURL,
-    priority,
-    sizes: sizes || (fill ? '100vw' : undefined),
-    style: fill ? { objectFit } : undefined,
-    ...(isExternal && { unoptimized: true }),
-  };
+  const imageClass = `${className} ${isLoading ? 'blur-sm' : 'blur-0'} transition-all duration-300`;
+
+  // build class and flags above; props are applied explicitly below
 
   if (fill) {
-    return <Image {...imageProps} fill />;
+    return (
+      <Image
+        src={src}
+        alt={alt}
+        className={imageClass}
+        onLoad={() => setIsLoading(false)}
+        onError={() => setHasError(true)}
+        placeholder={(blurDataURL || defaultBlurDataURL) ? ('blur' as const) : undefined}
+        blurDataURL={blurDataURL || defaultBlurDataURL}
+        priority={priority}
+        sizes={sizes || '100vw'}
+        style={{ objectFit }}
+        {...(isExternal ? { unoptimized: true } : {})}
+        fill
+      />
+    );
   }
 
   if (!width || !height) {
@@ -100,5 +105,21 @@ export default function OptimizedImage({
     return errorPlaceholder;
   }
 
-  return <Image {...imageProps} width={width} height={height} />;
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      className={imageClass}
+      onLoad={() => setIsLoading(false)}
+      onError={() => setHasError(true)}
+      placeholder={(blurDataURL || defaultBlurDataURL) ? ('blur' as const) : undefined}
+      blurDataURL={blurDataURL || defaultBlurDataURL}
+      priority={priority}
+      sizes={sizes}
+      style={fill ? { objectFit } : undefined}
+      {...(isExternal ? { unoptimized: true } : {})}
+    />
+  );
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
@@ -57,10 +57,12 @@ export default function PdfReader({ url, title }: PdfReaderProps) {
 
   // Load highlights from localStorage
   useEffect(() => {
+    const timeouts: number[] = [];
     const saved = localStorage.getItem(`highlights-${title}`);
     if (saved) {
-      setHighlights(JSON.parse(saved));
+      timeouts.push(window.setTimeout(() => setHighlights(JSON.parse(saved)), 0));
     }
+    return () => timeouts.forEach(t => clearTimeout(t));
   }, [title]);
 
   // Save highlights to localStorage
@@ -70,7 +72,31 @@ export default function PdfReader({ url, title }: PdfReaderProps) {
     }
   }, [highlights, title]);
 
-  // Keyboard navigation
+  const goToPreviousPage = useCallback(() => {
+    if (pageNumber > 1) {
+      setIsPageTransitioning(true);
+      setTimeout(() => {
+        const newPage = pageNumber - 1;
+        setPageNumber(newPage);
+        localStorage.setItem(`${title}-page`, newPage.toString());
+        setIsPageTransitioning(false);
+      }, 150);
+    }
+  }, [pageNumber, title]);
+
+  const goToNextPage = useCallback(() => {
+    if (pageNumber < numPages) {
+      setIsPageTransitioning(true);
+      setTimeout(() => {
+        const newPage = pageNumber + 1;
+        setPageNumber(newPage);
+        localStorage.setItem(`${title}-page`, newPage.toString());
+        setIsPageTransitioning(false);
+      }, 150);
+    }
+  }, [pageNumber, numPages, title]);
+
+  // Keyboard navigation (depends on stable callbacks)
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       if (e.key === 'ArrowRight') {
@@ -82,7 +108,7 @@ export default function PdfReader({ url, title }: PdfReaderProps) {
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [pageNumber, numPages]);
+  }, [goToNextPage, goToPreviousPage]);
 
   // Handle text selection
   useEffect(() => {
@@ -151,29 +177,7 @@ export default function PdfReader({ url, title }: PdfReaderProps) {
     setError(error.message || 'Failed to load PDF');
   }
 
-  const goToPreviousPage = () => {
-    if (pageNumber > 1) {
-      setIsPageTransitioning(true);
-      setTimeout(() => {
-        const newPage = pageNumber - 1;
-        setPageNumber(newPage);
-        localStorage.setItem(`${title}-page`, newPage.toString());
-        setIsPageTransitioning(false);
-      }, 150);
-    }
-  };
-
-  const goToNextPage = () => {
-    if (pageNumber < numPages) {
-      setIsPageTransitioning(true);
-      setTimeout(() => {
-        const newPage = pageNumber + 1;
-        setPageNumber(newPage);
-        localStorage.setItem(`${title}-page`, newPage.toString());
-        setIsPageTransitioning(false);
-      }, 150);
-    }
-  };
+  
 
   const zoomIn = () => {
     setScale(Math.min(scale + 0.2, 2.5));
@@ -639,7 +643,7 @@ export default function PdfReader({ url, title }: PdfReaderProps) {
                       </div>
                       
                       <p className="text-sm text-gray-700 mb-3 leading-relaxed italic border-l-2 pl-3" style={{ borderColor: h.color }}>
-                        "{h.text}"
+                        &ldquo;{h.text}&rdquo;
                       </p>
                       
                       {h.comment ? (

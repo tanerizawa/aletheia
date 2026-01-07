@@ -67,7 +67,7 @@ export default function NewsletterForm() {
       setTouched(false);
       setError('');
       setTimeout(() => setStatus('idle'), 3000);
-    } catch (err) {
+    } catch {
       setStatus('error');
       setError('Gagal menghubungi server');
       setTimeout(() => {

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { ReactReader, ReactReaderStyle } from 'react-reader';
-import type { Rendition, Contents } from 'epubjs';
+import type { Rendition } from 'epubjs';
 
 interface EpubReaderProps {
   url: string;
@@ -27,19 +27,27 @@ export default function EpubReader({ url, title }: EpubReaderProps) {
   const [theme, setTheme] = useState<ReaderTheme>(themes[0]);
   const [showControls, setShowControls] = useState(true);
   const renditionRef = useRef<Rendition | undefined>(undefined);
+  const [isRenditionReady, setIsRenditionReady] = useState(false);
 
   // Load saved preferences from localStorage
   useEffect(() => {
+    const timeouts: number[] = [];
     const savedLocation = localStorage.getItem(`${title}-location`);
     const savedFontSize = localStorage.getItem('epub-fontSize');
     const savedTheme = localStorage.getItem('epub-theme');
 
-    if (savedLocation) setLocation(savedLocation);
-    if (savedFontSize) setFontSize(parseInt(savedFontSize));
+    if (savedLocation) {
+      timeouts.push(window.setTimeout(() => setLocation(savedLocation), 0));
+    }
+    if (savedFontSize) {
+      timeouts.push(window.setTimeout(() => setFontSize(parseInt(savedFontSize)), 0));
+    }
     if (savedTheme) {
       const themeObj = themes.find((t) => t.name === savedTheme);
-      if (themeObj) setTheme(themeObj);
+      if (themeObj) timeouts.push(window.setTimeout(() => setTheme(themeObj), 0));
     }
+
+    return () => timeouts.forEach((t) => clearTimeout(t));
   }, [title]);
 
   // Save location on change
@@ -51,6 +59,7 @@ export default function EpubReader({ url, title }: EpubReaderProps) {
   // Apply theme and font size when rendition is ready
   const onRenditionReady = (rendition: Rendition) => {
     renditionRef.current = rendition;
+    setIsRenditionReady(true);
     
     // Apply font size
     rendition.themes.fontSize(`${fontSize}px`);
@@ -193,7 +202,7 @@ export default function EpubReader({ url, title }: EpubReaderProps) {
       </div>
 
       {/* Loading State */}
-      {!renditionRef.current && (
+      {!isRenditionReady && (
         <div className="absolute inset-0 flex items-center justify-center bg-cream-soft-white/80 z-40">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-700 mx-auto mb-4"></div>

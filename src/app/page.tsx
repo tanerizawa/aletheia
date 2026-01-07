@@ -3,7 +3,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { organization, library, units } from "@/data/organization";
-import { mainNavigation } from "@/data/navigation";
 import StatsShowcase from "@/components/StatsShowcase";
 import { PlantIcon, BuildingIcon, BookIcon, LocationIcon } from "@/components/icons";
 import NavIcon from "@/components/NavIcon";
