@@ -61,7 +61,7 @@ export default function AcademosPage() {
                 dimulai dengan menyediakan ekosistem yang mendukung pembelajaran sepanjang hayat.
               </p>
               <p>
-                Nama <em className="text-[#B05E3F] font-semibold">"Academos"</em> terinspirasi dari Akademia kuno Plato—tempat para 
+                Nama <em className="text-[#B05E3F] font-semibold">&quot;Academos&quot;</em> terinspirasi dari Akademia kuno Plato—tempat para 
                 pemikir berkumpul untuk berdialog, belajar, dan mengembangkan ide. Kami percaya bahwa demokratisasi 
                 pengetahuan adalah fondasi masyarakat yang maju dan bermartabat.
               </p>

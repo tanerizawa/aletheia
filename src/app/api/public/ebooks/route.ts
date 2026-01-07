@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     const skip = (page - 1) * limit;
 
     // Build where clause
-    const where: any = {};
+    const where: Record<string, unknown> = {};
 
     if (category) {
       where.category = category;
@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Determine order by
-    let orderBy: any = { addedDate: 'desc' }; // default: recent
+    let orderBy: Record<string, unknown> = { addedDate: 'desc' }; // default: recent
     if (sort === 'popular') {
       orderBy = { views: 'desc' };
     } else if (sort === 'rating') {
@@ -71,7 +71,7 @@ export async function GET(request: NextRequest) {
         totalPages: Math.ceil(total / limit),
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Public ebooks fetch error:', error);
     return NextResponse.json(
       { error: 'Failed to fetch ebooks', ebooks: [], pagination: { page: 1, limit: 12, total: 0, totalPages: 0 } },

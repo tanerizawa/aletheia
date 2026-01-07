@@ -1,0 +1,32 @@
+[
+  {
+    "type": "info",
+    "text": "Dev helper: analytics endpoints are blocked",
+    "location": {
+      "url": "http://localhost:3000/",
+      "lineNumber": 0,
+      "columnNumber": 4713
+    },
+    "timestamp": 1767782874722
+  },
+  {
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold",
+    "location": {
+      "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js",
+      "lineNumber": 2297,
+      "columnNumber": 27
+    },
+    "timestamp": 1767782874917
+  },
+  {
+    "type": "log",
+    "text": "[HMR] connected",
+    "location": {
+      "url": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js",
+      "lineNumber": 2297,
+      "columnNumber": 27
+    },
+    "timestamp": 1767782875179
+  }
+]

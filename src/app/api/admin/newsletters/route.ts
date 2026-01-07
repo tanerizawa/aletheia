@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search');
     const skip = (page - 1) * limit;
 
-    const where: any = {};
+    const where: Record<string, unknown> = {};
     if (search) {
       where.email = { contains: search, mode: 'insensitive' };
     }
@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
         totalPages: Math.ceil(total / limit),
       },
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Failed to fetch newsletters:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
@@ -84,7 +84,7 @@ export async function DELETE(request: NextRequest) {
     });
 
     return NextResponse.json({ message: 'Subscriber deleted successfully' });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Failed to delete subscriber:', error);
     return NextResponse.json({ error: 'Failed to delete subscriber' }, { status: 500 });
   }

@@ -62,8 +62,9 @@ export default function NewEventPage() {
       }
 
       router.push('/admin/events?success=created');
-    } catch (err: any) {
-      setError(err.message || 'Failed to create event');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setError(msg || 'Failed to create event');
     } finally {
       setLoading(false);
     }

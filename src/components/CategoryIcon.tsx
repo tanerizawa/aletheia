@@ -12,7 +12,7 @@ import {
 } from './icons';
 
 interface CategoryIconProps {
-  category: string;
+  category?: string;
   className?: string;
 }
 
@@ -36,5 +36,5 @@ export default function CategoryIcon({ category, className = "w-6 h-6" }: Catego
     'Tutorial': <BookIcon className={className} />,
   };
 
-  return iconMap[category] || <BookIcon className={className} />;
+  return iconMap[category ?? ''] || <BookIcon className={className} />;
 }

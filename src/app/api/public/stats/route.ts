@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
 // GET /api/public/stats - Get site statistics
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const [
       totalArticles,
@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
         completed: completedEvents,
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Stats fetch error:', error);
     return NextResponse.json(
       { error: 'Failed to fetch stats' },

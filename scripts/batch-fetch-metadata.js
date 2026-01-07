@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-require-imports */
 // Load .env and validate DATABASE_URL, provide clear errors if missing
 const dotenv = require('dotenv');
 dotenv.config({ path: process.env.DOTENV_PATH || '.env' });

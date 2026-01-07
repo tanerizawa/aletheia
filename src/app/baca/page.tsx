@@ -1,7 +1,22 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ReadIcon, BookIcon, FireIcon, SearchIcon } from "@/components/icons";
+import { ReadIcon, BookIcon, FireIcon } from "@/components/icons";
+import OptimizedImage from '@/components/OptimizedImage';
 import CategoryIcon from "@/components/CategoryIcon";
+
+interface Ebook {
+  id?: string;
+  slug: string;
+  title?: string;
+  author?: string;
+  description?: string;
+  category?: string;
+  coverImage?: string;
+  rating?: number;
+  views?: number;
+  downloads?: number;
+  format?: string[];
+}
 
 export const metadata: Metadata = {
   title: "Perpustakaan Digital - Baca E-Book Online",
@@ -9,13 +24,14 @@ export const metadata: Metadata = {
   keywords: ["ebook", "perpustakaan digital", "baca online", "buku digital", "pdf", "epub"],
 };
 
-async function getEbooks() {
+async function getEbooks(): Promise<{ ebooks: Ebook[] }> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
                     (process.env.PORT ? `http://localhost:${process.env.PORT}` : 'http://localhost:3001');
     const res = await fetch(`${baseUrl}/api/public/ebooks?limit=100`, { next: { revalidate: 60 } });
     if (!res.ok) return { ebooks: [] };
-    return await res.json();
+    const data = await res.json();
+    return { ebooks: (data.ebooks || []) as Ebook[] };
   } catch (error) {
     console.error('Failed to fetch ebooks:', error);
     return { ebooks: [] };
@@ -25,10 +41,10 @@ async function getEbooks() {
 export default async function BacaPage() {
   const { ebooks } = await getEbooks();
   
-  const featuredEbooks = ebooks.filter((e: any) => e.rating && e.rating >= 4.5).slice(0, 3);
+  const featuredEbooks = ebooks.filter((e: Ebook) => e.rating && e.rating >= 4.5).slice(0, 3);
   const recentEbooks = ebooks.slice(0, 4);
-  const popularEbooks = [...ebooks].sort((a: any, b: any) => b.views - a.views).slice(0, 5);
-  const ebookCategories: string[] = Array.from(new Set(ebooks.map((e: any) => e.category)));
+  const popularEbooks = [...ebooks].sort((a: Ebook, b: Ebook) => (b.views ?? 0) - (a.views ?? 0)).slice(0, 5);
+  const ebookCategories: string[] = Array.from(new Set(ebooks.map((e: Ebook) => e.category || 'Lainnya')));
 
   return (
     <main className="flex-grow bg-cream-soft-white">
@@ -103,7 +119,7 @@ export default async function BacaPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {featuredEbooks.map((ebook: any) => (
+            {featuredEbooks.map((ebook: Ebook) => (
               <Link
                 key={ebook.id}
                 href={`/baca/${ebook.slug}`}
@@ -112,9 +128,11 @@ export default async function BacaPage() {
                 {/* Cover Image */}
                 <div className="bg-gradient-to-br from-[#2C5F5D] to-[#B05E3F] h-64 mb-4 flex items-center justify-center group-hover:scale-105 transition-transform duration-300 overflow-hidden">
                   {ebook.coverImage ? (
-                    <img 
-                      src={ebook.coverImage} 
+                    <OptimizedImage
+                      src={ebook.coverImage}
                       alt={ebook.title}
+                      width={192}
+                      height={256}
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -153,7 +171,7 @@ export default async function BacaPage() {
                 
                 <div className="mt-4 pt-4 border-t border-cream-beige">
                   <div className="flex flex-wrap gap-2">
-                    {ebook.format.map((format: string) => (
+                    {(ebook.format || []).map((format: string) => (
                       <span key={format} className="text-xs px-2 py-1 bg-cream-soft-white text-gray-500 rounded">
                         {format}
                       </span>
@@ -203,7 +221,7 @@ export default async function BacaPage() {
                 Baru Ditambahkan
               </h2>
               <div className="space-y-4">
-                {recentEbooks.map((ebook: any) => (
+                {recentEbooks.map((ebook: Ebook) => (
                   <Link
                     key={ebook.id}
                     href={`/baca/${ebook.slug}`}
@@ -211,9 +229,11 @@ export default async function BacaPage() {
                   >
                     <div className="flex-shrink-0 w-20 h-28 bg-gradient-to-br from-[#2C5F5D] to-[#B05E3F] flex items-center justify-center overflow-hidden">
                       {ebook.coverImage ? (
-                        <img 
-                          src={ebook.coverImage} 
+                        <OptimizedImage
+                          src={ebook.coverImage}
                           alt={ebook.title}
+                          width={80}
+                          height={112}
                           className="w-full h-full object-cover"
                         />
                       ) : (
@@ -245,7 +265,7 @@ export default async function BacaPage() {
                 Paling Populer
               </h2>
               <div className="space-y-4">
-                {popularEbooks.map((ebook: any, index: number) => (
+                {popularEbooks.map((ebook: Ebook, index: number) => (
                   <Link
                     key={ebook.id}
                     href={`/baca/${ebook.slug}`}

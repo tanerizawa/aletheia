@@ -3,11 +3,27 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import OptimizedImage from '@/components/OptimizedImage';
+import { formatDate } from '@/lib/dateUtils';
+
+interface AdminArticle {
+  id: string;
+  title?: string;
+  excerpt?: string;
+  coverImage?: string | null;
+  author?: { name?: string } | null;
+  category?: string | null;
+  published?: boolean;
+  views?: number;
+  createdAt?: string | Date;
+  slug?: string;
+  likes?: number;
+}
 
 function ArticlesList() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [articles, setArticles] = useState<any[]>([]);
+  const [articles, setArticles] = useState<AdminArticle[]>([]);
   const [loading, setLoading] = useState(true);
   const [showSuccess, setShowSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
@@ -181,9 +197,11 @@ function ArticlesList() {
                       <td className="px-6 py-4">
                         <div className="flex items-start gap-3">
                           {article.coverImage && (
-                            <img
+                            <OptimizedImage
                               src={article.coverImage}
                               alt={article.title}
+                              width={64}
+                              height={64}
                               className="w-16 h-16 object-cover rounded"
                             />
                           )}
@@ -208,7 +226,7 @@ function ArticlesList() {
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-700">{article.views?.toLocaleString('id-ID') || 0}</td>
                       <td className="px-6 py-4 text-sm text-gray-700">
-                        {new Date(article.createdAt).toLocaleDateString('id-ID')}
+                        {formatDate(article.createdAt)}
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
@@ -227,7 +245,7 @@ function ArticlesList() {
                             Edit
                           </Link>
                           <button
-                            onClick={() => handleDelete(article.id, article.title)}
+                            onClick={() => handleDelete(article.id, article.title || '')}
                             className="text-red-600 hover:text-red-800 text-sm font-medium"
                           >
                             Delete

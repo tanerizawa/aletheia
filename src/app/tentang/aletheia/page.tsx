@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { library } from "@/data/organization";
-import { BookIcon, ReadIcon, TechnologyIcon, AcademicIcon, LibraryIcon, HeartIcon, UsersIcon, LightbulbIcon, CalendarIcon, DocumentIcon, ShieldIcon } from "@/components/icons";
+import { BookIcon, ReadIcon, TechnologyIcon, LibraryIcon, HeartIcon, UsersIcon, LightbulbIcon, CalendarIcon, DocumentIcon, ShieldIcon } from "@/components/icons";
 
 export const metadata: Metadata = {
   title: "Rumah Aletheia - Perpustakaan Komunitas",
@@ -50,8 +50,8 @@ export default function AletheiaPage() {
                 tempat berbagi cerita, dan komunitas yang saling belajar.
               </p>
               <p>
-                Nama <em className="text-[#B05E3F] font-semibold">"Aletheia"</em> (Ἀλήθεια) berasal dari bahasa Yunani klasik yang berarti <strong>"kebenaran yang terungkap"</strong> 
-                atau <strong>"keterbukaan"</strong>. Dalam filosofi Yunani kuno, Aletheia adalah lawan dari kebodohan dan kepalsuan — 
+                Nama <em className="text-[#B05E3F] font-semibold">&quot;Aletheia&quot;</em> (Ἀλήθεια) berasal dari bahasa Yunani klasik yang berarti <strong>&quot;kebenaran yang terungkap&quot;</strong> 
+                atau <strong>&quot;keterbukaan&quot;</strong>. Dalam filosofi Yunani kuno, Aletheia adalah lawan dari kebodohan dan kepalsuan — 
                 ia adalah cahaya yang menerangi jalan menuju pemahaman sejati.
               </p>
             </div>

@@ -2,6 +2,19 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import CategoryIcon from "@/components/CategoryIcon";
 import { ClockIcon, SearchIcon, HeartFilledIcon, DocumentIcon } from "@/components/icons";
+import { formatDate } from '@/lib/dateUtils';
+
+interface Article {
+  slug: string;
+  category?: string;
+  publishedDate?: string;
+  title?: string;
+  excerpt?: string;
+  readTime?: number;
+  views?: number;
+  likes?: number;
+  author?: { name?: string };
+}
 
 export const metadata: Metadata = {
   title: "Cari Artikel - Blog Rumah Aletheia",
@@ -12,13 +25,14 @@ interface SearchPageProps {
   searchParams: { q?: string };
 }
 
-async function searchArticles(query: string) {
+async function searchArticles(query: string): Promise<{ articles: Article[] }> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
                     (process.env.PORT ? `http://localhost:${process.env.PORT}` : 'http://localhost:3001');
     const res = await fetch(`${baseUrl}/api/public/articles?search=${encodeURIComponent(query)}&limit=100`, { next: { revalidate: 60 } });
     if (!res.ok) return { articles: [] };
-    return await res.json();
+    const data = await res.json();
+    return { articles: (data.articles || []) as Article[] };
   } catch (error) {
     console.error('Failed to search articles:', error);
     return { articles: [] };
@@ -32,8 +46,8 @@ async function getCategories(): Promise<string[]> {
     const res = await fetch(`${baseUrl}/api/public/articles?limit=100`, { next: { revalidate: 60 } });
     if (!res.ok) return [];
     const { articles } = await res.json();
-    return Array.from(new Set(articles.map((a: any) => a.category))) as string[];
-  } catch (error) {
+    return Array.from(new Set((articles || []).map((a: Article) => a.category || 'Lainnya'))) as string[];
+  } catch {
     return [];
   }
 }
@@ -93,7 +107,7 @@ export default async function SearchArticlesPage({ searchParams }: SearchPagePro
           {/* Results List */}
           {results.length > 0 ? (
             <div className="space-y-6">
-              {results.map((article: any) => (
+              {results.map((article: Article) => (
                 <Link
                   key={article.slug}
                   href={`/artikel/${article.slug}`}
@@ -110,11 +124,7 @@ export default async function SearchArticlesPage({ searchParams }: SearchPagePro
                           {article.category}
                         </span>
                         <span className="text-xs text-[#7A7A7A]">
-                          {new Date(article.publishedDate).toLocaleDateString('id-ID', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                          })}
+                          {formatDate(article.publishedDate, 'id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}
                         </span>
                       </div>
                       
@@ -126,11 +136,11 @@ export default async function SearchArticlesPage({ searchParams }: SearchPagePro
                         {article.excerpt}
                       </p>
                       
-                      <div className="flex items-center gap-4 text-xs text-[#7A7A7A]">
+                        <div className="flex items-center gap-4 text-xs text-[#7A7A7A]">
                         <span className="flex items-center gap-1"><ClockIcon className="w-4 h-4" /> {article.readTime}</span>
-                        <span>{article.views} views</span>
-                        <span className="flex items-center gap-1"><HeartFilledIcon className="w-4 h-4 text-red-500" /> {article.likes}</span>
-                        <span className="flex items-center gap-1"><DocumentIcon className="w-4 h-4" /> {article.author.name}</span>
+                        <span>{(article.views ?? 0)} views</span>
+                        <span className="flex items-center gap-1"><HeartFilledIcon className="w-4 h-4 text-red-500" /> {(article.likes ?? 0)}</span>
+                        <span className="flex items-center gap-1"><DocumentIcon className="w-4 h-4" /> {article.author?.name || ''}</span>
                       </div>
                     </div>
                   </div>
@@ -144,7 +154,7 @@ export default async function SearchArticlesPage({ searchParams }: SearchPagePro
                 Tidak Ditemukan
               </h3>
               <p className="text-[#7A7A7A] mb-8">
-                Maaf, tidak ada artikel yang cocok dengan pencarian "{query}"
+                Maaf, tidak ada artikel yang cocok dengan pencarian &quot;{query}&quot;
               </p>
               <Link
                 href="/artikel"

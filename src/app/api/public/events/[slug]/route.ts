@@ -27,7 +27,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
     }
 
     return NextResponse.json({ event });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Public event fetch error:', error);
     return NextResponse.json(
       { error: 'Failed to fetch event', event: null },

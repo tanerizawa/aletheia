@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 interface OptimizedImageProps {
   src: string;
-  alt: string;
+  alt?: string;
   width?: number;
   height?: number;
   className?: string;
@@ -85,7 +85,7 @@ export default function OptimizedImage({
     return (
       <Image
         src={src}
-        alt={alt}
+        alt={alt || ''}
         className={imageClass}
         onLoad={() => setIsLoading(false)}
         onError={() => setHasError(true)}
@@ -108,7 +108,7 @@ export default function OptimizedImage({
   return (
     <Image
       src={src}
-      alt={alt}
+      alt={alt || ''}
       width={width}
       height={height}
       className={imageClass}

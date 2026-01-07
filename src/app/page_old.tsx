@@ -99,7 +99,7 @@ export default function Home() {
             </svg>
           </div>
           <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-8 text-[#1F4E4C] italic leading-tight">
-            "Kunjungi Rumah Aletheia"
+            &quot;Kunjungi Rumah Aletheia&quot;
           </h2>
           <p className="text-xl text-[#5A5A5A] mb-10 leading-relaxed">
             Temukan pengetahuan dan pengalaman baru di perpustakaan yang dirancang untuk kenyamanan Anda

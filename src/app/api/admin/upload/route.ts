@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(bytes);
 
     // Upload to Cloudinary
-    const result = await new Promise<any>((resolve, reject) => {
+    const result = await new Promise<unknown>((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
           folder: folder,
@@ -48,19 +48,29 @@ export async function POST(request: NextRequest) {
       uploadStream.end(buffer);
     });
 
+    const uploadResult = result as {
+      secure_url?: string;
+      public_id?: string;
+      width?: number;
+      height?: number;
+      format?: string;
+      bytes?: number;
+    };
+
     return NextResponse.json({
       success: true,
-      url: result.secure_url,
-      publicId: result.public_id,
-      width: result.width,
-      height: result.height,
-      format: result.format,
-      size: result.bytes,
+      url: uploadResult.secure_url,
+      publicId: uploadResult.public_id,
+      width: uploadResult.width,
+      height: uploadResult.height,
+      format: uploadResult.format,
+      size: uploadResult.bytes,
     });
-  } catch (error: any) {
+    } catch (error: unknown) {
     console.error('Upload error:', error);
+    const message = error instanceof Error ? error.message : 'Upload failed';
     return NextResponse.json(
-      { error: error.message || 'Upload failed' },
+      { error: message },
       { status: 500 }
     );
   }
@@ -93,10 +103,11 @@ export async function DELETE(request: NextRequest) {
       success: true,
       result: result.result, // 'ok' if deleted, 'not found' if doesn't exist
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Delete error:', error);
+    const message = error instanceof Error ? error.message : 'Delete failed';
     return NextResponse.json(
-      { error: error.message || 'Delete failed' },
+      { error: message },
       { status: 500 }
     );
   }

@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import StatsShowcase from "@/components/StatsShowcase";
 import { ShieldIcon, HeartIcon, LightbulbIcon, HandshakeIcon } from "@/components/icons";
-import { organization, library } from "@/data/organization";
+import { organization } from "@/data/organization";
 
 export const metadata: Metadata = {
   title: "Tentang Kami - Rumah Aletheia",
@@ -41,7 +41,7 @@ export default function TentangPage() {
               dan menciptakan ruang belajar yang nyaman bagi masyarakat Karawang dan sekitarnya.
             </p>
             <p className="text-lg text-gray-600 leading-relaxed">
-              Nama "Aletheia" berasal dari bahasa Yunani yang berarti "kebenaran" atau "keterbukaan", 
+              Nama &quot;Aletheia&quot; berasal dari bahasa Yunani yang berarti &quot;kebenaran&quot; atau &quot;keterbukaan&quot;, 
               mencerminkan komitmen kami untuk menyediakan sumber informasi yang akurat, terpercaya, 
               dan terbuka untuk semua kalangan.
             </p>

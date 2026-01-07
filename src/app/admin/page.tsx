@@ -1,10 +1,9 @@
 import Link from 'next/link';
 import { requireAuth } from '@/lib/auth';
-import { redirect } from 'next/navigation';
 
 export default async function AdminDashboard() {
   // Require authentication - will redirect to /admin/login if not authenticated
-  const user = await requireAuth();
+  await requireAuth();
   
   return (
     <div className="min-h-screen bg-[#F0EBE3]">
@@ -262,7 +261,7 @@ export default async function AdminDashboard() {
               </div>
               <div className="flex-1">
                 <p className="text-xs font-semibold text-[#2A2A2A]">Added new e-book</p>
-                <p className="text-xs text-[#8A8A8A] mt-0.5">"Thinking, Fast and Slow" - Yesterday</p>
+                <p className="text-xs text-[#8A8A8A] mt-0.5">&quot;Thinking, Fast and Slow&quot; - Yesterday</p>
               </div>
               <span className="text-xs font-medium text-[#2C5F5D] bg-[#EAF4F3] px-2 py-0.5 rounded">Created</span>
             </div>

@@ -1,7 +1,28 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import OptimizedImage from '@/components/OptimizedImage';
 import { BookIcon } from '@/components/icons';
 import EbookCoverImage from '@/components/EbookCoverImage';
+
+interface Ebook {
+  id?: string;
+  slug: string;
+  title?: string;
+  author?: string;
+  description?: string;
+  category?: string;
+  coverImage?: string;
+  rating?: number;
+  views?: number;
+  downloads?: number;
+  format?: string[];
+  publisher?: string;
+  publishYear?: number;
+  pages?: number;
+  language?: string;
+  fileSize?: string;
+  tags?: string[];
+}
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -23,7 +44,7 @@ async function getEbook(slug: string) {
       return null;
     }
     const data = await res.json();
-    return data.ebook;
+    return data.ebook as Ebook | null;
   } catch (error) {
     console.error('Failed to fetch ebook:', error);
     return null;
@@ -42,7 +63,7 @@ async function getRelatedEbooks(category: string, currentId: string) {
     });
     if (!res.ok) return [];
     const data = await res.json();
-    return data.ebooks.filter((e: any) => e.id !== currentId).slice(0, 4);
+    return (data.ebooks || []).filter((e: Ebook) => e.id !== currentId).slice(0, 4) as Ebook[];
   } catch (error) {
     console.error('Failed to fetch related ebooks:', error);
     return [];
@@ -91,7 +112,7 @@ export default async function BacaDetailPage({ params }: PageProps) {
     );
   }
 
-  const relatedEbooks = await getRelatedEbooks(ebook.category, ebook.id);
+  const relatedEbooks = await getRelatedEbooks(ebook.category || '', ebook.id || '');
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#F5F1E8] to-[#E8DED0] pt-24 pb-20">
@@ -139,11 +160,11 @@ export default async function BacaDetailPage({ params }: PageProps) {
                 <div className="mt-6 bg-white/10 backdrop-blur-sm rounded-xl p-4 text-cream-soft-white">
                   <div className="grid grid-cols-2 gap-4 text-center">
                     <div>
-                      <div className="text-2xl font-bold">{ebook.views.toLocaleString('id-ID')}</div>
+                        <div className="text-2xl font-bold">{(ebook.views ?? 0).toLocaleString('id-ID')}</div>
                       <div className="text-xs text-cream-warm/70">Views</div>
                     </div>
                     <div>
-                      <div className="text-2xl font-bold">{ebook.downloads.toLocaleString('id-ID')}</div>
+                      <div className="text-2xl font-bold">{(ebook.downloads ?? 0).toLocaleString('id-ID')}</div>
                       <div className="text-xs text-cream-warm/70">Downloads</div>
                     </div>
                   </div>
@@ -212,7 +233,7 @@ export default async function BacaDetailPage({ params }: PageProps) {
                 )}
                 <div>
                   <div className="text-sm text-cream-warm/60 mb-1">Format</div>
-                  <div className="text-cream-soft-white font-semibold">{ebook.format.join(', ')}</div>
+                  <div className="text-cream-soft-white font-semibold">{(ebook.format || []).join(', ')}</div>
                 </div>
                 <div>
                   <div className="text-sm text-cream-warm/60 mb-1">Bahasa</div>
@@ -261,7 +282,7 @@ export default async function BacaDetailPage({ params }: PageProps) {
           <div>
             <h2 className="text-3xl font-serif font-bold text-gray-900 mb-8">Buku Terkait</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {relatedEbooks.map((related: any) => (
+              {relatedEbooks.map((related: Ebook) => (
                 <Link
                   key={related.id}
                   href={`/baca/${related.slug}`}
@@ -269,9 +290,11 @@ export default async function BacaDetailPage({ params }: PageProps) {
                 >
                   <div className="aspect-[3/4] bg-gradient-to-br from-[#2C5F5D] to-[#1F4E4C] rounded-xl shadow-lg overflow-hidden hover:shadow-2xl hover:scale-105 transition-all mb-4">
                     {related.coverImage ? (
-                      <img 
-                        src={related.coverImage} 
+                      <OptimizedImage
+                        src={related.coverImage}
                         alt={related.title}
+                        width={180}
+                        height={240}
                         className="w-full h-full object-cover"
                       />
                     ) : (

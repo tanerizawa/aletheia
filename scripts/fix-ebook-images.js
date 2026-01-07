@@ -7,7 +7,7 @@
  * Usage: DATABASE_URL="..." node scripts/fix-ebook-images.js
  */
 
-const { PrismaClient } = require('@prisma/client');
+ 
 const prisma = new PrismaClient();
 
 async function fixEbookImages() {

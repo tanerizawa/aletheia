@@ -41,6 +41,7 @@ export async function POST(request: NextRequest) {
     const ebooks: ScrapedEbook[] = [];
 
     // Parse berdasarkan struktur HTML sebenarnya: col-md-4 > card > card-body
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     $('.col-md-4 .card').each((_index: number, element: any) => {
       const $el = $(element);
       const $body = $el.find('.card-body');
@@ -97,7 +98,7 @@ export async function POST(request: NextRequest) {
       url,
     });
 
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Scraping error:', error);
     return NextResponse.json(
       { 

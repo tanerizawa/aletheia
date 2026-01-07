@@ -1,12 +1,15 @@
 #!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-require-imports */
+const fs = require('fs');
+const path = require('path');
+const { PrismaClient } = require('@prisma/client');
 
 const https = require('https');
 const http = require('http');
-const fs = require('fs');
-const path = require('path');
 const { exec } = require('child_process');
 const { promisify } = require('util');
 const execAsync = promisify(exec);
+const prisma = new PrismaClient();
 
 // Ebook data dari halaman
 const ebooks = [

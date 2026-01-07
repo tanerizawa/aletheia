@@ -8,7 +8,7 @@ interface PrefetchLinkProps {
   children: React.ReactNode;
   className?: string;
   prefetchOn?: 'hover' | 'visible' | 'immediate';
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**

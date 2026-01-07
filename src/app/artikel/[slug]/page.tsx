@@ -1,6 +1,23 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { DocumentIcon, UsersIcon } from '@/components/icons';
+import { formatDate } from '@/lib/dateUtils';
+
+interface Article {
+  id?: string;
+  slug: string;
+  title?: string;
+  excerpt?: string;
+  content?: string;
+  category?: string;
+  publishedDate?: string;
+  readTime?: number;
+  views?: number;
+  likes?: number;
+  coverImage?: string;
+  author?: { name?: string; role?: string };
+  tags?: string[];
+}
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -15,7 +32,7 @@ async function getArticle(slug: string) {
     });
     if (!res.ok) return null;
     const data = await res.json();
-    return data.article;
+    return data.article as Article | null;
   } catch (error) {
     console.error('Failed to fetch article:', error);
     return null;
@@ -31,7 +48,7 @@ async function getRelatedArticles(category: string, currentSlug: string) {
     });
     if (!res.ok) return [];
     const data = await res.json();
-    return data.articles.filter((a: any) => a.slug !== currentSlug).slice(0, 3);
+    return (data.articles || []).filter((a: Article) => a.slug !== currentSlug).slice(0, 3) as Article[];
   } catch (error) {
     console.error('Failed to fetch related articles:', error);
     return [];
@@ -54,7 +71,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-function MarkdownContent({ content }: { content: string }) {
+function MarkdownContent({ content }: { content?: string }) {
   // Simple markdown renderer (paragraphs, headings, lists, bold, italic, links)
   const renderMarkdown = (md: string) => {
     const lines = md.split('\n');
@@ -134,7 +151,7 @@ function MarkdownContent({ content }: { content: string }) {
     return elements;
   };
 
-  return <div className="prose max-w-none">{renderMarkdown(content)}</div>;
+  return <div className="prose max-w-none">{renderMarkdown(content || '')}</div>;
 }
 
 export default async function ArtikelDetailPage({ params }: PageProps) {
@@ -163,7 +180,7 @@ export default async function ArtikelDetailPage({ params }: PageProps) {
     );
   }
 
-  const relatedArticles = await getRelatedArticles(article.category, article.slug);
+  const relatedArticles = await getRelatedArticles(article.category ?? '', article.slug);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#F5F1E8] to-[#E8DED0] pt-24 pb-20">
@@ -203,7 +220,7 @@ export default async function ArtikelDetailPage({ params }: PageProps) {
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              <span>{article.publishedDate}</span>
+              <span>{formatDate(article.publishedDate)}</span>
             </div>
             <div className="flex items-center gap-2">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -216,7 +233,7 @@ export default async function ArtikelDetailPage({ params }: PageProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
               </svg>
-              <span>{article.views.toLocaleString('id-ID')} views</span>
+              <span>{(article.views ?? 0).toLocaleString('id-ID')} views</span>
             </div>
           </div>
         </div>
@@ -225,9 +242,9 @@ export default async function ArtikelDetailPage({ params }: PageProps) {
       {/* Content Section */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Cover Image */}
-        <div className="mb-12 rounded-xl overflow-hidden shadow-lg">
+          <div className="mb-12 rounded-xl overflow-hidden shadow-lg">
           <div className="aspect-video bg-gradient-to-br from-[#2C5F5D] to-[#1F4E4C] flex items-center justify-center">
-            <div className="text-9xl">{article.coverImage}</div>
+                <div className="text-9xl">{article.coverImage}</div>
           </div>
         </div>
 
@@ -263,9 +280,9 @@ export default async function ArtikelDetailPage({ params }: PageProps) {
                 <UsersIcon className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">{article.author.name}</h3>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">{article.author?.name || ''}</h3>
                 <p className="text-gray-600">
-                  {article.author.role} - Kontributor aktif di Rumah Aletheia, passionate tentang {article.category.toLowerCase()} dan pengembangan masyarakat.
+                  {article.author?.role || 'Kontributor'} - Kontributor aktif di Rumah Aletheia, passionate tentang {article.category?.toLowerCase() || ''} dan pengembangan masyarakat.
                 </p>
               </div>
             </div>
@@ -277,7 +294,7 @@ export default async function ArtikelDetailPage({ params }: PageProps) {
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" />
               </svg>
-              <span>{article.likes.toLocaleString('id-ID')}</span>
+              <span>{(article.likes ?? 0).toLocaleString('id-ID')}</span>
             </button>
             <button className="flex items-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -293,7 +310,7 @@ export default async function ArtikelDetailPage({ params }: PageProps) {
           <div className="mb-12">
             <h2 className="text-3xl font-serif font-bold text-gray-900 mb-8">Artikel Terkait</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {relatedArticles.map((related: any) => (
+              {relatedArticles.map((related: Article) => (
                 <Link
                   key={related.id}
                   href={`/artikel/${related.slug}`}
@@ -311,7 +328,7 @@ export default async function ArtikelDetailPage({ params }: PageProps) {
                     <div className="flex items-center gap-4 mt-4 text-xs text-gray-500">
                       <span>{related.readTime}</span>
                       <span>•</span>
-                      <span>{related.views.toLocaleString('id-ID')} views</span>
+                      <span>{(related.views ?? 0).toLocaleString('id-ID')} views</span>
                     </div>
                   </div>
                 </Link>

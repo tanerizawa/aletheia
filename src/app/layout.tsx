@@ -81,6 +81,18 @@ export default function RootLayout({
         {/* Preconnect to external resources for faster loading */}
         <link rel="preconnect" href="https://res.cloudinary.com" />
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
+        {/*
+          Development helper: block known analytics endpoints in dev so the
+          dev server and local environment don't produce ERR_CONNECTION_REFUSED
+          logs when extensions or other tooling try to send analytics.
+        */}
+        {process.env.NODE_ENV !== "production" && (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `(function(){try{var hosts=["google-analytics.com","www.google-analytics.com","www.googletagmanager.com","www.google.com","www.googleadservices.com","www.google-analytics.com/analytics.js","www.google-analytics.com/mp/collect"];function match(u){try{return hosts.some(function(h){return u&&u.indexOf(h)!==-1})}catch(e){return false}};var _fetch=window.fetch;window.fetch=function(input){try{var url=typeof input==='string'?input:(input&&input.url?input.url:'');if(match(url)){return Promise.resolve(new Response(null,{status:204}))}return _fetch.apply(this,arguments)}catch(e){return _fetch.apply(this,arguments)}};var X=window.XMLHttpRequest;var _open=X&&X.prototype&&X.prototype.open; if(_open){X.prototype.open=function(method,url){try{if(match(url)){this.abort();return}return _open.apply(this,arguments)}catch(e){return _open.apply(this,arguments)}}}window.dataLayer=window.dataLayer||[];window.gtag=window.gtag||function(){window.dataLayer.push(arguments)};console.info('Dev helper: analytics endpoints are blocked');}catch(e){} })();`,
+            }}
+          />
+        )}
       </head>
       <body
         className={`${inter.variable} ${playfair.variable} ${sourceSans.variable} ${lora.variable} antialiased flex flex-col min-h-screen bg-cream-soft-white`}

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
+// removed unused Image import
 import { UsersIcon, HeartIcon, LightbulbIcon, HandshakeIcon, ShieldIcon, BookIcon, ResearchIcon, PublishIcon, ReadIcon } from "@/components/icons";
 
 export const metadata: Metadata = {
@@ -39,8 +39,8 @@ export default function TimPage() {
               Filosofi Tim Kami
             </h2>
             <div className="prose prose-lg max-w-none text-[#5A5A5A] leading-relaxed space-y-4">
-              <p className="first-letter:text-6xl first-letter:font-serif first-letter:font-bold first-letter:text-[#2C5F5D] first-letter:mr-3 first-letter:float-left">
-                <strong className="text-[#1F4E4C]">"Alone we can do so little; together we can do so much."</strong> — Helen Keller. 
+                <p className="first-letter:text-6xl first-letter:font-serif first-letter:font-bold first-letter:text-[#2C5F5D] first-letter:mr-3 first-letter:float-left">
+                <strong className="text-[#1F4E4C]">&quot;Alone we can do so little; together we can do so much.&quot;</strong> — Helen Keller. 
                 Kutipan ini merangkum esensi dari tim kami. Kami bukan sekadar sekumpulan individu yang bekerja di tempat yang sama, 
                 melainkan <em className="text-[#B05E3F] font-semibold">komunitas pembelajar</em> yang saling mendukung, berbagi visi, 
                 dan berkomitmen pada misi yang sama.

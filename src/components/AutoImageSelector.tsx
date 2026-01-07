@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import OptimizedImage from '@/components/OptimizedImage';
 
 interface AutoImageSelectorProps {
-  title: string;
+  title?: string;
   type: 'book' | 'article' | 'event';
   keywords?: string[];
   onImageSelect: (imageUrl: string) => void;
@@ -140,9 +141,11 @@ export default function AutoImageSelector({
           <div className="grid grid-cols-3 gap-4">
             {images.map((image) => (
               <div key={image.id} className="group relative">
-                <img
+                <OptimizedImage
                   src={image.thumb}
                   alt={image.description || 'Cover image'}
+                  width={320}
+                  height={160}
                   className="w-full h-40 object-cover rounded-lg border-2 border-cream-warm group-hover:border-[#B05E3F] transition-colors"
                 />
                 

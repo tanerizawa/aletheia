@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 // Retry metadata enrichment for ebooks that still miss metadata
+/* eslint-disable @typescript-eslint/no-require-imports */
 const dotenv = require('dotenv');
 dotenv.config({ path: process.env.DOTENV_PATH || '.env' });
 

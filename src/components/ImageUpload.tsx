@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import OptimizedImage from '@/components/OptimizedImage';
 
 interface ImageUploadProps {
   label: string;
@@ -66,8 +67,9 @@ export default function ImageUpload({
 
       const data = await response.json();
       onImageUploaded(data.url);
-    } catch (err: any) {
-      setError(err.message || 'Upload failed');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      setError(message || 'Upload failed');
       setPreview(currentImageUrl || '');
     } finally {
       setUploading(false);
@@ -98,9 +100,11 @@ export default function ImageUpload({
         {/* Preview */}
         {preview && (
           <div className="relative inline-block">
-            <img
+            <OptimizedImage
               src={preview}
               alt="Preview"
+              width={320}
+              height={192}
               className="max-w-xs max-h-48 rounded-lg border border-gray-300 object-cover"
             />
             <button

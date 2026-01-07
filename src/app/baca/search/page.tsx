@@ -2,6 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { BookIcon, SearchIcon } from "@/components/icons";
 
+interface Ebook {
+  id?: string;
+  slug: string;
+  title?: string;
+  author?: string;
+  category?: string;
+  rating?: number;
+  views?: number;
+}
+
 export const metadata: Metadata = {
   title: "Cari E-Book - Perpustakaan Digital",
   description: "Hasil pencarian e-book di perpustakaan digital Rumah Aletheia",
@@ -11,13 +21,14 @@ interface SearchPageProps {
   searchParams: { q?: string };
 }
 
-async function searchEbooks(query: string) {
+async function searchEbooks(query: string): Promise<{ ebooks: Ebook[] }> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
                     (process.env.PORT ? `http://localhost:${process.env.PORT}` : 'http://localhost:3001');
     const res = await fetch(`${baseUrl}/api/public/ebooks?search=${encodeURIComponent(query)}&limit=100`, { next: { revalidate: 60 } });
     if (!res.ok) return { ebooks: [] };
-    return await res.json();
+    const data = await res.json();
+    return { ebooks: (data.ebooks || []) as Ebook[] };
   } catch (error) {
     console.error('Failed to search ebooks:', error);
     return { ebooks: [] };
@@ -31,8 +42,8 @@ async function getCategories(): Promise<string[]> {
     const res = await fetch(`${baseUrl}/api/public/ebooks?limit=100`, { next: { revalidate: 60 } });
     if (!res.ok) return [];
     const { ebooks } = await res.json();
-    return Array.from(new Set(ebooks.map((e: any) => e.category))) as string[];
-  } catch (error) {
+    return Array.from(new Set((ebooks || []).map((e: Ebook) => e.category || 'Lainnya'))) as string[];
+  } catch {
     return [];
   }
 }
@@ -92,7 +103,7 @@ export default async function SearchEbooksPage({ searchParams }: SearchPageProps
           {/* Results Grid */}
           {results.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {results.map((ebook: any) => (
+              {results.map((ebook: Ebook) => (
                 <Link
                   key={ebook.id}
                   href={`/baca/${ebook.slug}`}
@@ -132,7 +143,7 @@ export default async function SearchEbooksPage({ searchParams }: SearchPageProps
                 Tidak Ditemukan
               </h3>
               <p className="text-[#7A7A7A] mb-8">
-                Maaf, tidak ada e-book yang cocok dengan pencarian "{query}"
+                Maaf, tidak ada e-book yang cocok dengan pencarian &quot;{query}&quot;
               </p>
               <Link
                 href="/baca"

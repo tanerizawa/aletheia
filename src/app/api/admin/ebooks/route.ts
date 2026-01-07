@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     const skip = (page - 1) * limit;
 
     // Build where clause
-    const where: any = {};
+    const where: Record<string, unknown> = {};
     if (category) {
       where.category = category;
     }
@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
         totalPages: Math.ceil(total / limit),
       },
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('GET /api/admin/ebooks error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
@@ -112,7 +112,7 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ success: true, ebook }, { status: 201 });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('POST /api/admin/ebooks error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }

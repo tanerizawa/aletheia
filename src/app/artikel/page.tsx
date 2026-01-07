@@ -2,6 +2,23 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { DocumentIcon, ClockIcon, HeartFilledIcon } from "@/components/icons";
 import CategoryIcon from "@/components/CategoryIcon";
+import { formatDate } from '@/lib/dateUtils';
+
+interface Article {
+  slug: string;
+  featured?: boolean;
+  category?: string;
+  publishedDate?: string;
+  title?: string;
+  excerpt?: string;
+  author?: { name?: string; role?: string };
+  readTime?: number;
+  views?: number;
+  likes?: number;
+  tags?: string[];
+  coverImage?: string;
+  content?: string;
+}
 
 export const metadata: Metadata = {
   title: "Artikel & Blog - Literasi, Pendidikan, Penelitian",
@@ -9,7 +26,7 @@ export const metadata: Metadata = {
   keywords: ["artikel", "blog", "literasi", "pendidikan", "penelitian", "budaya"],
 };
 
-async function getArticles() {
+async function getArticles(): Promise<{ articles: Article[] }> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
                     (process.env.PORT ? `http://localhost:${process.env.PORT}` : 'http://localhost:3001');
@@ -17,7 +34,8 @@ async function getArticles() {
       next: { revalidate: 60 },
     });
     if (!res.ok) return { articles: [] };
-    return await res.json();
+    const data = await res.json();
+    return { articles: (data.articles || []) as Article[] };
   } catch (error) {
     console.error('Failed to fetch articles:', error);
     return { articles: [] };
@@ -43,11 +61,11 @@ export default async function ArtikelPage() {
   const { articles } = await getArticles();
   const stats = await getStats();
   
-  const featuredArticles = articles.filter((a: any) => a.featured).slice(0, 2);
+  const featuredArticles = articles.filter((a: Article) => a.featured).slice(0, 2);
   const recentArticles = articles.slice(0, 6);
   
   // Get unique categories
-  const articleCategories = Array.from(new Set(articles.map((a: any) => a.category)));
+  const articleCategories = Array.from(new Set(articles.map((a: Article) => a.category || 'Lainnya')));
 
   return (
     <main className="flex-grow bg-cream-soft-white">
@@ -118,7 +136,7 @@ export default async function ArtikelPage() {
             </h2>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {featuredArticles.map((article: any) => (
+              {featuredArticles.map((article: Article) => (
                 <Link
                   key={article.slug}
                   href={`/artikel/${article.slug}`}
@@ -137,11 +155,7 @@ export default async function ArtikelPage() {
                         {article.category}
                       </span>
                       <span className="text-sm text-[#7A7A7A]">
-                        {new Date(article.publishedDate).toLocaleDateString('id-ID', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric'
-                        })}
+                        {formatDate(article.publishedDate, 'id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}
                       </span>
                     </div>
 
@@ -166,14 +180,14 @@ export default async function ArtikelPage() {
 
                     {/* Meta */}
                     <div className="flex items-center gap-4 text-xs text-[#7A7A7A] pt-4 border-t border-cream-beige">
-                      <span className="flex items-center gap-1"><ClockIcon className="w-3.5 h-3.5" /> {article.readTime} menit</span>
-                      <span>{article.views} views</span>
-                      <span className="flex items-center gap-1"><HeartFilledIcon className="w-3.5 h-3.5 text-red-500" /> {article.likes} likes</span>
+                      <span className="flex items-center gap-1"><ClockIcon className="w-3.5 h-3.5" /> {article.readTime ?? 0} menit</span>
+                      <span>{article.views ?? 0} views</span>
+                      <span className="flex items-center gap-1"><HeartFilledIcon className="w-3.5 h-3.5 text-red-500" /> {article.likes ?? 0} likes</span>
                     </div>
 
                     {/* Tags */}
                     <div className="flex flex-wrap gap-2 mt-4">
-                      {article.tags.slice(0, 3).map((tag: string) => (
+                      {(article.tags || []).slice(0, 3).map((tag: string) => (
                         <span key={tag} className="text-xs px-2 py-1 bg-white text-[#7A7A7A] rounded">
                           #{tag}
                         </span>
@@ -195,7 +209,7 @@ export default async function ArtikelPage() {
           </h2>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {articleCategories.map((category: any) => (
+            {articleCategories.map((category: string) => (
               <Link
                 key={category}
                 href={`/artikel/kategori/${category.toLowerCase()}`}
@@ -221,7 +235,7 @@ export default async function ArtikelPage() {
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {recentArticles.map((article: any) => (
+            {recentArticles.map((article: Article) => (
               <Link
                 key={article.slug}
                 href={`/artikel/${article.slug}`}
@@ -240,11 +254,7 @@ export default async function ArtikelPage() {
                       {article.category}
                     </span>
                     <span className="text-xs text-[#7A7A7A]">
-                      {new Date(article.publishedDate).toLocaleDateString('id-ID', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric'
-                      })}
+                      {formatDate(article.publishedDate, 'id-ID', { year: 'numeric', month: 'short', day: 'numeric' })}
                     </span>
                   </div>
 
@@ -257,11 +267,11 @@ export default async function ArtikelPage() {
                   </p>
 
                   {/* Author */}
-                  <div className="flex items-center gap-2 mb-3">
+                    <div className="flex items-center gap-3 mb-3">
                     <div className="w-8 h-8 rounded-full bg-[#2C5F5D] flex items-center justify-center text-white text-xs font-bold">
-                      {article.author.name.charAt(0)}
+                      {article.author?.name?.charAt(0) ?? 'A'}
                     </div>
-                    <span className="text-xs text-[#7A7A7A]">{article.author.name}</span>
+                    <span className="text-xs text-[#7A7A7A]">{article.author?.name ?? 'Anonymous'}</span>
                   </div>
 
                   <div className="flex items-center gap-3 text-xs text-[#7A7A7A] pt-3 border-t border-cream-beige">
