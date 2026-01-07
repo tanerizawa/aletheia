@@ -37,7 +37,7 @@ export default function Home() {
           
           {/* Main Heading - Logo */}
           <div className="mb-6 animate-[fadeIn_1s_ease-in]">
-            <Image src="/logo.svg" alt="Rumah Aletheia - part of Academos" width={400} height={133} className="mx-auto h-24 lg:h-32 w-auto" priority />
+            <Image src="/logo.svg" alt="Rumah Aletheia - part of Academos" width={400} height={133} className="mx-auto h-24 lg:h-32 w-auto" />
           </div>
           
           {/* Subtitle - Organization */}
