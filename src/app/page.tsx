@@ -1,10 +1,9 @@
-'use client';
+"use client";
 
 import Link from "next/link";
 import Image from "next/image";
 import { organization, library, units } from "@/data/organization";
 import StatsShowcase from "@/components/StatsShowcase";
-import StatsShowcaseServer from "@/components/StatsShowcaseServer";
 import { PlantIcon, BuildingIcon, BookIcon, LocationIcon } from "@/components/icons";
 import NavIcon from "@/components/NavIcon";
 import ScrollFadeIn from "@/components/ScrollFadeIn";
@@ -191,9 +190,8 @@ export default function Home() {
           </div>
           
           {/* Statistics Showcase */}
-          {/* Server component fetches DB counts and passes to client component */}
-          {/* @ts-expect-error Server Component */}
-          <StatsShowcaseServer />
+          {/* Statistics Showcase (client) - fetches /stats.json or /api/stats */}
+          <StatsShowcase />
           
           {/* Room Navigation - Explore the House */}
           <div className="mt-20">
