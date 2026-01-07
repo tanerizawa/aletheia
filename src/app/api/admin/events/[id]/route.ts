@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { randomUUID } from 'crypto';
 import { prisma } from '@/lib/prisma';
+import type { Prisma } from '@prisma/client';
 import { getSession } from '@/lib/auth';
 
 // GET /api/admin/events/[id] - Get single event
@@ -27,7 +29,7 @@ export async function GET(
     }
 
     return NextResponse.json({ event });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Event fetch error:', error);
     return NextResponse.json({ error: 'Failed to fetch event' }, { status: 500 });
   }
@@ -76,12 +78,12 @@ export async function PATCH(
         where: { slug, id: { not: id } },
       });
       if (slugExists) {
-        slug = `${slug}-${Date.now()}`;
+        slug = `${slug}-${randomUUID().replace(/-/g, '').slice(0,8)}`;
       }
     }
 
     // Handle date fields
-    const updateData: any = { ...body, slug, updatedAt: new Date() };
+    const updateData: Prisma.EventUpdateInput = { ...body, slug, updatedAt: new Date() } as Prisma.EventUpdateInput;
     
     if (body.startDate) {
       updateData.startDate = new Date(body.startDate);
@@ -102,7 +104,7 @@ export async function PATCH(
     });
 
     return NextResponse.json({ success: true, event });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Event update error:', error);
     return NextResponse.json({ error: 'Failed to update event' }, { status: 500 });
   }
@@ -146,7 +148,7 @@ export async function DELETE(
     });
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Event deletion error:', error);
     return NextResponse.json({ error: 'Failed to delete event' }, { status: 500 });
   }

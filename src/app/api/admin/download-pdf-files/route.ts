@@ -3,12 +3,13 @@ import { prisma } from '@/lib/prisma';
 import { writeFile, mkdir } from 'fs/promises';
 import { existsSync } from 'fs';
 import path from 'path';
+import type { Prisma } from '@prisma/client';
 
 export async function POST(request: NextRequest) {
   try {
     const { limit } = await request.json();
     // If limit is not provided, fetch all
-    const findArgs: any = {
+    const findArgs: Prisma.EbookFindManyArgs = {
       where: {
         OR: [
           { fileUrl: { startsWith: 'http://' } },

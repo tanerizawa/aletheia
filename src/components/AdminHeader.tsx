@@ -1,8 +1,9 @@
-'use client';
+"use client";
 
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import LogoutButton from '@/components/LogoutButton';
 import { AdminUser } from '@/lib/auth';
 
 interface AdminHeaderProps {
@@ -42,7 +43,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
   return (
     <>
       {/* Top Navigation Bar */}
-      <header className="bg-gradient-to-r from-[#2C5F5D] to-[#1F4E4C] border-b border-[#1A3D3B] sticky top-0 z-50 shadow-lg">
+      <header className="sticky top-0 z-50 shadow-lg" style={{ backgroundImage: 'linear-gradient(to right, var(--teal-700), var(--teal-800))', borderBottom: '4px solid var(--color-secondary)' }}>
         <div className="flex items-center justify-between h-16 px-6">
           {/* Left: Logo & Breadcrumbs */}
           <div className="flex items-center gap-8">
@@ -60,14 +61,14 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
                   
                   return (
                     <div key={segment} className="flex items-center gap-2">
-                      {index > 0 && <span className="text-[#5A9692]">/</span>}
-                      {isLast ? (
-                        <span className="text-cream-soft-white font-medium">{label}</span>
-                      ) : (
-                        <Link href={href} className="text-[#D4E5E4] hover:text-[#B05E3F] transition-colors">
-                          {label}
-                        </Link>
-                      )}
+                            {index > 0 && <span style={{ color: 'var(--teal-400)' }}>/</span>}
+                            {isLast ? (
+                              <span style={{ color: 'var(--color-cream-soft-white)' }} className="font-medium">{label}</span>
+                            ) : (
+                              <Link href={href} className="transition-colors" style={{ color: 'var(--teal-100)' }}>
+                                {label}
+                              </Link>
+                            )}
                     </div>
                   );
                 })}
@@ -81,7 +82,8 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
             <Link
               href="/"
               target="_blank"
-              className="hidden md:flex items-center gap-2 px-3 py-1.5 text-sm text-cream-warm hover:text-white hover:bg-[#1A3D3B] rounded-lg transition-all"
+              className="hidden md:flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg transition-all"
+              style={{ color: 'var(--color-cream-warm)' }}
             >
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M4.083 9h1.946c.089-1.546.383-2.97.837-4.118A6.004 6.004 0 004.083 9zM10 2a8 8 0 100 16 8 8 0 000-16zm0 2c-.076 0-.232.032-.465.262-.238.234-.497.623-.737 1.182-.389.907-.673 2.142-.766 3.556h3.936c-.093-1.414-.377-2.649-.766-3.556-.24-.56-.5-.948-.737-1.182C10.232 4.032 10.076 4 10 4zm3.971 5c-.089-1.546-.383-2.97-.837-4.118A6.004 6.004 0 0115.917 9h-1.946zm-2.003 2H8.032c.093 1.414.377 2.649.766 3.556.24.56.5.948.737 1.182.233.23.389.262.465.262.076 0 .232-.032.465-.262.238-.234.498-.623.737-1.182.389-.907.673-2.142.766-3.556zm1.166 4.118c.454-1.147.748-2.572.837-4.118h1.946a6.004 6.004 0 01-2.783 4.118zm-6.268 0C6.412 13.97 6.118 12.546 6.03 11H4.083a6.004 6.004 0 002.783 4.118z" clipRule="evenodd" />
@@ -90,29 +92,18 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
             </Link>
 
             {/* User Info - Neuroscience: Recognition over recall */}
-            <div className="flex items-center gap-3 pl-4 border-l border-[#3A7A77]">
+            <div className="flex items-center gap-3 pl-4" style={{ borderLeft: '1px solid var(--teal-400)' }}>
               <div className="text-right hidden sm:block">
-                <p className="text-xs text-[#D4E5E4] capitalize">{user.role}</p>
+                <p className="text-xs capitalize" style={{ color: 'var(--color-cream-soft-white)' }}>{user.role}</p>
               </div>
               
-              <form action="/api/admin/logout" method="POST">
-                <button
-                  type="submit"
-                  className="flex items-center gap-2 px-4 py-2 bg-[#C24B4B] text-cream-soft-white rounded-lg hover:bg-[#A33939] transition-colors text-sm font-medium"
-                  title="Logout"
-                >
-                  <span className="hidden sm:inline">Logout</span>
-                  <svg className="sm:hidden w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V4a1 1 0 00-1-1H3zm11 4.414l-4.293 4.293a1 1 0 01-1.414 0L4 7.414V14h10V7.414zM4 6h10.586L10 10.586 4 6z" clipRule="evenodd" />
-                  </svg>
-                </button>
-              </form>
+              <LogoutButton />
             </div>
           </div>
         </div>
 
         {/* Horizontal Navigation - Neuroscience: Serial Position Effect */}
-        <div className="border-t border-[#3A7A77] bg-[#1A3D3B]">
+        <div style={{ borderTop: '1px solid var(--teal-400)', backgroundColor: 'var(--teal-700)' }}>
           <nav className="flex items-center gap-1 px-6 py-2">
             {navItems.map((item) => {
               const active = isActive(item.href);
@@ -120,18 +111,13 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`
-                    flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all
-                    ${active 
-                      ? 'bg-[#B05E3F] text-cream-soft-white shadow-sm' 
-                      : 'text-cream-warm hover:bg-[#2C5F5D] hover:text-white hover:shadow-sm'
-                    }
-                  `}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all`}
+                  style={{ backgroundColor: active ? 'var(--color-secondary)' : 'transparent', color: active ? 'var(--color-cream-soft-white)' : 'var(--color-cream-warm)' }}
                 >
                   {getIcon(item.icon)}
                   <span>{item.label}</span>
                   {/* Active Indicator - Neuroscience: Von Restorff Effect */}
-                  {active && <span className="w-1.5 h-1.5 bg-cream-soft-white rounded-full ml-1"></span>}
+                  {active && <span className="w-1.5 h-1.5" style={{ backgroundColor: 'var(--color-cream-soft-white)' }} role="presentation" aria-hidden="true"></span>}
                 </Link>
               );
             })}

@@ -70,7 +70,8 @@ export default function NewEbookPage() {
         language: book.language ? book.language : prev.language,
         coverImage: book.imageLinks?.thumbnail?.replace('http://','https://') || prev.coverImage,
       }));
-    } catch (err) {
+    } catch (error) {
+      console.error(error);
       setError('Gagal fetch data ISBN.');
     } finally {
       setLoading(false);
@@ -110,8 +111,9 @@ export default function NewEbookPage() {
       // Success - redirect to ebooks list
       router.push('/admin/ebooks?success=created');
       router.refresh();
-    } catch (err: any) {
-      setError(err?.message || 'An error occurred');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setError(msg || 'An error occurred');
     } finally {
       setLoading(false);
     }
@@ -261,6 +263,17 @@ export default function NewEbookPage() {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B05E3F] focus:border-transparent"
                     placeholder="978-xxx-xxx-xxx"
                   />
+                  <div className="mt-2 flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => fetchISBN()}
+                      className="px-3 py-1 bg-[#2C5F5D] text-white rounded hover:bg-[#1A3D3B] disabled:opacity-50"
+                      disabled={loading}
+                    >
+                      {loading ? 'Mencari...' : 'Fetch ISBN'}
+                    </button>
+                    {error && <p className="text-sm text-red-600">{error}</p>}
+                  </div>
                 </div>
 
                 <div>

@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 interface OptimizedImageProps {
   src: string;
-  alt: string;
+  alt?: string;
   width?: number;
   height?: number;
   className?: string;
@@ -52,6 +52,8 @@ export default function OptimizedImage({
 }: OptimizedImageProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const [currentSrc, setCurrentSrc] = useState(src);
+  const [triedFallback, setTriedFallback] = useState(false);
 
   // Default blur placeholder (low-quality gray)
   const defaultBlurDataURL = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI0YwRUJFMyIvPjwvc3ZnPg==';
@@ -74,8 +76,9 @@ export default function OptimizedImage({
     return errorPlaceholder;
   }
 
-  // Check if external URL (needs unoptimized flag)
-  const isExternal = src.startsWith('http://') || src.startsWith('https://');
+  // Check if external URL (needs unoptimized flag) or local /images path
+  const isExternal = currentSrc.startsWith('http://') || currentSrc.startsWith('https://');
+  const isLocalImagePath = currentSrc.startsWith('/images/') || currentSrc.startsWith('images/');
 
   const imageClass = `${className} ${isLoading ? 'blur-sm' : 'blur-0'} transition-all duration-300`;
 
@@ -84,17 +87,27 @@ export default function OptimizedImage({
   if (fill) {
     return (
       <Image
-        src={src}
-        alt={alt}
+        src={currentSrc}
+        alt={alt || ''}
         className={imageClass}
         onLoad={() => setIsLoading(false)}
-        onError={() => setHasError(true)}
+        onError={() => {
+          // Try a fallback in public/covers if the image was missing
+          if (!triedFallback && (currentSrc.startsWith('/images/') || currentSrc.startsWith('images/'))) {
+            const parts = currentSrc.split('/');
+            const name = parts[parts.length - 1];
+            setTriedFallback(true);
+            setCurrentSrc(`/covers/${name}`);
+            return;
+          }
+          setHasError(true);
+        }}
         placeholder={(blurDataURL || defaultBlurDataURL) ? ('blur' as const) : undefined}
         blurDataURL={blurDataURL || defaultBlurDataURL}
         priority={priority}
         sizes={sizes || '100vw'}
         style={{ objectFit }}
-        {...(isExternal ? { unoptimized: true } : {})}
+        {...((isExternal || isLocalImagePath) ? { unoptimized: true } : {})}
         fill
       />
     );
@@ -105,21 +118,30 @@ export default function OptimizedImage({
     return errorPlaceholder;
   }
 
-  return (
+      return (
     <Image
-      src={src}
-      alt={alt}
+      src={currentSrc}
+      alt={alt || ''}
       width={width}
       height={height}
       className={imageClass}
       onLoad={() => setIsLoading(false)}
-      onError={() => setHasError(true)}
+      onError={() => {
+        if (!triedFallback && (currentSrc.startsWith('/images/') || currentSrc.startsWith('images/'))) {
+          const parts = currentSrc.split('/');
+          const name = parts[parts.length - 1];
+          setTriedFallback(true);
+          setCurrentSrc(`/covers/${name}`);
+          return;
+        }
+        setHasError(true);
+      }}
       placeholder={(blurDataURL || defaultBlurDataURL) ? ('blur' as const) : undefined}
       blurDataURL={blurDataURL || defaultBlurDataURL}
       priority={priority}
       sizes={sizes}
       style={fill ? { objectFit } : undefined}
-      {...(isExternal ? { unoptimized: true } : {})}
+        {...((isExternal || isLocalImagePath) ? { unoptimized: true } : {})}
     />
   );
 }

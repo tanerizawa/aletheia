@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     const skip = (page - 1) * limit;
 
     // Build where clause
-    const where: any = {};
+    const where: Record<string, unknown> = {};
 
     if (type) {
       where.type = type;
@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
         totalPages: Math.ceil(total / limit),
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Public events fetch error:', error);
     return NextResponse.json(
       { error: 'Failed to fetch events', events: [], pagination: { page: 1, limit: 12, total: 0, totalPages: 0 } },

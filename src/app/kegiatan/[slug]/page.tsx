@@ -3,9 +3,27 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { CalendarIcon, BellIcon, CheckCircleIcon, TargetIcon, ClockIcon, LocationIcon, DocumentIcon, UsersIcon, CameraIcon } from '@/components/icons';
+import { formatDate, isAfterNow, isBeforeNow } from '@/lib/dateUtils';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+}
+
+interface EventDetail {
+  id: string;
+  slug?: string;
+  type?: string;
+  title?: string;
+  description?: string;
+  startDate?: string;
+  coverImage?: string | null;
+  endDate?: string;
+  time?: string;
+  location?: string;
+  maxParticipants?: number;
+  registeredParticipants?: number;
+  organizer?: string;
+  photos?: { id?: string; caption?: string }[];
 }
 
 async function getEvent(slug: string) {
@@ -33,8 +51,8 @@ async function getUpcomingEvents() {
 }
 
 export default function KegiatanDetailPage({ params }: PageProps) {
-  const [event, setEvent] = useState<any | null>(null);
-  const [upcomingEvents, setUpcomingEvents] = useState<any[]>([]);
+  const [event, setEvent] = useState<EventDetail | null>(null);
+  const [upcomingEvents, setUpcomingEvents] = useState<EventDetail[]>([]);
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
   const [showLightbox, setShowLightbox] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -46,7 +64,8 @@ export default function KegiatanDetailPage({ params }: PageProps) {
       
       if (eventData) {
         const upcoming = await getUpcomingEvents();
-        setUpcomingEvents(upcoming.filter((e: any) => e.id !== eventData.id));
+        const list = Array.isArray(upcoming) ? (upcoming as EventDetail[]) : [];
+        setUpcomingEvents(list.filter(e => e.id !== eventData.id));
       }
       
       setLoading(false);
@@ -66,8 +85,8 @@ export default function KegiatanDetailPage({ params }: PageProps) {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#2C5F5D] via-[#1F4E4C] to-[#1A3D3B] pt-32 pb-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-cream-warm">Memuat...</p>
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-[#D4A574]">Memuat...</p>
         </div>
       </div>
     );
@@ -77,11 +96,11 @@ export default function KegiatanDetailPage({ params }: PageProps) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#2C5F5D] via-[#1F4E4C] to-[#1A3D3B] pt-32 pb-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <CalendarIcon className="w-32 h-32 mx-auto mb-6 text-cream-soft-white/60" />
-          <h1 className="text-4xl font-serif font-bold text-cream-soft-white mb-4">
+          <CalendarIcon className="w-32 h-32 mx-auto mb-6 text-[#E8E3DB]/60" />
+          <h1 className="text-4xl font-serif font-bold text-[#E8E3DB] mb-4">
             Kegiatan Tidak Ditemukan
           </h1>
-          <p className="text-xl text-cream-warm/80 mb-8">
+          <p className="text-xl text-[#D4A574]/80 mb-8">
             Maaf, kegiatan yang Anda cari tidak tersedia.
           </p>
           <Link
@@ -95,8 +114,8 @@ export default function KegiatanDetailPage({ params }: PageProps) {
     );
   }
 
-  const isUpcoming = new Date(event.startDate) > new Date();
-  const isPast = new Date(event.startDate) < new Date();
+  const isUpcoming = isAfterNow(event.startDate);
+  const isPast = isBeforeNow(event.startDate);
 
   return (
     <>
@@ -125,30 +144,30 @@ export default function KegiatanDetailPage({ params }: PageProps) {
             </div>
 
             {/* Title */}
-            <h1 className="text-4xl md:text-5xl font-serif font-bold text-cream-soft-white mb-6 leading-tight">
+            <h1 className="text-4xl md:text-5xl font-serif font-bold text-[#E8E3DB] mb-6 leading-tight">
               {event.title}
             </h1>
 
             {/* Metadata Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="flex items-start gap-3 text-cream-warm/90">
+              <div className="flex items-start gap-3 text-[#D4A574]/90">
                 <CalendarIcon className="w-8 h-8" />
                 <div>
-                  <div className="text-sm text-cream-warm/60">Tanggal</div>
-                  <div className="font-semibold">{event.startDate}{event.endDate ? ` - ${event.endDate}` : ''}</div>
+                  <div className="text-sm text-[#D4A574]/60">Tanggal</div>
+                  <div className="font-semibold">{formatDate(event.startDate)}{event.endDate ? ` - ${formatDate(event.endDate)}` : ''}</div>
                 </div>
               </div>
-              <div className="flex items-start gap-3 text-cream-warm/90">
+              <div className="flex items-start gap-3 text-[#D4A574]/90">
                 <ClockIcon className="w-8 h-8" />
                 <div>
-                  <div className="text-sm text-cream-warm/60">Waktu</div>
+                  <div className="text-sm text-[#D4A574]/60">Waktu</div>
                   <div className="font-semibold">{event.time}</div>
                 </div>
               </div>
-              <div className="flex items-start gap-3 text-cream-warm/90">
+              <div className="flex items-start gap-3 text-[#D4A574]/90">
                 <LocationIcon className="w-8 h-8" />
                 <div>
-                  <div className="text-sm text-cream-warm/60">Lokasi</div>
+                  <div className="text-sm text-[#D4A574]/60">Lokasi</div>
                   <div className="font-semibold">{event.location}</div>
                 </div>
               </div>
@@ -169,7 +188,7 @@ export default function KegiatanDetailPage({ params }: PageProps) {
             </div>
 
             {/* Event Type & Capacity */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10 p-6 bg-cream-soft-white rounded-xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10 p-6 bg-[#E8E3DB] rounded-xl">
               <div>
                 <div className="text-sm text-gray-600 mb-1">Jenis Kegiatan</div>
                 <div className="text-lg font-semibold text-gray-900">{event.type}</div>
@@ -223,14 +242,14 @@ export default function KegiatanDetailPage({ params }: PageProps) {
                 <CameraIcon className="w-8 h-8 text-[#B05E3F]" /> Dokumentasi Foto {isPast ? '' : '(Preview)'}
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {event.photos.map((photo: any) => (
+                {event.photos.map((photo: { id?: string; caption?: string }) => (
                   <button
                     key={photo.id}
-                    onClick={() => openLightbox(photo.caption)}
+                    onClick={() => openLightbox(photo.caption || '')}
                     className="aspect-square rounded-xl overflow-hidden bg-gradient-to-br from-[#2C5F5D] to-[#1F4E4C] flex flex-col items-center justify-center text-center p-4 hover:scale-105 hover:shadow-2xl transition-all cursor-pointer group"
                   >
                     <CameraIcon className="w-12 h-12 mb-2 text-white/80 group-hover:scale-110 transition-transform" />
-                    <span className="text-xs text-cream-soft-white/80 group-hover:text-cream-soft-white transition-colors line-clamp-2">{photo.caption}</span>
+                    <span className="text-xs text-[#E8E3DB]/80 group-hover:text-[#E8E3DB] transition-colors line-clamp-2">{photo.caption}</span>
                   </button>
                 ))}
               </div>
@@ -242,7 +261,7 @@ export default function KegiatanDetailPage({ params }: PageProps) {
             <div className="mb-12">
               <h2 className="text-3xl font-serif font-bold text-gray-900 mb-8">Kegiatan Lainnya</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {upcomingEvents.map((upcoming: any) => (
+                {upcomingEvents.map((upcoming: EventDetail) => (
                   <Link
                     key={upcoming.id}
                     href={`/kegiatan/${upcoming.slug}`}
@@ -258,7 +277,7 @@ export default function KegiatanDetailPage({ params }: PageProps) {
                       </h3>
                       <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
                         <CalendarIcon className="w-4 h-4" />
-                        <span>{upcoming.startDate}</span>
+                        <span>{formatDate(upcoming.startDate)}</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-gray-600">
                         <LocationIcon className="w-4 h-4" />

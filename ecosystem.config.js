@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 require('dotenv').config();
 
 module.exports = {
@@ -29,6 +30,8 @@ module.exports = {
       UNSPLASH_ACCESS_KEY: process.env.UNSPLASH_ACCESS_KEY,
       // Session
       SESSION_SECRET: process.env.SESSION_SECRET,
+      // Disable analytics for audit runs (set to '1' to disable)
+      NEXT_PUBLIC_DISABLE_ANALYTICS: process.env.NEXT_PUBLIC_DISABLE_ANALYTICS || '1',
     }
   }]
 };

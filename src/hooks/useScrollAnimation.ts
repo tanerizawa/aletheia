@@ -34,8 +34,9 @@ export function useScrollAnimation<T extends HTMLElement = HTMLDivElement>(
 
     // Check if browser supports Intersection Observer
     if (!('IntersectionObserver' in window)) {
-      setIsVisible(true); // Fallback: show immediately
-      return;
+      // Defer state update to avoid calling setState synchronously in the effect
+      const t = setTimeout(() => setIsVisible(true), 0);
+      return () => clearTimeout(t);
     }
 
     const observer = new IntersectionObserver(

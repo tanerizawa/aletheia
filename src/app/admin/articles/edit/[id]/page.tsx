@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
@@ -18,7 +18,8 @@ export default function EditArticlePage() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
-  const [authors, setAuthors] = useState<any[]>([]);
+  interface AuthorItem { id: string; name?: string; role?: string }
+  const [authors, setAuthors] = useState<AuthorItem[]>([]);
   
   const [formData, setFormData] = useState({
     title: '',
@@ -32,22 +33,17 @@ export default function EditArticlePage() {
     featured: false,
   });
 
-  useEffect(() => {
-    fetchAuthors();
-    fetchArticle();
-  }, [id]);
-
-  const fetchAuthors = async () => {
+  const fetchAuthors = useCallback(async () => {
     try {
       const response = await fetch('/api/admin/article-authors');
       const data = await response.json();
       setAuthors(data.authors || []);
-    } catch (error) {
-      console.error('Failed to fetch authors:', error);
+    } catch (err: unknown) {
+      console.error('Failed to fetch authors:', err);
     }
-  };
+  }, []);
 
-  const fetchArticle = async () => {
+  const fetchArticle = useCallback(async () => {
     try {
       const response = await fetch(`/api/admin/articles/${id}`);
       if (!response.ok) throw new Error('Failed to fetch article');
@@ -66,12 +62,19 @@ export default function EditArticlePage() {
         published: article.published ?? false,
         featured: article.featured ?? false,
       });
-    } catch (err) {
-      setError('Failed to load article');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setError(msg || 'Failed to load article');
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    fetchAuthors();
+    fetchArticle();
+  }, [id, fetchAuthors, fetchArticle]);
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -111,8 +114,9 @@ export default function EditArticlePage() {
       }
 
       router.push('/admin/articles?success=updated');
-    } catch (err: any) {
-      setError(err.message || 'Failed to update article');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setError(msg || 'Failed to update article');
     } finally {
       setSubmitting(false);
     }

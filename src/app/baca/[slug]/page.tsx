@@ -1,7 +1,28 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import OptimizedImage from '@/components/OptimizedImage';
 import { BookIcon } from '@/components/icons';
 import EbookCoverImage from '@/components/EbookCoverImage';
+
+interface Ebook {
+  id?: string;
+  slug: string;
+  title?: string;
+  author?: string;
+  description?: string;
+  category?: string;
+  coverImage?: string;
+  rating?: number;
+  views?: number;
+  downloads?: number;
+  format?: string[];
+  publisher?: string;
+  publishYear?: number;
+  pages?: number;
+  language?: string;
+  fileSize?: string;
+  tags?: string[];
+}
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -23,7 +44,7 @@ async function getEbook(slug: string) {
       return null;
     }
     const data = await res.json();
-    return data.ebook;
+    return data.ebook as Ebook | null;
   } catch (error) {
     console.error('Failed to fetch ebook:', error);
     return null;
@@ -42,7 +63,7 @@ async function getRelatedEbooks(category: string, currentId: string) {
     });
     if (!res.ok) return [];
     const data = await res.json();
-    return data.ebooks.filter((e: any) => e.id !== currentId).slice(0, 4);
+    return (data.ebooks || []).filter((e: Ebook) => e.id !== currentId).slice(0, 4) as Ebook[];
   } catch (error) {
     console.error('Failed to fetch related ebooks:', error);
     return [];
@@ -71,13 +92,13 @@ export default async function BacaDetailPage({ params }: PageProps) {
 
   if (!ebook) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#2C5F5D] via-[#1F4E4C] to-[#1A3D3B] pt-32 pb-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <BookIcon className="w-32 h-32 mx-auto mb-6 text-cream-soft-white/60" />
-          <h1 className="text-4xl font-serif font-bold text-cream-soft-white mb-4">
+      <div className="min-h-screen hero-outer pt-32 pb-20">
+        <div className="hero-inner max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <BookIcon className="w-32 h-32 mx-auto mb-6 text-[var(--hero-title-color)]/60" />
+          <h1 className="text-4xl font-serif font-bold hero-title mb-4">
             E-book Tidak Ditemukan
           </h1>
-          <p className="text-xl text-cream-warm/80 mb-8">
+          <p className="text-xl hero-lead mb-8">
             Maaf, e-book yang Anda cari tidak tersedia.
           </p>
           <Link
@@ -91,13 +112,13 @@ export default async function BacaDetailPage({ params }: PageProps) {
     );
   }
 
-  const relatedEbooks = await getRelatedEbooks(ebook.category, ebook.id);
+  const relatedEbooks = await getRelatedEbooks(ebook.category || '', ebook.id || '');
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#F5F1E8] to-[#E8DED0] pt-24 pb-20">
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-[#2C5F5D] via-[#1F4E4C] to-[#1A3D3B] pt-12 pb-16 mb-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="hero-outer pt-12 pb-16 mb-12">
+        <div className="hero-inner">
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 text-sm mb-8">
             <Link href="/" className="text-[#4A4A4A] hover:text-[#B05E3F] transition-colors">Beranda</Link>
@@ -130,21 +151,21 @@ export default async function BacaDetailPage({ params }: PageProps) {
                     </svg>
                     Baca Sekarang
                   </Link>
-                  <p className="text-cream-warm/80 text-xs mt-2 text-center">
+                  <p className="text-[#D4A574]/80 text-xs mt-2 text-center">
                     📖 Baca online untuk melindungi hak cipta penulis
                   </p>
                 </div>
 
                 {/* Book Stats */}
-                <div className="mt-6 bg-white/10 backdrop-blur-sm rounded-xl p-4 text-cream-soft-white">
+                <div className="mt-6 bg-white/10 backdrop-blur-sm rounded-xl p-4 text-[#FAF8F5]">
                   <div className="grid grid-cols-2 gap-4 text-center">
                     <div>
-                      <div className="text-2xl font-bold">{ebook.views.toLocaleString('id-ID')}</div>
-                      <div className="text-xs text-cream-warm/70">Views</div>
+                        <div className="text-2xl font-bold">{(ebook.views ?? 0).toLocaleString('id-ID')}</div>
+                      <div className="text-xs text-[#D4A574]/70">Views</div>
                     </div>
                     <div>
-                      <div className="text-2xl font-bold">{ebook.downloads.toLocaleString('id-ID')}</div>
-                      <div className="text-xs text-cream-warm/70">Downloads</div>
+                      <div className="text-2xl font-bold">{(ebook.downloads ?? 0).toLocaleString('id-ID')}</div>
+                      <div className="text-xs text-[#D4A574]/70">Downloads</div>
                     </div>
                   </div>
                 </div>
@@ -161,14 +182,14 @@ export default async function BacaDetailPage({ params }: PageProps) {
               </div>
 
               {/* Title & Author */}
-              <h1 className="text-4xl md:text-5xl font-serif font-bold text-cream-soft-white mb-4 leading-tight">
+              <h1 className="text-4xl md:text-5xl font-serif font-bold text-[#FAF8F5] mb-4 leading-tight">
                 {ebook.title}
               </h1>
               
-              <div className="flex items-center gap-3 text-cream-warm/90 mb-6">
+              <div className="flex items-center gap-3 text-[#D4A574]/90 mb-6">
                 <div className="text-2xl">✍️</div>
                 <div>
-                  <div className="text-sm text-cream-warm/60">Penulis</div>
+                  <div className="text-sm text-[#D4A574]/60">Penulis</div>
                   <div className="text-lg font-semibold">{ebook.author}</div>
                 </div>
               </div>
@@ -187,49 +208,49 @@ export default async function BacaDetailPage({ params }: PageProps) {
                     </svg>
                   ))}
                 </div>
-                <span className="text-cream-soft-white font-semibold text-lg">{ebook.rating?.toFixed(1) || '0.0'}</span>
+                <span className="text-[#FAF8F5] font-semibold text-lg">{ebook.rating?.toFixed(1) || '0.0'}</span>
               </div>
 
               {/* Book Details Grid */}
               <div className="grid grid-cols-2 gap-6 mb-8 bg-white/10 backdrop-blur-sm rounded-xl p-6">
                 {ebook.publisher && (
                   <div>
-                    <div className="text-sm text-cream-warm/60 mb-1">Penerbit</div>
-                    <div className="text-cream-soft-white font-semibold">{ebook.publisher}</div>
+                    <div className="text-sm text-[#D4A574]/60 mb-1">Penerbit</div>
+                    <div className="text-[#FAF8F5] font-semibold">{ebook.publisher}</div>
                   </div>
                 )}
                 {ebook.publishYear && (
                   <div>
-                    <div className="text-sm text-cream-warm/60 mb-1">Tahun Terbit</div>
-                    <div className="text-cream-soft-white font-semibold">{ebook.publishYear}</div>
+                    <div className="text-sm text-[#D4A574]/60 mb-1">Tahun Terbit</div>
+                    <div className="text-[#FAF8F5] font-semibold">{ebook.publishYear}</div>
                   </div>
                 )}
                 {ebook.pages && (
                   <div>
-                    <div className="text-sm text-cream-warm/60 mb-1">Jumlah Halaman</div>
-                    <div className="text-cream-soft-white font-semibold">{ebook.pages} halaman</div>
+                    <div className="text-sm text-[#D4A574]/60 mb-1">Jumlah Halaman</div>
+                    <div className="text-[#FAF8F5] font-semibold">{ebook.pages} halaman</div>
                   </div>
                 )}
                 <div>
-                  <div className="text-sm text-cream-warm/60 mb-1">Format</div>
-                  <div className="text-cream-soft-white font-semibold">{ebook.format.join(', ')}</div>
+                  <div className="text-sm text-[#D4A574]/60 mb-1">Format</div>
+                  <div className="text-[#FAF8F5] font-semibold">{(ebook.format || []).join(', ')}</div>
                 </div>
                 <div>
-                  <div className="text-sm text-cream-warm/60 mb-1">Bahasa</div>
-                  <div className="text-cream-soft-white font-semibold">{ebook.language}</div>
+                  <div className="text-sm text-[#D4A574]/60 mb-1">Bahasa</div>
+                  <div className="text-[#FAF8F5] font-semibold">{ebook.language}</div>
                 </div>
                 {ebook.fileSize && (
                   <div>
-                    <div className="text-sm text-cream-warm/60 mb-1">Ukuran File</div>
-                    <div className="text-cream-soft-white font-semibold">{ebook.fileSize}</div>
+                    <div className="text-sm text-[#D4A574]/60 mb-1">Ukuran File</div>
+                    <div className="text-[#FAF8F5] font-semibold">{ebook.fileSize}</div>
                   </div>
                 )}
               </div>
 
               {/* Description */}
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-                <h2 className="text-2xl font-serif font-bold text-cream-soft-white mb-4">Deskripsi</h2>
-                <p className="text-cream-warm/90 leading-relaxed whitespace-pre-line">
+                <h2 className="text-2xl font-serif font-bold text-[#FAF8F5] mb-4">Deskripsi</h2>
+                <p className="text-[#D4A574]/90 leading-relaxed whitespace-pre-line">
                   {ebook.description}
                 </p>
               </div>
@@ -237,12 +258,12 @@ export default async function BacaDetailPage({ params }: PageProps) {
               {/* Tags */}
               {ebook.tags && ebook.tags.length > 0 && (
                 <div className="mt-6">
-                  <h3 className="text-sm font-semibold text-cream-warm/60 mb-3">TAG:</h3>
+                  <h3 className="text-sm font-semibold text-[#D4A574]/60 mb-3">TAG:</h3>
                   <div className="flex flex-wrap gap-2">
                     {ebook.tags.map((tag: string) => (
                       <span
                         key={tag}
-                        className="px-3 py-1 bg-white/10 backdrop-blur-sm text-cream-soft-white rounded-full text-sm hover:bg-white/20 transition-colors cursor-pointer"
+                        className="px-3 py-1 bg-white/10 backdrop-blur-sm text-[#FAF8F5] rounded-full text-sm hover:bg-white/20 transition-colors cursor-pointer"
                       >
                         #{tag}
                       </span>
@@ -261,7 +282,7 @@ export default async function BacaDetailPage({ params }: PageProps) {
           <div>
             <h2 className="text-3xl font-serif font-bold text-gray-900 mb-8">Buku Terkait</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {relatedEbooks.map((related: any) => (
+              {relatedEbooks.map((related: Ebook) => (
                 <Link
                   key={related.id}
                   href={`/baca/${related.slug}`}
@@ -269,9 +290,11 @@ export default async function BacaDetailPage({ params }: PageProps) {
                 >
                   <div className="aspect-[3/4] bg-gradient-to-br from-[#2C5F5D] to-[#1F4E4C] rounded-xl shadow-lg overflow-hidden hover:shadow-2xl hover:scale-105 transition-all mb-4">
                     {related.coverImage ? (
-                      <img 
-                        src={related.coverImage} 
+                      <OptimizedImage
+                        src={related.coverImage}
                         alt={related.title}
+                        width={180}
+                        height={240}
                         className="w-full h-full object-cover"
                       />
                     ) : (

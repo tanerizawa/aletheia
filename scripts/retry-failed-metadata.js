@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 // Retry metadata enrichment for ebooks that still miss metadata
+/* eslint-disable @typescript-eslint/no-require-imports */
 const dotenv = require('dotenv');
 dotenv.config({ path: process.env.DOTENV_PATH || '.env' });
 
@@ -24,7 +25,7 @@ async function fetchGoogleBooks(q) {
     if (!res.ok) throw new Error(`GB fetch ${res.status}`);
     const data = await res.json();
     return data.items && data.items.length ? data.items[0].volumeInfo : null;
-  } catch (e) {
+  } catch {
     return null;
   }
 }

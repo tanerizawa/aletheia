@@ -28,7 +28,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
     });
 
     return NextResponse.json({ ebook });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Public ebook fetch error:', error);
     return NextResponse.json(
       { error: 'Failed to fetch ebook', ebook: null },

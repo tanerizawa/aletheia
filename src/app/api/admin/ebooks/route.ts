@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { randomUUID } from 'crypto';
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 
@@ -19,7 +20,7 @@ export async function GET(request: NextRequest) {
     const skip = (page - 1) * limit;
 
     // Build where clause
-    const where: any = {};
+    const where: Record<string, unknown> = {};
     if (category) {
       where.category = category;
     }
@@ -50,7 +51,7 @@ export async function GET(request: NextRequest) {
         totalPages: Math.ceil(total / limit),
       },
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('GET /api/admin/ebooks error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
@@ -89,7 +90,7 @@ export async function POST(request: NextRequest) {
     const ebook = await prisma.ebook.create({
       data: {
         title: data.title,
-        slug: `${slug}-${Date.now()}`,
+        slug: `${slug}-${randomUUID().replace(/-/g, '').slice(0,8)}`,
         author: data.author,
         publisher: data.publisher || null,
         publishYear: data.publishYear ? parseInt(data.publishYear) : null,
@@ -112,7 +113,7 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ success: true, ebook }, { status: 201 });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('POST /api/admin/ebooks error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }

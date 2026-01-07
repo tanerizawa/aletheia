@@ -165,6 +165,12 @@ npm run build && npm start
 - ✅ SSL certificate akan auto-configured jika deploy via Vercel
 - ✅ Semua pages sudah static generated untuk performance optimal
 
+## Development Notes
+
+- If you see hydration mismatch warnings in development mentioning attributes like `crxlauncher`, try reproducing in an Incognito window (extensions can inject attributes and cause mismatches). Reproduce first in a fresh profile or Incognito to rule out extension interference.
+- If the browser warns that a preloaded resource (for example `/logo.svg`) was not used quickly after load, we removed the `priority` prop from the homepage hero logo to avoid unnecessary preload. Keep `priority` on header images that are above-the-fold; avoid multiple `priority` images with the same `src`.
+- For deterministic SSR output, avoid using volatile values (e.g., `Date.now()`, `Math.random()`, or locale-specific formatting) directly during server render without embedding a consistent snapshot for the client.
+
 ## Resources
 
 - [Next.js Documentation](https://nextjs.org/docs)

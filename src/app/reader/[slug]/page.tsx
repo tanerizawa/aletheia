@@ -60,7 +60,7 @@ export default async function ReaderPage({ params }: PageProps) {
 
   if (!ebook.availableOnline) {
     return (
-      <div className="min-h-screen bg-cream-soft-white flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[#E8E3DB] flex items-center justify-center p-4">
         <div className="max-w-md text-center">
           <div className="mb-6">
             <svg
@@ -80,8 +80,8 @@ export default async function ReaderPage({ params }: PageProps) {
           <h1 className="text-2xl font-display font-bold text-teal-900 mb-4">
             Buku Tidak Tersedia Online
           </h1>
-          <p className="text-gray-600 mb-6">
-            Buku "{ebook.title}" saat ini tidak tersedia untuk dibaca secara online.
+            <p className="text-gray-600 mb-6">
+            Buku &quot;{ebook.title}&quot; saat ini tidak tersedia untuk dibaca secara online.
           </p>
           <a
             href={`/baca/${slug}`}

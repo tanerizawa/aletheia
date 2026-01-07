@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface Subscriber {
@@ -19,11 +19,7 @@ export default function NewslettersPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
 
-  useEffect(() => {
-    fetchSubscribers();
-  }, [page, search]);
-
-  const fetchSubscribers = async () => {
+  const fetchSubscribers = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams({
@@ -50,8 +46,11 @@ export default function NewslettersPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, search, router]);
 
+  useEffect(() => {
+    fetchSubscribers();
+  }, [page, search, fetchSubscribers]);
   const handleDelete = async (id: string) => {
     if (!confirm('Hapus subscriber ini?')) return;
 

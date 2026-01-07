@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 
 // GET /api/admin/article-authors - List all authors
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const session = await getSession();
     if (!session) {
@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.json({ authors });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Authors fetch error:', error);
     return NextResponse.json({ error: 'Failed to fetch authors' }, { status: 500 });
   }
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ success: true, author }, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Author creation error:', error);
     return NextResponse.json({ error: 'Failed to create author' }, { status: 500 });
   }

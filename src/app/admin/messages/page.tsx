@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface ContactMessage {
@@ -25,11 +25,7 @@ export default function MessagesPage() {
   const [unreadCount, setUnreadCount] = useState(0);
   const [selectedMessage, setSelectedMessage] = useState<ContactMessage | null>(null);
 
-  useEffect(() => {
-    fetchMessages();
-  }, [page, search, filter]);
-
-  const fetchMessages = async () => {
+  const fetchMessages = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams({
@@ -58,7 +54,11 @@ export default function MessagesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, search, filter, router]);
+
+  useEffect(() => {
+    fetchMessages();
+  }, [page, search, filter, fetchMessages]);
 
   const handleToggleRead = async (id: string, isRead: boolean) => {
     try {
@@ -153,7 +153,7 @@ export default function MessagesPage() {
             <select
               value={filter}
               onChange={(e) => {
-                setFilter(e.target.value as any);
+                setFilter(e.target.value as 'all' | 'unread' | 'read');
                 setPage(1);
               }}
               className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 interface VisitHistory {
   path: string;
@@ -22,24 +22,29 @@ const MAX_HISTORY = 5; // Keep last 5 visits
  * - Suggest related content
  */
 export function usePersonalization() {
-  const [visitHistory, setVisitHistory] = useState<VisitHistory[]>([]);
-  const [lastVisit, setLastVisit] = useState<VisitHistory | null>(null);
-
-  // Load history from localStorage on mount
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
+  // Lazily initialize from localStorage to avoid setting state inside an effect
+  const [visitHistory, setVisitHistory] = useState<VisitHistory[]>(() => {
     try {
+      if (typeof window === 'undefined') return [];
       const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        const history = JSON.parse(stored) as VisitHistory[];
-        setVisitHistory(history);
-        setLastVisit(history[0] || null);
-      }
+      return stored ? (JSON.parse(stored) as VisitHistory[]) : [];
     } catch (error) {
-      console.error('Failed to load visit history:', error);
+      console.error('Failed to read visit history during init:', error);
+      return [];
     }
-  }, []);
+  });
+
+  const [lastVisit, setLastVisit] = useState<VisitHistory | null>(() => {
+    try {
+      if (typeof window === 'undefined') return null;
+      const stored = localStorage.getItem(STORAGE_KEY);
+      const history = stored ? (JSON.parse(stored) as VisitHistory[]) : [];
+      return history[0] || null;
+    } catch (error) {
+      console.error('Failed to read last visit during init:', error);
+      return null;
+    }
+  });
 
   // Save current visit
   const recordVisit = (path: string, title?: string) => {

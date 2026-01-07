@@ -10,11 +10,17 @@ import 'easymde/dist/easymde.min.css';
 
 const SimpleMDE = dynamic(() => import('react-simplemde-editor'), { ssr: false });
 
+interface AuthorItem {
+  id: string;
+  name?: string;
+  role?: string;
+}
+
 export default function NewArticlePage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [authors, setAuthors] = useState<any[]>([]);
+  const [authors, setAuthors] = useState<AuthorItem[]>([]);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -37,8 +43,8 @@ export default function NewArticlePage() {
       const response = await fetch('/api/admin/article-authors');
       const data = await response.json();
       setAuthors(data.authors || []);
-    } catch (error) {
-      console.error('Failed to fetch authors:', error);
+    } catch (err: unknown) {
+      console.error('Failed to fetch authors:', err);
     }
   };
 
@@ -81,8 +87,9 @@ export default function NewArticlePage() {
       }
 
       router.push('/admin/articles?success=created');
-    } catch (err: any) {
-      setError(err.message || 'Failed to create article');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setError(msg || 'Failed to create article');
     } finally {
       setLoading(false);
     }

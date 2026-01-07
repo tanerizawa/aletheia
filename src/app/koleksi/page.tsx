@@ -71,14 +71,14 @@ export default function KoleksiPage() {
   ];
 
   return (
-    <main className="flex-grow bg-cream-soft-white">
-      <div className="bg-[#2C5F5D] py-16 border-b-4 border-[#B05E3F]">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+    <main className="flex-grow bg-[#E8E3DB]">
+      <div className="hero-outer py-16 border-b-4 border-[#B05E3F]">
+        <div className="hero-inner">
           <div className="inline-block mb-4">
-            <span className="text-[#B05E3F] text-sm uppercase tracking-[0.3em] font-semibold">Perpustakaan</span>
+            <span className="hero-label text-sm uppercase tracking-[0.3em] font-semibold">Perpustakaan</span>
           </div>
-          <h1 className="font-serif text-5xl lg:text-6xl font-bold text-cream-soft-white mb-6">Koleksi Kami</h1>
-          <p className="text-xl text-cream-warm max-w-3xl leading-relaxed">
+          <h1 className="font-serif text-5xl lg:text-6xl font-bold hero-title mb-6">Koleksi Kami</h1>
+          <p className="text-xl hero-lead max-w-3xl leading-relaxed">
             Lebih dari 8,000 koleksi buku dan sumber informasi — dari fiksi klasik hingga pengetahuan kontemporer, 
             dari bacaan anak hingga referensi akademik. Setiap buku adalah jendela ke dunia baru yang menanti untuk dibuka
           </p>
@@ -104,28 +104,28 @@ export default function KoleksiPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="text-center">
               <div className="w-20 h-20 bg-[#2C5F5D] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <span className="font-serif text-3xl font-bold text-cream-soft-white">1</span>
+                <span className="font-serif text-3xl font-bold text-[#E8E3DB]">1</span>
               </div>
               <h3 className="font-serif text-xl font-bold mb-3 text-[#1F4E4C]">Daftar Anggota</h3>
               <p className="text-gray-500 leading-relaxed">Daftarkan diri sebagai anggota perpustakaan</p>
             </div>
             <div className="text-center">
               <div className="w-20 h-20 bg-[#2C5F5D] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <span className="font-serif text-3xl font-bold text-cream-soft-white">2</span>
+                <span className="font-serif text-3xl font-bold text-[#E8E3DB]">2</span>
               </div>
               <h3 className="font-serif text-xl font-bold mb-3 text-[#1F4E4C]">Cari Buku</h3>
               <p className="text-gray-500 leading-relaxed">Temukan buku yang Anda inginkan</p>
             </div>
             <div className="text-center">
               <div className="w-20 h-20 bg-[#2C5F5D] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <span className="font-serif text-3xl font-bold text-cream-soft-white">3</span>
+                <span className="font-serif text-3xl font-bold text-[#E8E3DB]">3</span>
               </div>
               <h3 className="font-serif text-xl font-bold mb-3 text-[#1F4E4C]">Pinjam</h3>
               <p className="text-gray-500 leading-relaxed">Bawa kartu anggota dan pinjam maksimal 3 buku</p>
             </div>
             <div className="text-center">
               <div className="w-20 h-20 bg-[#2C5F5D] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <span className="font-serif text-3xl font-bold text-cream-soft-white">4</span>
+                <span className="font-serif text-3xl font-bold text-[#E8E3DB]">4</span>
               </div>
               <h3 className="font-serif text-xl font-bold mb-3 text-[#1F4E4C]">Kembalikan</h3>
               <p className="text-gray-500 leading-relaxed">Kembalikan buku maksimal 14 hari</p>

@@ -83,7 +83,7 @@ export default function SejarahPage() {
                             Odang ditunjuk sebagai Direktur untuk memimpin visi jangka panjang.
                           </p>
                           <div className="text-xs text-[#7A7A7A] italic">
-                            "Sebuah awal baru untuk demokratisasi pengetahuan"
+                            &quot;Sebuah awal baru untuk demokratisasi pengetahuan&quot;
                           </div>
                         </div>
                       </div>
@@ -109,7 +109,7 @@ export default function SejarahPage() {
                             menyediakan buku, tetapi juga menjadi rumah bagi pencinta ilmu.
                           </p>
                           <div className="text-xs text-[#7A7A7A] italic">
-                            "Aletheia — kebenaran yang terungkap melalui literasi"
+                            &quot;Aletheia — kebenaran yang terungkap melalui literasi&quot;
                           </div>
                         </div>
                       </div>
@@ -131,7 +131,7 @@ export default function SejarahPage() {
                             SK Pendirian: 01/SK/Academos/int/X/2025. NPP: 3215184J0000003.
                           </p>
                           <div className="text-xs text-[#7A7A7A] italic">
-                            "Pintu pertama menuju ekosistem literasi terbuka"
+                            &quot;Pintu pertama menuju ekosistem literasi terbuka&quot;
                           </div>
                         </div>
                       </div>
@@ -157,7 +157,7 @@ export default function SejarahPage() {
                             dari berbagai genre: fiksi, non-fiksi, akademik, dan referensi.
                           </p>
                           <div className="text-xs text-[#7A7A7A] italic">
-                            "Setiap buku adalah jendela ke dunia baru"
+                            &quot;Setiap buku adalah jendela ke dunia baru&quot;
                           </div>
                         </div>
                       </div>
@@ -179,7 +179,7 @@ export default function SejarahPage() {
                             story telling anak, dan workshop menulis menarik berbagai kalangan.
                           </p>
                           <div className="text-xs text-[#7A7A7A] italic">
-                            "Komunitas yang tumbuh bersama adalah kekuatan sejati"
+                            &quot;Komunitas yang tumbuh bersama adalah kekuatan sejati&quot;
                           </div>
                         </div>
                       </div>
@@ -205,7 +205,7 @@ export default function SejarahPage() {
                             dan sistem manajemen kegiatan. Akses literasi kini tanpa batas ruang dan waktu.
                           </p>
                           <div className="text-xs text-[#D4A574] italic">
-                            "Masa depan literasi adalah hybrid: fisik dan digital"
+                            &quot;Masa depan literasi adalah hybrid: fisik dan digital&quot;
                           </div>
                         </div>
                       </div>

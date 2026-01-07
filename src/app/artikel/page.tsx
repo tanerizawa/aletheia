@@ -2,6 +2,23 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { DocumentIcon, ClockIcon, HeartFilledIcon } from "@/components/icons";
 import CategoryIcon from "@/components/CategoryIcon";
+import { formatDate } from '@/lib/dateUtils';
+
+interface Article {
+  slug: string;
+  featured?: boolean;
+  category?: string;
+  publishedDate?: string;
+  title?: string;
+  excerpt?: string;
+  author?: { name?: string; role?: string };
+  readTime?: number;
+  views?: number;
+  likes?: number;
+  tags?: string[];
+  coverImage?: string;
+  content?: string;
+}
 
 export const metadata: Metadata = {
   title: "Artikel & Blog - Literasi, Pendidikan, Penelitian",
@@ -9,7 +26,7 @@ export const metadata: Metadata = {
   keywords: ["artikel", "blog", "literasi", "pendidikan", "penelitian", "budaya"],
 };
 
-async function getArticles() {
+async function getArticles(): Promise<{ articles: Article[] }> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
                     (process.env.PORT ? `http://localhost:${process.env.PORT}` : 'http://localhost:3001');
@@ -17,7 +34,8 @@ async function getArticles() {
       next: { revalidate: 60 },
     });
     if (!res.ok) return { articles: [] };
-    return await res.json();
+    const data = await res.json();
+    return { articles: (data.articles || []) as Article[] };
   } catch (error) {
     console.error('Failed to fetch articles:', error);
     return { articles: [] };
@@ -43,27 +61,27 @@ export default async function ArtikelPage() {
   const { articles } = await getArticles();
   const stats = await getStats();
   
-  const featuredArticles = articles.filter((a: any) => a.featured).slice(0, 2);
+  const featuredArticles = articles.filter((a: Article) => a.featured).slice(0, 2);
   const recentArticles = articles.slice(0, 6);
   
   // Get unique categories
-  const articleCategories = Array.from(new Set(articles.map((a: any) => a.category)));
+  const articleCategories = Array.from(new Set(articles.map((a: Article) => a.category || 'Lainnya')));
 
   return (
-    <main className="flex-grow bg-cream-soft-white">
+    <main className="flex-grow bg-[#E8E3DB]">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-[#1F4E4C] to-[#2C5F5D] py-16 border-b-4 border-[#B05E3F]">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex items-center gap-3 mb-4 text-cream-warm">
+      <section className="hero-outer py-16 border-b-4 border-[#B05E3F]">
+        <div className="hero-inner">
+          <div className="flex items-center gap-3 mb-4 hero-label">
             <DocumentIcon className="w-8 h-8" />
             <span className="text-sm uppercase tracking-wider font-serif">Perpustakaan Pengetahuan</span>
           </div>
           
-          <h1 className="font-serif text-5xl lg:text-6xl font-bold text-cream-soft-white mb-6">
+          <h1 className="font-serif text-5xl lg:text-6xl font-bold hero-title mb-6">
             Artikel & Blog
           </h1>
           
-          <p className="text-xl text-cream-warm max-w-3xl leading-relaxed mb-8">
+          <p className="text-xl hero-lead max-w-3xl leading-relaxed mb-8">
             Eksplorasi ide-ide, pengetahuan, dan wawasan mendalam — dari literasi, pendidikan, penelitian, 
             hingga budaya dan isu sosial. Bacaan yang menginspirasi dan memperluas perspektif
           </p>
@@ -75,7 +93,7 @@ export default async function ArtikelPage() {
                 type="text"
                 name="q"
                 placeholder="Cari artikel berdasarkan judul, topik, atau tag..."
-                className="w-full px-6 py-4 pr-14 rounded-lg border-2 border-cream-soft-white/30 bg-white/10 text-cream-soft-white placeholder-cream-warm/60 focus:outline-none focus:border-[#B05E3F] focus:bg-white/20 transition-all"
+                className="w-full px-6 py-4 pr-14 rounded-lg border-2 border-[#FAF8F5]/30 bg-white/10 text-[#FAF8F5] placeholder-[#D4A574]/60 focus:outline-none focus:border-[#B05E3F] focus:bg-white/20 transition-all"
               />
               <button type="submit" className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#B05E3F] text-white p-2 rounded hover:bg-[#9A5035] transition-colors">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -87,19 +105,19 @@ export default async function ArtikelPage() {
 
           {/* Stats */}
           <div className="flex flex-wrap gap-6 mt-8">
-            <div className="flex items-center gap-2 text-cream-warm">
+            <div className="flex items-center gap-2 text-[#D4A574]">
               <svg className="w-5 h-5 text-[#B05E3F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               <span className="font-bold">{stats?.articles?.published || articles.length}</span> Artikel
             </div>
-            <div className="flex items-center gap-2 text-cream-warm">
+            <div className="flex items-center gap-2 text-[#D4A574]">
               <svg className="w-5 h-5 text-[#B05E3F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
               </svg>
               <span className="font-bold">{articleCategories.length}</span> Kategori
             </div>
-            <div className="flex items-center gap-2 text-cream-warm">
+            <div className="flex items-center gap-2 text-[#D4A574]">
               <svg className="w-5 h-5 text-[#B05E3F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -118,11 +136,11 @@ export default async function ArtikelPage() {
             </h2>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {featuredArticles.map((article: any) => (
+              {featuredArticles.map((article: Article) => (
                 <Link
                   key={article.slug}
                   href={`/artikel/${article.slug}`}
-                  className="group bg-cream-soft-white border-2 border-cream-beige hover:border-[#B05E3F] hover:shadow-xl transition-all duration-300 overflow-hidden"
+                  className="group bg-[#E8E3DB] border-2 border-[#C4BDB2] hover:border-[#B05E3F] hover:shadow-xl transition-all duration-300 overflow-hidden"
                 >
                   {/* Cover Image */}
                   <div className="h-64 bg-gradient-to-br from-[#2C5F5D] to-[#B05E3F] flex items-center justify-center overflow-hidden">
@@ -137,11 +155,7 @@ export default async function ArtikelPage() {
                         {article.category}
                       </span>
                       <span className="text-sm text-[#7A7A7A]">
-                        {new Date(article.publishedDate).toLocaleDateString('id-ID', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric'
-                        })}
+                        {formatDate(article.publishedDate, 'id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}
                       </span>
                     </div>
 
@@ -165,15 +179,15 @@ export default async function ArtikelPage() {
                     </div>
 
                     {/* Meta */}
-                    <div className="flex items-center gap-4 text-xs text-[#7A7A7A] pt-4 border-t border-cream-beige">
-                      <span className="flex items-center gap-1"><ClockIcon className="w-3.5 h-3.5" /> {article.readTime} menit</span>
-                      <span>{article.views} views</span>
-                      <span className="flex items-center gap-1"><HeartFilledIcon className="w-3.5 h-3.5 text-red-500" /> {article.likes} likes</span>
+                    <div className="flex items-center gap-4 text-xs text-[#7A7A7A] pt-4 border-t border-[#C4BDB2]">
+                      <span className="flex items-center gap-1"><ClockIcon className="w-3.5 h-3.5" /> {article.readTime ?? 0} menit</span>
+                      <span>{article.views ?? 0} views</span>
+                      <span className="flex items-center gap-1"><HeartFilledIcon className="w-3.5 h-3.5 text-red-500" /> {article.likes ?? 0} likes</span>
                     </div>
 
                     {/* Tags */}
                     <div className="flex flex-wrap gap-2 mt-4">
-                      {article.tags.slice(0, 3).map((tag: string) => (
+                      {(article.tags || []).slice(0, 3).map((tag: string) => (
                         <span key={tag} className="text-xs px-2 py-1 bg-white text-[#7A7A7A] rounded">
                           #{tag}
                         </span>
@@ -195,11 +209,11 @@ export default async function ArtikelPage() {
           </h2>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {articleCategories.map((category: any) => (
+            {articleCategories.map((category: string) => (
               <Link
                 key={category}
                 href={`/artikel/kategori/${category.toLowerCase()}`}
-                className="group p-6 bg-white border-2 border-cream-beige hover:border-[#2C5F5D] hover:bg-cream-soft-white transition-all duration-300 text-center"
+                className="group p-6 bg-white border-2 border-[#C4BDB2] hover:border-[#2C5F5D] hover:bg-[#E8E3DB] transition-all duration-300 text-center"
               >
                 <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">
                   <CategoryIcon category={category} className="w-10 h-10 mx-auto text-[#2C5F5D] group-hover:text-[#B05E3F] transition-colors" />
@@ -221,11 +235,11 @@ export default async function ArtikelPage() {
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {recentArticles.map((article: any) => (
+            {recentArticles.map((article: Article) => (
               <Link
                 key={article.slug}
                 href={`/artikel/${article.slug}`}
-                className="group bg-cream-soft-white border-2 border-cream-beige hover:border-[#B05E3F] hover:shadow-lg transition-all"
+                className="group bg-[#E8E3DB] border-2 border-[#C4BDB2] hover:border-[#B05E3F] hover:shadow-lg transition-all"
               >
                 {/* Cover */}
                 <div className="h-48 bg-gradient-to-br from-[#2C5F5D] to-[#B05E3F] flex items-center justify-center">
@@ -240,11 +254,7 @@ export default async function ArtikelPage() {
                       {article.category}
                     </span>
                     <span className="text-xs text-[#7A7A7A]">
-                      {new Date(article.publishedDate).toLocaleDateString('id-ID', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric'
-                      })}
+                      {formatDate(article.publishedDate, 'id-ID', { year: 'numeric', month: 'short', day: 'numeric' })}
                     </span>
                   </div>
 
@@ -257,14 +267,14 @@ export default async function ArtikelPage() {
                   </p>
 
                   {/* Author */}
-                  <div className="flex items-center gap-2 mb-3">
+                    <div className="flex items-center gap-3 mb-3">
                     <div className="w-8 h-8 rounded-full bg-[#2C5F5D] flex items-center justify-center text-white text-xs font-bold">
-                      {article.author.name.charAt(0)}
+                      {article.author?.name?.charAt(0) ?? 'A'}
                     </div>
-                    <span className="text-xs text-[#7A7A7A]">{article.author.name}</span>
+                    <span className="text-xs text-[#7A7A7A]">{article.author?.name ?? 'Anonymous'}</span>
                   </div>
 
-                  <div className="flex items-center gap-3 text-xs text-[#7A7A7A] pt-3 border-t border-cream-beige">
+                  <div className="flex items-center gap-3 text-xs text-[#7A7A7A] pt-3 border-t border-[#C4BDB2]">
                     <span className="flex items-center gap-1"><ClockIcon className="w-3.5 h-3.5" /> {article.readTime}</span>
                     <span>views {article.views}</span>
                   </div>
@@ -278,15 +288,15 @@ export default async function ArtikelPage() {
       {/* CTA Section */}
       <section className="py-16 bg-gradient-to-r from-[#2C5F5D] to-[#1F4E4C]">
         <div className="max-w-4xl mx-auto px-6 lg:px-8 text-center">
-          <h2 className="font-serif text-3xl lg:text-4xl font-bold text-cream-soft-white mb-6">
+          <h2 className="font-serif text-3xl lg:text-4xl font-bold text-[#FAF8F5] mb-6">
             Ingin Berkontribusi?
           </h2>
-          <p className="text-xl text-cream-warm mb-8">
+          <p className="text-xl text-[#D4A574] mb-8">
             Kirimkan artikel Anda dan bagikan pengetahuan dengan komunitas kami
           </p>
           <Link
             href="/kontak"
-            className="inline-block bg-[#B05E3F] text-cream-soft-white px-10 py-4 font-serif font-bold text-lg hover:bg-[#9A5035] transition-all border-2 border-[#B05E3F]"
+            className="inline-block bg-[#B05E3F] text-[#FAF8F5] px-10 py-4 font-serif font-bold text-lg hover:bg-[#9A5035] transition-all border-2 border-[#B05E3F]"
           >
             Hubungi Kami
           </Link>

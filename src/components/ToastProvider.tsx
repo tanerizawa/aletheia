@@ -19,8 +19,16 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
   const showToast = (message: string, type: ToastMessage['type']) => {
-    const id = Math.random().toString(36).substr(2, 9);
-    setToasts(prev => [...prev, { id, message, type }]);
+    let id: string;
+    if (typeof globalThis.crypto?.getRandomValues === 'function') {
+      const arr = new Uint8Array(6);
+      // use crypto.getRandomValues to build a short id without casting
+      globalThis.crypto.getRandomValues(arr as unknown as Uint8Array);
+      id = Array.from(arr).map((b) => b.toString(36).padStart(2, '0')).join('').slice(0, 9);
+    } else {
+      id = Math.random().toString(36).substr(2, 9);
+    }
+    setToasts((prev) => [...prev, { id, message, type }]);
   };
 
   const removeToast = (id: string) => {

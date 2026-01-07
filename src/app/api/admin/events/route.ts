@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { randomUUID } from 'crypto';
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 
@@ -20,7 +21,7 @@ export async function GET(request: NextRequest) {
     const skip = (page - 1) * limit;
 
     // Build where clause
-    const where: any = {};
+    const where: Record<string, unknown> = {};
 
     if (type) {
       where.type = type;
@@ -59,7 +60,7 @@ export async function GET(request: NextRequest) {
         totalPages: Math.ceil(total / limit),
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Events fetch error:', error);
     return NextResponse.json({ error: 'Failed to fetch events' }, { status: 500 });
   }
@@ -115,7 +116,7 @@ export async function POST(request: NextRequest) {
 
     // Check if slug exists
     const existing = await prisma.event.findUnique({ where: { slug } });
-    const finalSlug = existing ? `${slug}-${Date.now()}` : slug;
+    const finalSlug = existing ? `${slug}-${randomUUID().replace(/-/g, '').slice(0,8)}` : slug;
 
     const event = await prisma.event.create({
       data: {
@@ -142,7 +143,7 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ success: true, event }, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Event creation error:', error);
     return NextResponse.json({ error: 'Failed to create event' }, { status: 500 });
   }

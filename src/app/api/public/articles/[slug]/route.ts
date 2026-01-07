@@ -41,7 +41,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
     });
 
     return NextResponse.json({ article });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Public article fetch error:', error);
     return NextResponse.json(
       { error: 'Failed to fetch article', article: null },

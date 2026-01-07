@@ -39,7 +39,7 @@ export default function Header() {
                 {item.children ? (
                   <>
                     <button
-                      className="px-5 py-2 text-cream-soft-white hover:text-[#B05E3F] hover:bg-[#1F4E4C] rounded transition-all font-medium flex items-center space-x-1"
+                      className="px-5 py-2 text-[#E8E3DB] hover:text-[#B05E3F] hover:bg-[#1F4E4C] rounded transition-all font-medium flex items-center space-x-1"
                       onClick={() => toggleDropdown(item.title)}
                       aria-haspopup="true"
                       aria-expanded={openDropdown === item.title}
@@ -53,7 +53,7 @@ export default function Header() {
                     {/* Dropdown Menu */}
                     <div className={`absolute left-0 top-full mt-2 w-64 bg-white rounded-lg shadow-xl border-2 border-[#B05E3F] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50`}>
                       {item.description && (
-                        <div className="px-4 py-3 border-b border-cream-warm bg-cream-soft-white">
+                        <div className="px-4 py-3 border-b border-[#D4A574] bg-[#E8E3DB]">
                           <p className="text-sm font-semibold text-[#2C5F5D]">{item.description}</p>
                         </div>
                       )}
@@ -62,7 +62,7 @@ export default function Header() {
                           <Link
                             key={child.href}
                             href={child.href}
-                            className="flex items-start px-4 py-3 hover:bg-cream-soft-white transition-colors group/item"
+                            className="flex items-start px-4 py-3 hover:bg-[#E8E3DB] transition-colors group/item"
                           >
                             <div className="mr-3 mt-0.5 text-[#B05E3F]">
                               {child.icon && <NavIcon icon={child.icon} className="w-5 h-5" />}
@@ -87,8 +87,8 @@ export default function Header() {
                     href={item.href}
                     className={`px-5 py-2 rounded transition-all font-medium ${
                       isActive(item.href)
-                        ? 'bg-[#B05E3F] text-cream-soft-white'
-                        : 'text-cream-soft-white hover:text-[#B05E3F] hover:bg-[#1F4E4C]'
+                        ? 'bg-[#B05E3F] text-[#E8E3DB]'
+                        : 'text-[#E8E3DB] hover:text-[#B05E3F] hover:bg-[#1F4E4C]'
                     }`}
                   >
                     {item.title}
@@ -102,7 +102,7 @@ export default function Header() {
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-cream-soft-white hover:text-[#B05E3F] focus:outline-none focus:ring-2 focus:ring-[#B05E3F] focus:ring-offset-2 focus:ring-offset-[#2C5F5D] rounded p-2"
+              className="text-[#E8E3DB] hover:text-[#B05E3F] focus:outline-none focus:ring-2 focus:ring-[#B05E3F] focus:ring-offset-2 focus:ring-offset-[#2C5F5D] rounded p-2"
               aria-label={isMenuOpen ? "Tutup menu" : "Buka menu"}
               aria-expanded={isMenuOpen}
               aria-controls="mobile-menu"
@@ -118,60 +118,56 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="md:hidden pb-6 pt-2 space-y-1 border-t border-[#1F4E4C] mt-2" id="mobile-menu" role="navigation" aria-label="Navigasi mobile">
-            {mainNavigation.map((item) => (
-              <div key={item.title}>
-                {item.children ? (
-                  <>
-                    <button
-                      onClick={() => toggleDropdown(item.title)}
-                      className="w-full text-left py-3 px-4 text-cream-soft-white hover:bg-[#1F4E4C] hover:text-[#B05E3F] rounded transition-all font-medium flex items-center justify-between"
-                    >
-                      <span className="flex items-center space-x-2">
-                        {item.icon && <NavIcon icon={item.icon} className="w-5 h-5" />}
-                        <span>{item.title}</span>
-                      </span>
-                      <svg 
-                        className={`w-4 h-4 transition-transform ${openDropdown === item.title ? 'rotate-180' : ''}`} 
-                        fill="none" 
-                        stroke="currentColor" 
-                        viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-                    {openDropdown === item.title && (
-                      <div className="pl-8 mt-1 space-y-1">
-                        {item.children.map((child) => (
-                          <Link
-                            key={child.href}
-                            href={child.href}
-                            className="flex items-center gap-2 py-2 px-4 text-cream-soft-white hover:bg-[#1F4E4C] hover:text-[#B05E3F] rounded transition-all text-sm"
-                            onClick={() => setIsMenuOpen(false)}
-                          >
-                            {child.icon && <NavIcon icon={child.icon} className="w-4 h-4" />}
-                            <span>{child.title}</span>
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <Link
-                    href={item.href}
-                    className="flex items-center space-x-2 py-3 px-4 text-cream-soft-white hover:bg-[#1F4E4C] hover:text-[#B05E3F] rounded transition-all font-medium"
-                    onClick={() => setIsMenuOpen(false)}
+        {/* Mobile Navigation: always in DOM, toggle visibility by CSS to avoid transient node removal */}
+        <div className={`md:hidden pb-6 pt-2 space-y-1 border-t border-[#1F4E4C] mt-2 ${isMenuOpen ? 'block' : 'hidden'}`} id="mobile-menu" role="navigation" aria-label="Navigasi mobile">
+          {mainNavigation.map((item) => (
+            <div key={item.title}>
+              {item.children ? (
+                <>
+                  <button
+                    onClick={() => toggleDropdown(item.title)}
+                    className="w-full text-left py-3 px-4 text-[#E8E3DB] hover:bg-[#1F4E4C] hover:text-[#B05E3F] rounded transition-all font-medium flex items-center justify-between"
                   >
-                    {item.icon && <NavIcon icon={item.icon} className="w-5 h-5" />}
-                    <span>{item.title}</span>
-                  </Link>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
+                    <span className="flex items-center space-x-2">
+                      {item.icon && <NavIcon icon={item.icon} className="w-5 h-5" />}
+                      <span>{item.title}</span>
+                    </span>
+                    <svg 
+                      className={`w-4 h-4 transition-transform ${openDropdown === item.title ? 'rotate-180' : ''}`} 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  <div className={`${openDropdown === item.title ? 'block' : 'hidden'} pl-8 mt-1 space-y-1`}>
+                    {item.children.map((child) => (
+                      <Link
+                        key={child.href}
+                        href={child.href}
+                        className="flex items-center gap-2 py-2 px-4 text-[#E8E3DB] hover:bg-[#1F4E4C] hover:text-[#B05E3F] rounded transition-all text-sm"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        {child.icon && <NavIcon icon={child.icon} className="w-4 h-4" />}
+                        <span>{child.title}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <Link
+                  href={item.href}
+                  className="flex items-center space-x-2 py-3 px-4 text-[#E8E3DB] hover:bg-[#1F4E4C] hover:text-[#B05E3F] rounded transition-all font-medium"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.icon && <NavIcon icon={item.icon} className="w-5 h-5" />}
+                  <span>{item.title}</span>
+                </Link>
+              )}
+            </div>
+          ))}
+        </div>
       </nav>
     </header>
   );

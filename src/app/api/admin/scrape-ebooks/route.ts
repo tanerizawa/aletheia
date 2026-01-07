@@ -41,6 +41,7 @@ export async function POST(request: NextRequest) {
     const ebooks: ScrapedEbook[] = [];
 
     // Parse berdasarkan struktur HTML sebenarnya: col-md-4 > card > card-body
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     $('.col-md-4 .card').each((_index: number, element: any) => {
       const $el = $(element);
       const $body = $el.find('.card-body');
@@ -67,12 +68,11 @@ export async function POST(request: NextRequest) {
       const coverImage = $body.find('img').first().attr('src');
       
       // Extract link baca buku (untuk mendapatkan ID buku)
-      const readLink = $body.find('a[href*="baca-buku"]').first().attr('href');
       const downloadLink = $body.find('a[href*="unduh"]').first().attr('href');
       
-      // Extract ID buku dari URL untuk fileUrl
-      const bookIdMatch = readLink?.match(/baca-buku\/(\d+)/);
-      const bookId = bookIdMatch ? bookIdMatch[1] : undefined;
+      // Extract ID buku dari URL untuk fileUrl (not used currently)
+      // const bookIdMatch = readLink?.match(/baca-buku\/(\d+)/);
+      // const bookId = bookIdMatch ? bookIdMatch[1] : undefined;
 
       if (title) {
         ebooks.push({
@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
       url,
     });
 
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Scraping error:', error);
     return NextResponse.json(
       { 

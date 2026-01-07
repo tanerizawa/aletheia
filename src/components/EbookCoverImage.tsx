@@ -5,9 +5,9 @@ import { BookIcon } from '@/components/icons';
 import OptimizedImage from './OptimizedImage';
 
 interface EbookCoverImageProps {
-  src: string | null;
-  alt: string;
-  title: string;
+  src?: string | null;
+  alt?: string;
+  title?: string;
 }
 
 export default function EbookCoverImage({ src, alt, title }: EbookCoverImageProps) {
@@ -46,7 +46,7 @@ export default function EbookCoverImage({ src, alt, title }: EbookCoverImageProp
       <div className="flex flex-col items-center justify-center w-full h-full p-8">
         <BookIcon className="w-24 h-24 text-white/60 mb-4" />
         <p className="text-white/80 text-center font-semibold">
-          {title.substring(0, 50)}
+          {(title || '').substring(0, 50)}
         </p>
       </div>
     );
@@ -61,8 +61,8 @@ export default function EbookCoverImage({ src, alt, title }: EbookCoverImageProp
       )}
       <div className={`w-full h-full ${imageLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-500`}>
         <OptimizedImage
-          src={src}
-          alt={alt}
+          src={src || ''}
+          alt={alt || title || ''}
           width={400}
           height={533}
           className="w-full h-full object-cover"

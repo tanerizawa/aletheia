@@ -1,6 +1,22 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { TargetIcon, CalendarIcon, SparklesIcon, BookIcon, UsersIcon, ChatIcon, CameraIcon } from "@/components/icons";
+import { formatDate } from '@/lib/dateUtils';
+interface EventItem {
+  id?: string;
+  slug: string;
+  type?: string;
+  title?: string;
+  description?: string;
+  startDate?: string;
+  endDate?: string;
+  time?: string;
+  location?: string;
+  status?: string;
+  photos?: { id?: string }[];
+  maxParticipants?: number;
+  registeredParticipants?: number;
+}
 
 export const metadata: Metadata = {
   title: "Kegiatan - Program & Event Rumah Aletheia",
@@ -14,7 +30,8 @@ async function getEvents() {
                     (process.env.PORT ? `http://localhost:${process.env.PORT}` : 'http://localhost:3001');
     const res = await fetch(`${baseUrl}/api/public/events?limit=100`, { next: { revalidate: 60 } });
     if (!res.ok) return { events: [] };
-    return await res.json();
+    const data = await res.json();
+    return { events: (data.events || []) as EventItem[] };
   } catch (error) {
     console.error('Failed to fetch events:', error);
     return { events: [] };
@@ -24,46 +41,46 @@ async function getEvents() {
 export default async function KegiatanPage() {
   const { events } = await getEvents();
   
-  const upcomingEvents = events.filter((e: any) => e.status === 'UPCOMING').slice(0, 3);
-  const ongoingEvents = events.filter((e: any) => e.status === 'ONGOING');
-  const completedEvents = events.filter((e: any) => e.status === 'COMPLETED').slice(0, 6);
+  const upcomingEvents = events.filter((e: EventItem) => e.status === 'UPCOMING').slice(0, 3);
+  const ongoingEvents = events.filter((e: EventItem) => e.status === 'ONGOING');
+  const completedEvents = events.filter((e: EventItem) => e.status === 'COMPLETED').slice(0, 6);
 
   return (
-    <main className="flex-grow bg-cream-soft-white">
+    <main className="flex-grow bg-[#E8E3DB]">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-[#1F4E4C] to-[#2C5F5D] py-16 border-b-4 border-[#B05E3F]">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex items-center gap-3 mb-4 text-cream-warm">
+      <section className="hero-outer py-16 border-b-4 border-[#B05E3F]">
+        <div className="hero-inner">
+          <div className="flex items-center gap-3 mb-4 hero-label">
             <TargetIcon className="w-8 h-8" />
             <span className="text-sm uppercase tracking-wider font-serif">Taman Kegiatan</span>
           </div>
           
-          <h1 className="font-serif text-5xl lg:text-6xl font-bold text-cream-soft-white mb-6">
+          <h1 className="font-serif text-5xl lg:text-6xl font-bold hero-title mb-6">
             Program & Kegiatan
           </h1>
           
-          <p className="text-xl text-cream-warm max-w-3xl leading-relaxed">
+          <p className="text-xl hero-lead max-w-3xl leading-relaxed">
             Bergabunglah dalam beragam kegiatan edukatif — dari workshop kreatif, diskusi literasi, bedah buku, 
             hingga pelatihan keterampilan. Tempat berkumpul, belajar, dan tumbuh bersama komunitas
           </p>
 
           {/* Stats */}
           <div className="flex flex-wrap gap-6 mt-8">
-            <div className="flex items-center gap-2 text-cream-warm">
+            <div className="flex items-center gap-2 text-[#D4A574]">
               <CalendarIcon className="w-6 h-6" />
               <div>
                 <span className="font-bold text-lg">{upcomingEvents.length}</span>
                 <span className="ml-1">Event Mendatang</span>
               </div>
             </div>
-            <div className="flex items-center gap-2 text-cream-warm">
+            <div className="flex items-center gap-2 text-[#D4A574]">
               <SparklesIcon className="w-6 h-6" />
               <div>
                 <span className="font-bold text-lg">{ongoingEvents.length}</span>
                 <span className="ml-1">Sedang Berlangsung</span>
               </div>
             </div>
-            <div className="flex items-center gap-2 text-cream-warm">
+            <div className="flex items-center gap-2 text-[#D4A574]">
               <CalendarIcon className="w-6 h-6" />
               <div>
                 <span className="font-bold text-lg">{completedEvents.length}+</span>
@@ -133,11 +150,11 @@ export default async function KegiatanPage() {
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {upcomingEvents.map((event: any) => (
+              {upcomingEvents.map((event: EventItem) => (
                 <Link
                   key={event.slug}
                   href={`/kegiatan/${event.slug}`}
-                  className="group bg-cream-soft-white border-2 border-cream-beige hover:border-[#B05E3F] hover:shadow-xl transition-all"
+                  className="group bg-[#E8E3DB] border-2 border-[#C4BDB2] hover:border-[#B05E3F] hover:shadow-xl transition-all"
                 >
                   <div className="p-6">
                     <div className="flex items-center gap-3 mb-4">
@@ -164,12 +181,7 @@ export default async function KegiatanPage() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
                         <span>
-                          {new Date(event.startDate).toLocaleDateString('id-ID', {
-                            weekday: 'long',
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                          })}
+                          {formatDate(event.startDate, 'id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                         </span>
                       </div>
 
@@ -191,7 +203,7 @@ export default async function KegiatanPage() {
 
                     {/* Registration Info */}
                     {event.maxParticipants && event.registeredParticipants !== undefined && (
-                      <div className="pt-4 border-t border-cream-beige">
+                      <div className="pt-4 border-t border-[#C4BDB2]">
                         <div className="flex items-center justify-between text-sm">
                           <span className="text-gray-400">
                             Kuota: {event.registeredParticipants}/{event.maxParticipants}
@@ -218,11 +230,11 @@ export default async function KegiatanPage() {
             </h2>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {ongoingEvents.map((event: any) => (
+              {ongoingEvents.map((event: EventItem) => (
                 <Link
                   key={event.slug}
                   href={`/kegiatan/${event.slug}`}
-                  className="group bg-white border-2 border-cream-beige hover:border-[#2C5F5D] hover:shadow-xl transition-all overflow-hidden"
+                  className="group bg-white border-2 border-[#C4BDB2] hover:border-[#2C5F5D] hover:shadow-xl transition-all overflow-hidden"
                 >
                   {/* Featured Photo */}
                   {event.photos && event.photos.length > 0 && (
@@ -257,14 +269,7 @@ export default async function KegiatanPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
                       <span>
-                        {new Date(event.startDate).toLocaleDateString('id-ID', {
-                          day: 'numeric',
-                          month: 'long'
-                        })}{event.endDate && ` - ${new Date(event.endDate).toLocaleDateString('id-ID', {
-                          day: 'numeric',
-                          month: 'long',
-                          year: 'numeric'
-                        })}`}
+                        {formatDate(event.startDate, 'id-ID', { day: 'numeric', month: 'long' })}{event.endDate ? ` - ${formatDate(event.endDate, 'id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}` : ''}
                       </span>
                     </div>
                   </div>
@@ -279,46 +284,41 @@ export default async function KegiatanPage() {
       <section className="py-16 lg:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <h2 className="font-serif text-3xl lg:text-4xl font-bold text-[#1F4E4C] mb-10 flex items-center gap-3">
-            <CameraIcon className="w-8 h-8 text-[#B05E3F]" /> Dokumentasi Kegiatan
+            <BookIcon className="w-8 h-8 text-[#B05E3F]" /> Dokumentasi Kegiatan
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {completedEvents.map((event: any) => (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {completedEvents.map((event: EventItem) => (
               <Link
                 key={event.slug}
                 href={`/kegiatan/${event.slug}`}
-                className="group bg-cream-soft-white border-2 border-cream-beige hover:border-[#B05E3F] hover:shadow-xl transition-all overflow-hidden"
+                className="group bg-[#E8E3DB] border-2 border-[#C4BDB2] hover:border-[#B05E3F] hover:shadow-xl transition-all overflow-hidden"
               >
-                {/* Photo Grid Preview */}
-                {event.photos && event.photos.length > 0 && (
-                  <div className="grid grid-cols-2 gap-1 h-48">
-                    {event.photos.slice(0, 4).map((photo: any, index: number) => (
-                      <div
-                        key={photo.id}
-                        className="bg-gradient-to-br from-[#2C5F5D] to-[#B05E3F] flex items-center justify-center group-hover:scale-105 transition-transform"
-                      >
-                        <span className="text-white">
-                          {index === 0 && <BookIcon className="w-8 h-8" />}
-                          {index === 1 && <UsersIcon className="w-8 h-8" />}
-                          {index === 2 && <ChatIcon className="w-8 h-8" />}
-                          {index === 3 && <SparklesIcon className="w-8 h-8" />}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
                 <div className="p-6">
+                  {event.photos && event.photos.length > 0 && (
+                    <div className="grid grid-cols-2 gap-1 h-40 mb-4">
+                      {event.photos.slice(0, 4).map((photo, index) => (
+                        <div
+                          key={photo?.id ?? index}
+                          className="bg-gradient-to-br from-[#2C5F5D] to-[#B05E3F] flex items-center justify-center"
+                        >
+                          <span className="text-white">
+                            {index === 0 && <BookIcon className="w-6 h-6" />}
+                            {index === 1 && <UsersIcon className="w-6 h-6" />}
+                            {index === 2 && <ChatIcon className="w-6 h-6" />}
+                            {index === 3 && <SparklesIcon className="w-6 h-6" />}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
                   <div className="flex items-center gap-3 mb-3">
                     <span className="px-2 py-1 bg-gray-500/10 text-gray-600 text-xs font-bold uppercase">
                       {event.type}
                     </span>
                     <span className="text-xs text-gray-400">
-                      {new Date(event.startDate).toLocaleDateString('id-ID', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric'
-                      })}
+                      {formatDate(event.startDate, 'id-ID', { year: 'numeric', month: 'short', day: 'numeric' })}
                     </span>
                   </div>
 
@@ -330,12 +330,12 @@ export default async function KegiatanPage() {
                     {event.description}
                   </p>
 
-                  <div className="flex items-center gap-4 text-xs text-gray-400 pt-3 border-t border-cream-beige">
+                  <div className="flex items-center gap-4 text-xs text-gray-400 pt-3 border-t border-[#C4BDB2]">
                     <span className="flex items-center gap-1">
                       <CameraIcon className="w-4 h-4" /> {event.photos?.length || 0} Foto
                     </span>
                     <span className="flex items-center gap-1">
-                      <UsersIcon className="w-4 h-4" /> {event.registeredParticipants} Peserta
+                      <UsersIcon className="w-4 h-4" /> {event.registeredParticipants ?? 0} Peserta
                     </span>
                   </div>
                 </div>
@@ -358,22 +358,22 @@ export default async function KegiatanPage() {
       {/* CTA Section */}
       <section className="py-16 bg-gradient-to-r from-[#2C5F5D] to-[#1F4E4C]">
         <div className="max-w-4xl mx-auto px-6 lg:px-8 text-center">
-          <h2 className="font-serif text-3xl lg:text-4xl font-bold text-cream-soft-white mb-6">
+          <h2 className="font-serif text-3xl lg:text-4xl font-bold text-[#E8E3DB] mb-6">
             Ingin Berpartisipasi?
           </h2>
-          <p className="text-xl text-cream-warm mb-8">
+          <p className="text-xl text-[#D4A574] mb-8">
             Daftarkan diri Anda untuk mengikuti kegiatan mendatang atau usulkan kegiatan baru
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/kontak"
-              className="inline-block bg-[#B05E3F] text-cream-soft-white px-10 py-4 font-serif font-bold text-lg hover:bg-[#9A5035] transition-all border-2 border-[#B05E3F]"
+              className="inline-block bg-[#B05E3F] text-[#E8E3DB] px-10 py-4 font-serif font-bold text-lg hover:bg-[#9A5035] transition-all border-2 border-[#B05E3F]"
             >
               Daftar Sekarang
             </Link>
             <Link
               href="/kontak"
-              className="inline-block bg-transparent text-cream-soft-white px-10 py-4 font-serif font-bold text-lg hover:bg-white/10 transition-all border-2 border-cream-soft-white"
+              className="inline-block bg-transparent text-[#E8E3DB] px-10 py-4 font-serif font-bold text-lg hover:bg-white/10 transition-all border-2 border-[#E8E3DB]"
             >
               Usulkan Kegiatan
             </Link>

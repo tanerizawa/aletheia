@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, useEffect, useCallback, FormEvent } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import ImageUpload from '@/components/ImageUpload';
@@ -33,11 +33,7 @@ export default function EditEventPage() {
     status: 'UPCOMING',
   });
 
-  useEffect(() => {
-    fetchEvent();
-  }, [id]);
-
-  const fetchEvent = async () => {
+  const fetchEvent = useCallback(async () => {
     try {
       const response = await fetch(`/api/admin/events/${id}`);
       if (!response.ok) throw new Error('Failed to fetch event');
@@ -63,11 +59,16 @@ export default function EditEventPage() {
         status: event.status || 'UPCOMING',
       });
     } catch (err) {
+      console.error(err);
       setError('Failed to load event');
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    fetchEvent();
+  }, [id, fetchEvent]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -102,8 +103,9 @@ export default function EditEventPage() {
       }
 
       router.push('/admin/events?success=updated');
-    } catch (err: any) {
-      setError(err.message || 'Failed to update event');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setError(msg || 'Failed to update event');
     } finally {
       setSubmitting(false);
     }

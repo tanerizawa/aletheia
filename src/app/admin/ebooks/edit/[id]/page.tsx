@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import ImageUpload from '@/components/ImageUpload';
@@ -17,7 +17,26 @@ export default function EditEbookPage() {
   const [isbnLoading, setIsbnLoading] = useState(false);
   const [isbnError, setIsbnError] = useState('');
   const [categories, setCategories] = useState<string[]>([]);
-  const [formData, setFormData] = useState({
+  interface AdminEbookForm {
+    title?: string;
+    author?: string;
+    category?: string;
+    description?: string;
+    publisher?: string;
+    publishYear?: number;
+    isbn?: string;
+    pages?: number;
+    language?: string;
+    fileSize?: string;
+    fileUrl?: string;
+    coverImage?: string;
+    availableOnline?: boolean;
+    downloadable?: boolean;
+    requiresLogin?: boolean;
+    tags?: string | string[];
+    format?: string[];
+  }
+  const [formData, setFormData] = useState<AdminEbookForm>({
     title: '',
     author: '',
     category: '',
@@ -37,9 +56,44 @@ export default function EditEbookPage() {
     format: ['PDF'] as string[],
   });
 
+  const fetchEbook = useCallback(async () => {
+    try {
+      const response = await fetch(`/api/admin/ebooks/${id}`);
+      if (!response.ok) throw new Error('Failed to fetch ebook');
+      
+      const data = await response.json();
+      const ebook = data.ebook as Record<string, unknown> | undefined;
+
+      setFormData({
+        title: (ebook?.title as string) || '',
+        author: (ebook?.author as string) || '',
+        category: (ebook?.category as string) || '',
+        description: (ebook?.description as string) || '',
+        publisher: (ebook?.publisher as string) || '',
+        publishYear: (ebook?.publishYear as number) || new Date().getFullYear(),
+        isbn: (ebook?.isbn as string) || '',
+        pages: (ebook?.pages as number) || 0,
+        language: (ebook?.language as string) || 'Bahasa Indonesia',
+        fileSize: (ebook?.fileSize as string) || '',
+        fileUrl: (ebook?.fileUrl as string) || '',
+        coverImage: (ebook?.coverImage as string) || '',
+        availableOnline: (ebook?.availableOnline as boolean) ?? true,
+        downloadable: (ebook?.downloadable as boolean) ?? true,
+        requiresLogin: (ebook?.requiresLogin as boolean) ?? false,
+        tags: Array.isArray(ebook?.tags) ? (ebook?.tags as string[]).join(', ') : '',
+        format: Array.isArray(ebook?.format) ? (ebook?.format as string[]) : ['PDF'],
+      });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setError(msg || 'Failed to load ebook');
+    } finally {
+      setLoading(false);
+    }
+  }, [id]);
+
   useEffect(() => {
     fetchEbook();
-  }, [id]);
+  }, [id, fetchEbook]);
 
   useEffect(() => {
     // fetch existing categories for suggestions
@@ -48,48 +102,19 @@ export default function EditEbookPage() {
         const res = await fetch('/api/public/ebooks?limit=200');
         if (!res.ok) return;
         const data = await res.json();
-        const cats = Array.from(new Set(data.ebooks.map((e: any) => e.category).filter(Boolean))) as string[];
+        const items = Array.isArray(data.ebooks) ? data.ebooks : [];
+        const cats = Array.from(new Set(items.map((e: unknown) => {
+          if (e && typeof e === 'object') return (e as Record<string, unknown>).category as string | undefined;
+          return undefined;
+        }).filter(Boolean))) as string[];
         setCategories(cats);
-      } catch (e) {
+      } catch {
         // ignore
       }
     }
     loadCategories();
   }, []);
-
-  const fetchEbook = async () => {
-    try {
-      const response = await fetch(`/api/admin/ebooks/${id}`);
-      if (!response.ok) throw new Error('Failed to fetch ebook');
-      
-      const data = await response.json();
-      const ebook = data.ebook;
-      
-      setFormData({
-        title: ebook.title || '',
-        author: ebook.author || '',
-        category: ebook.category || '',
-        description: ebook.description || '',
-        publisher: ebook.publisher || '',
-        publishYear: ebook.publishYear || new Date().getFullYear(),
-        isbn: ebook.isbn || '',
-        pages: ebook.pages || 0,
-        language: ebook.language || 'Bahasa Indonesia',
-        fileSize: ebook.fileSize || '',
-        fileUrl: ebook.fileUrl || '',
-        coverImage: ebook.coverImage || '',
-        availableOnline: ebook.availableOnline ?? true,
-        downloadable: ebook.downloadable ?? true,
-        requiresLogin: ebook.requiresLogin ?? false,
-        tags: Array.isArray(ebook.tags) ? ebook.tags.join(', ') : '',
-        format: Array.isArray(ebook.format) ? ebook.format : ['PDF'],
-      });
-    } catch (err) {
-      setError('Failed to load ebook');
-    } finally {
-      setLoading(false);
-    }
-  };
+  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -116,9 +141,9 @@ export default function EditEbookPage() {
   const handleFormatChange = (format: string) => {
     setFormData(prev => ({
       ...prev,
-      format: prev.format.includes(format)
-        ? prev.format.filter(f => f !== format)
-        : [...prev.format, format]
+      format: (prev.format || []).includes(format)
+        ? (prev.format || []).filter(f => f !== format)
+        : [...(prev.format || []), format]
     }));
   };
 
@@ -136,9 +161,11 @@ export default function EditEbookPage() {
       // Prepare data
       const submitData = {
         ...formData,
-        tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
-        publishYear: parseInt(formData.publishYear.toString()),
-        pages: parseInt(formData.pages.toString()) || 0,
+        tags: typeof formData.tags === 'string'
+          ? formData.tags.split(',').map((tag: string) => tag.trim()).filter(Boolean)
+          : Array.isArray(formData.tags) ? formData.tags : [],
+        publishYear: parseInt(String(formData.publishYear)),
+        pages: parseInt(String(formData.pages)) || 0,
       };
 
       const response = await fetch(`/api/admin/ebooks/${id}`, {
@@ -151,12 +178,13 @@ export default function EditEbookPage() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to update ebook');
+        throw new Error((errorData && (errorData.error || String(errorData))) || 'Failed to update ebook');
       }
 
       router.push('/admin/ebooks?success=updated');
-    } catch (err: any) {
-      setError(err.message || 'Failed to update ebook');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setError(msg || 'Failed to update ebook');
     } finally {
       setSubmitting(false);
     }
@@ -204,10 +232,12 @@ export default function EditEbookPage() {
                         } else {
                           const book = data.items[0].volumeInfo;
                           // try to find ISBN identifier
-                          const ids = book.industryIdentifiers || [];
-                          const isbn13 = ids.find((i: any) => i.type === 'ISBN_13')?.identifier;
-                          const isbn10 = ids.find((i: any) => i.type === 'ISBN_10')?.identifier;
-                          const foundIsbn = isbn13 || isbn10 || '';
+                              const ids = Array.isArray(book.industryIdentifiers) ? book.industryIdentifiers as unknown[] : [];
+                              const isbn13Rec = ids.find((i: unknown) => i && typeof i === 'object' && (i as Record<string, unknown>).type === 'ISBN_13') as Record<string, unknown> | undefined;
+                              const isbn10Rec = ids.find((i: unknown) => i && typeof i === 'object' && (i as Record<string, unknown>).type === 'ISBN_10') as Record<string, unknown> | undefined;
+                              const isbn13 = isbn13Rec?.identifier as string | undefined;
+                              const isbn10 = isbn10Rec?.identifier as string | undefined;
+                              const foundIsbn = isbn13 || isbn10 || '';
                           if (!foundIsbn) {
                             setIsbnError('ISBN tidak ditemukan pada hasil pertama');
                           }
@@ -225,7 +255,7 @@ export default function EditEbookPage() {
                              coverImage: book.imageLinks?.thumbnail?.replace('http://','https://') || prev.coverImage,
                           }));
                         }
-                      } catch (err) {
+                      } catch {
                         setIsbnError('Gagal mencari berdasarkan judul');
                       } finally {
                         setIsbnLoading(false);
@@ -383,7 +413,7 @@ export default function EditEbookPage() {
                             coverImage: book.imageLinks?.thumbnail?.replace('http://','https://') || prev.coverImage,
                           }));
                         }
-                      } catch (err) {
+                      } catch {
                         setIsbnError('Gagal fetch data ISBN.');
                       } finally {
                         setIsbnLoading(false);
@@ -461,7 +491,7 @@ export default function EditEbookPage() {
               <AutoImageSelector
                 title={formData.title}
                 type="book"
-                keywords={formData.category ? [formData.category, formData.author] : [formData.author]}
+                keywords={[formData.category, formData.author].filter(Boolean) as string[]}
                 onImageSelect={(url) => setFormData(prev => ({ ...prev, coverImage: url }))}
               />
 
@@ -490,7 +520,7 @@ export default function EditEbookPage() {
                     <label key={format} className="flex items-center gap-2">
                       <input
                         type="checkbox"
-                        checked={formData.format.includes(format)}
+                        checked={(formData.format || []).includes(format)}
                         onChange={() => handleFormatChange(format)}
                         className="rounded border-gray-300 text-[#2C5F5D] focus:ring-[#2C5F5D]"
                       />

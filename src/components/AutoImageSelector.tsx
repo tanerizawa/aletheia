@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import OptimizedImage from '@/components/OptimizedImage';
 
 interface AutoImageSelectorProps {
-  title: string;
+  title?: string;
   type: 'book' | 'article' | 'event';
   keywords?: string[];
   onImageSelect: (imageUrl: string) => void;
@@ -96,7 +97,7 @@ export default function AutoImageSelector({
   };
 
   return (
-    <div className="bg-[#FAF8F5] border border-cream-warm rounded-xl p-6">
+    <div className="bg-[#FAF8F5] border border-[#D4A574] rounded-xl p-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-serif font-bold text-gray-800">
           Auto-Generate Cover Image
@@ -104,7 +105,7 @@ export default function AutoImageSelector({
         <button
           onClick={generateImages}
           disabled={loading || !title}
-          className="flex items-center gap-2 px-4 py-2 bg-[#B05E3F] text-cream-soft-white rounded-lg hover:bg-[#944A2F] disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+          className="flex items-center gap-2 px-4 py-2 bg-[#B05E3F] text-[#FAF8F5] rounded-lg hover:bg-[#944A2F] disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
         >
           {loading ? (
             <>
@@ -140,10 +141,12 @@ export default function AutoImageSelector({
           <div className="grid grid-cols-3 gap-4">
             {images.map((image) => (
               <div key={image.id} className="group relative">
-                <img
+                <OptimizedImage
                   src={image.thumb}
                   alt={image.description || 'Cover image'}
-                  className="w-full h-40 object-cover rounded-lg border-2 border-cream-warm group-hover:border-[#B05E3F] transition-colors"
+                  width={320}
+                  height={160}
+                  className="w-full h-40 object-cover rounded-lg border-2 border-[#D4A574] group-hover:border-[#B05E3F] transition-colors"
                 />
                 
                 <button

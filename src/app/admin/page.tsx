@@ -1,10 +1,22 @@
 import Link from 'next/link';
 import { requireAuth } from '@/lib/auth';
-import { redirect } from 'next/navigation';
+import { prisma } from '@/lib/prisma';
 
 export default async function AdminDashboard() {
   // Require authentication - will redirect to /admin/login if not authenticated
-  const user = await requireAuth();
+  await requireAuth();
+  // Fetch dashboard counts and recent activity
+  const [ebooksCount, articlesCount, eventsUpcomingCount, subscribersCount, unreadMessagesCount] = await Promise.all([
+    prisma.ebook.count(),
+    prisma.article.count(),
+    prisma.event.count({ where: { status: 'UPCOMING' } }),
+    prisma.newsletterSubscriber.count(),
+    prisma.contactMessage.count({ where: { isRead: false } }),
+  ]);
+
+  const [recentArticle] = await prisma.article.findMany({ orderBy: { createdAt: 'desc' }, take: 1, select: { title: true, createdAt: true } });
+  const [recentEbook] = await prisma.ebook.findMany({ orderBy: { createdAt: 'desc' }, take: 1, select: { title: true, createdAt: true } });
+  const [recentEvent] = await prisma.event.findMany({ orderBy: { createdAt: 'desc' }, take: 1, select: { title: true, startDate: true, createdAt: true } });
   
   return (
     <div className="min-h-screen bg-[#F0EBE3]">
@@ -17,24 +29,24 @@ export default async function AdminDashboard() {
             href="/admin/articles/new"
             className="group relative block bg-gradient-to-br from-[#B05E3F] to-[#944A2F] hover:from-[#944A2F] hover:to-[#7A3D26] rounded-xl p-5 shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 overflow-hidden"
           >
-            <div className="absolute inset-0 bg-cream-soft-white/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div className="absolute inset-0 bg-[#E8E3DB]/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
             <div className="relative z-10 flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-cream-soft-white/20 rounded-lg group-hover:scale-105 transition-transform">
-                  <svg className="w-7 h-7 text-cream-soft-white" fill="currentColor" viewBox="0 0 20 20">
+                <div className="p-3 bg-[#E8E3DB]/20 rounded-lg group-hover:scale-105 transition-transform">
+                  <svg className="w-7 h-7 text-[#E8E3DB]" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-base font-serif font-semibold text-cream-soft-white mb-0.5">Write New Article</h3>
-                  <p className="text-sm text-cream-warm/90">Share knowledge with your community</p>
+                  <h3 className="text-base font-serif font-semibold text-[#E8E3DB] mb-0.5">Write New Article</h3>
+                  <p className="text-sm text-[#D4A574]/90">Share knowledge with your community</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-medium text-cream-soft-white/90 bg-cream-soft-white/20 px-3 py-1.5 rounded-md">
+                <span className="text-xs font-medium text-[#E8E3DB]/90 bg-[#E8E3DB]/20 px-3 py-1.5 rounded-md">
                   Most Used
                 </span>
-                <svg className="w-5 h-5 text-cream-soft-white group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-[#FAF8F5] group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </div>
@@ -46,7 +58,7 @@ export default async function AdminDashboard() {
         <div className="grid grid-cols-2 gap-4 mb-6">
           <Link
             href="/admin/ebooks/new"
-            className="group bg-[#FAF8F5] hover:bg-[#D4E5E4] rounded-lg p-4 shadow-sm hover:shadow-md border border-cream-warm/50 hover:border-[#2C5F5D] transition-all duration-300 hover:-translate-y-0.5"
+            className="group bg-[#FAF8F5] hover:bg-[#D4E5E4] rounded-lg p-4 shadow-sm hover:shadow-md border border-[#D4A574]/50 hover:border-[#2C5F5D] transition-all duration-300 hover:-translate-y-0.5"
           >
             <div className="flex items-center gap-3">
               <div className="p-2.5 bg-[#D4E5E4] rounded-lg group-hover:scale-105 transition-transform">
@@ -66,7 +78,7 @@ export default async function AdminDashboard() {
 
           <Link
             href="/admin/events/new"
-            className="group bg-[#FAF8F5] hover:bg-[#FBF1ED] rounded-lg p-4 shadow-sm hover:shadow-md border border-cream-warm/50 hover:border-[#B05E3F] transition-all duration-300 hover:-translate-y-0.5"
+            className="group bg-[#FAF8F5] hover:bg-[#FBF1ED] rounded-lg p-4 shadow-sm hover:shadow-md border border-[#D4A574]/50 hover:border-[#B05E3F] transition-all duration-300 hover:-translate-y-0.5"
           >
             <div className="flex items-center gap-3">
               <div className="p-2.5 bg-[#F5DDD3] rounded-lg group-hover:scale-105 transition-transform">
@@ -120,7 +132,7 @@ export default async function AdminDashboard() {
         {/* CONTENT OVERVIEW */}
         <div className="grid grid-cols-3 gap-4 mb-6">
           
-          <Link href="/admin/ebooks" className="group bg-[#FAF8F5] rounded-lg p-4 shadow-sm hover:shadow-md border border-cream-warm/50 hover:border-[#2C5F5D] transition-all duration-300 hover:-translate-y-0.5">
+          <Link href="/admin/ebooks" className="group bg-[#FAF8F5] rounded-lg p-4 shadow-sm hover:shadow-md border border-[#D4A574]/50 hover:border-[#2C5F5D] transition-all duration-300 hover:-translate-y-0.5">
             <div className="flex items-start justify-between mb-3">
               <div className="p-2 bg-[#EAF4F3] rounded-lg">
                 <svg className="w-6 h-6 text-[#2C5F5D]" fill="currentColor" viewBox="0 0 20 20">
@@ -136,12 +148,12 @@ export default async function AdminDashboard() {
             <div className="flex items-center gap-1.5 text-xs text-[#8A8A8A]">
               <span className="flex items-center gap-1">
                 <span className="w-1.5 h-1.5 bg-[#4A8B5C] rounded-full"></span>
-                5 items
+                {ebooksCount} items
               </span>
             </div>
           </Link>
 
-          <Link href="/admin/articles" className="group bg-[#FAF8F5] rounded-lg p-4 shadow-sm hover:shadow-md border border-cream-warm/50 hover:border-[#B05E3F] transition-all duration-300 hover:-translate-y-0.5">
+          <Link href="/admin/articles" className="group bg-[#FAF8F5] rounded-lg p-4 shadow-sm hover:shadow-md border border-[#D4A574]/50 hover:border-[#B05E3F] transition-all duration-300 hover:-translate-y-0.5">
             <div className="flex items-start justify-between mb-3">
               <div className="p-2 bg-[#FBF1ED] rounded-lg">
                 <svg className="w-6 h-6 text-[#B05E3F]" fill="currentColor" viewBox="0 0 20 20">
@@ -157,12 +169,12 @@ export default async function AdminDashboard() {
             <div className="flex items-center gap-1.5 text-xs text-[#8A8A8A]">
               <span className="flex items-center gap-1">
                 <span className="w-1.5 h-1.5 bg-[#4A8B5C] rounded-full"></span>
-                3 published
+                {articlesCount} published
               </span>
             </div>
           </Link>
 
-          <Link href="/admin/events" className="group bg-[#FAF8F5] rounded-lg p-4 shadow-sm hover:shadow-md border border-cream-warm/50 hover:border-[#3A7A77] transition-all duration-300 hover:-translate-y-0.5">
+          <Link href="/admin/events" className="group bg-[#FAF8F5] rounded-lg p-4 shadow-sm hover:shadow-md border border-[#D4A574]/50 hover:border-[#3A7A77] transition-all duration-300 hover:-translate-y-0.5">
             <div className="flex items-start justify-between mb-3">
               <div className="p-2 bg-[#D4E5E4] rounded-lg">
                 <svg className="w-6 h-6 text-[#3A7A77]" fill="currentColor" viewBox="0 0 20 20">
@@ -178,7 +190,7 @@ export default async function AdminDashboard() {
             <div className="flex items-center gap-1.5 text-xs text-[#8A8A8A]">
               <span className="flex items-center gap-1">
                 <span className="w-1.5 h-1.5 bg-[#4A8B5C] rounded-full"></span>
-                5 upcoming
+                {eventsUpcomingCount} upcoming
               </span>
             </div>
           </Link>
@@ -203,7 +215,7 @@ export default async function AdminDashboard() {
             <div className="flex items-center gap-1.5 text-xs text-white/70">
               <span className="flex items-center gap-1">
                 <span className="w-1.5 h-1.5 bg-red-400 rounded-full animate-pulse"></span>
-                Check new
+                {unreadMessagesCount > 0 ? `${unreadMessagesCount} unread` : 'No new'}
               </span>
             </div>
           </Link>
@@ -225,14 +237,14 @@ export default async function AdminDashboard() {
             <div className="flex items-center gap-1.5 text-xs text-white/70">
               <span className="flex items-center gap-1">
                 <span className="w-1.5 h-1.5 bg-green-400 rounded-full"></span>
-                Export CSV
+                {subscribersCount} subscribers
               </span>
             </div>
           </Link>
         </div>
 
         {/* RECENT ACTIVITY */}
-        <div className="bg-[#FAF8F5] rounded-lg shadow-sm p-4 border border-cream-warm/50 mb-6">
+        <div className="bg-[#FAF8F5] rounded-lg shadow-sm p-4 border border-[#D4A574]/50 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-serif font-semibold text-[#2A2A2A]">Recent Activity</h3>
             <span className="text-xs text-[#6A6A6A] bg-[#F0EBE3] px-2.5 py-1 rounded-full">Last 7 days</span>
@@ -247,8 +259,8 @@ export default async function AdminDashboard() {
                 </svg>
               </div>
               <div className="flex-1">
-                <p className="text-sm font-semibold text-[#2A2A2A]">Published new article</p>
-                <p className="text-xs text-[#8A8A8A] mt-0.5">Article about democracy and freedom - 2 hours ago</p>
+                <p className="text-sm font-semibold text-[#2A2A2A]">{recentArticle ? `Published: ${recentArticle.title}` : 'No recent articles'}</p>
+                <p className="text-xs text-[#8A8A8A] mt-0.5">{recentArticle ? new Date(recentArticle.createdAt).toLocaleString() : ''}</p>
               </div>
               <span className="text-xs font-medium text-[#2C5F5D] bg-[#D4E5E4] px-2 py-0.5 rounded">Success</span>
             </div>
@@ -261,8 +273,8 @@ export default async function AdminDashboard() {
                 </svg>
               </div>
               <div className="flex-1">
-                <p className="text-xs font-semibold text-[#2A2A2A]">Added new e-book</p>
-                <p className="text-xs text-[#8A8A8A] mt-0.5">"Thinking, Fast and Slow" - Yesterday</p>
+                <p className="text-xs font-semibold text-[#2A2A2A]">{recentEbook ? `Added: ${recentEbook.title}` : 'No recent e-books'}</p>
+                <p className="text-xs text-[#8A8A8A] mt-0.5">{recentEbook ? new Date(recentEbook.createdAt).toLocaleString() : ''}</p>
               </div>
               <span className="text-xs font-medium text-[#2C5F5D] bg-[#EAF4F3] px-2 py-0.5 rounded">Created</span>
             </div>
@@ -275,8 +287,8 @@ export default async function AdminDashboard() {
                 </svg>
               </div>
               <div className="flex-1">
-                <p className="text-xs font-semibold text-[#2A2A2A]">Upcoming event</p>
-                <p className="text-xs text-[#8A8A8A] mt-0.5">Book Discussion - In 3 days</p>
+                <p className="text-xs font-semibold text-[#2A2A2A]">{recentEvent ? `Event: ${recentEvent.title}` : 'No recent events'}</p>
+                <p className="text-xs text-[#8A8A8A] mt-0.5">{recentEvent ? (recentEvent.startDate ? new Date(recentEvent.startDate).toLocaleString() : new Date(recentEvent.createdAt).toLocaleString()) : ''}</p>
               </div>
               <span className="text-xs font-medium text-[#B05E3F] bg-[#F5DDD3] px-2 py-0.5 rounded">Scheduled</span>
             </div>
@@ -285,9 +297,9 @@ export default async function AdminDashboard() {
 
         {/* System Status Footer */}
         <div className="bg-gradient-to-r from-[#1A3D3B] to-[#2C5F5D] rounded-lg p-4">
-          <div className="flex items-center justify-between text-cream-soft-white">
+          <div className="flex items-center justify-between text-[#E8E3DB]">
             <div>
-              <h4 className="text-xs font-medium text-cream-warm mb-0.5">System Status</h4>
+              <h4 className="text-xs font-medium text-[#D4A574] mb-0.5">System Status</h4>
               <p className="text-sm font-serif font-semibold">All Systems Operational</p>
             </div>
             <div className="flex items-center gap-6">

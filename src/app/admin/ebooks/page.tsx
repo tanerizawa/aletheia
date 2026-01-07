@@ -3,12 +3,26 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import OptimizedImage from '@/components/OptimizedImage';
 import { BookIcon } from '@/components/icons';
+
+interface AdminEbook {
+  id: string;
+  title?: string;
+  coverImage?: string | null;
+  category?: string | null;
+  author?: string | { name?: string } | null;
+  format?: string[];
+  rating?: number;
+  views?: number;
+  downloads?: number;
+  slug?: string;
+}
 
 function EbooksList() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [ebooks, setEbooks] = useState<any[]>([]);
+  const [ebooks, setEbooks] = useState<AdminEbook[]>([]);
   const [loading, setLoading] = useState(true);
   const [showSuccess, setShowSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
@@ -70,7 +84,8 @@ function EbooksList() {
       } else {
         alert('Failed to delete ebook');
       }
-    } catch (error) {
+    } catch (err) {
+      console.error(err);
       alert('An error occurred');
     }
   };
@@ -247,9 +262,11 @@ function EbooksList() {
                         <div className="flex items-center gap-3">
                           <div className="w-12 h-16 bg-gray-200 rounded flex items-center justify-center text-2xl overflow-hidden">
                             {ebook.coverImage ? (
-                              <img 
-                                src={ebook.coverImage} 
-                                alt={ebook.title} 
+                              <OptimizedImage
+                                src={ebook.coverImage}
+                                alt={ebook.title}
+                                width={48}
+                                height={64}
                                 className="w-full h-full object-cover rounded"
                               />
                             ) : (
@@ -263,7 +280,7 @@ function EbooksList() {
                         </div>
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-700">{ebook.category}</td>
-                      <td className="px-6 py-4 text-sm text-gray-700">{ebook.author}</td>
+                      <td className="px-6 py-4 text-sm text-gray-700">{typeof ebook.author === 'string' ? ebook.author : ebook.author?.name || ''}</td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-1">
                           <span className="text-yellow-500">⭐</span>
@@ -290,7 +307,7 @@ function EbooksList() {
                             Edit
                           </Link>
                           <button
-                            onClick={() => handleDelete(ebook.id, ebook.title)}
+                            onClick={() => handleDelete(ebook.id, ebook.title || '')}
                             className="text-red-600 hover:text-red-800 text-sm font-medium"
                           >
                             Delete

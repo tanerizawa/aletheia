@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { cookies } from 'next/headers';
+import { SESSION_COOKIE } from '@/lib/auth';
 
 async function verifyAuth() {
   const cookieStore = await cookies();
-  const token = cookieStore.get('admin_token')?.value;
+  const token = cookieStore.get(SESSION_COOKIE)?.value;
   
   if (!token) {
     return null;
@@ -15,7 +16,7 @@ async function verifyAuth() {
     include: { user: true },
   });
 
-  if (!session || session.expiresAt < new Date()) {
+    if (!session || session.expiresAt < new Date()) {
     return null;
   }
 
@@ -36,7 +37,7 @@ export async function GET(request: NextRequest) {
     const isRead = searchParams.get('isRead');
     const skip = (page - 1) * limit;
 
-    const where: any = {};
+    const where: Record<string, unknown> = {};
     if (search) {
       where.OR = [
         { name: { contains: search, mode: 'insensitive' } },
@@ -69,7 +70,7 @@ export async function GET(request: NextRequest) {
         totalPages: Math.ceil(total / limit),
       },
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Failed to fetch messages:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
@@ -94,7 +95,7 @@ export async function PATCH(request: NextRequest) {
     });
 
     return NextResponse.json(updated);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Failed to update message:', error);
     return NextResponse.json({ error: 'Failed to update message' }, { status: 500 });
   }
@@ -119,7 +120,7 @@ export async function DELETE(request: NextRequest) {
     });
 
     return NextResponse.json({ message: 'Message deleted successfully' });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Failed to delete message:', error);
     return NextResponse.json({ error: 'Failed to delete message' }, { status: 500 });
   }
