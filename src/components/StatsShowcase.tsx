@@ -32,53 +32,70 @@ const iconTemplates = {
   )
 };
 
-export default function StatsShowcase() {
+interface StatsShowcaseProps {
+  initialData?: any;
+}
+
+export default function StatsShowcase({ initialData }: StatsShowcaseProps) {
   const [stats, setStats] = useState<Stat[]>([]);
   const [counts, setCounts] = useState<number[]>([]);
   const [hasAnimated, setHasAnimated] = useState(false);
 
+  // If server passed initialData, use it immediately and skip client fetch
   useEffect(() => {
+    if (initialData) {
+      const statsData: Stat[] = [
+        { label: 'E-Books', value: initialData.ebooks?.total || 0, suffix: '', icon: iconTemplates.books },
+        { label: 'Artikel Published', value: initialData.articles?.published || 0, suffix: '', icon: iconTemplates.articles },
+        { label: 'Total Events', value: initialData.events?.total || 0, suffix: '', icon: iconTemplates.events },
+        { label: 'Tahun Berdiri', value: initialData.organization?.established || 2025, suffix: '', icon: iconTemplates.year },
+      ];
+      setStats(statsData);
+      setCounts(statsData.map(() => 0));
+      return;
+    }
+
     async function fetchStats() {
       try {
-        const res = await fetch('/api/public/stats');
-        if (!res.ok) throw new Error('Failed to fetch stats');
-        const data = await res.json();
-        
+        const base = typeof window !== 'undefined' ? window.location.origin : '';
+        // Try static JSON first (public/stats.json), fallback to API if needed
+        let data: any = null;
+        try {
+          const jsonRes = await fetch(new URL('/stats.json', base).toString());
+          if (jsonRes.ok) data = await jsonRes.json();
+        } catch (e) {
+          // ignore and fallback
+        }
+
+        if (!data) {
+          const res = await fetch(new URL('/api/stats', base).toString());
+          if (!res.ok) throw new Error('Failed to fetch stats');
+          data = await res.json();
+        }
+
         const statsData: Stat[] = [
-          {
-            label: "E-Books",
-            value: data.ebooks.total,
-            suffix: "",
-            icon: iconTemplates.books
-          },
-          {
-            label: "Artikel Published",
-            value: data.articles.published,
-            suffix: "",
-            icon: iconTemplates.articles
-          },
-          {
-            label: "Total Events",
-            value: data.events.total,
-            suffix: "",
-            icon: iconTemplates.events
-          },
-          {
-            label: "Tahun Berdiri",
-            value: 2025,
-            suffix: "",
-            icon: iconTemplates.year
-          }
+          { label: 'E-Books', value: data.ebooks.total, suffix: '', icon: iconTemplates.books },
+          { label: 'Artikel Published', value: data.articles.published, suffix: '', icon: iconTemplates.articles },
+          { label: 'Total Events', value: data.events.total, suffix: '', icon: iconTemplates.events },
+          { label: 'Tahun Berdiri', value: data.organization?.established || 2025, suffix: '', icon: iconTemplates.year },
         ];
-        
+
         setStats(statsData);
         setCounts(statsData.map(() => 0));
       } catch (error) {
         console.error('Failed to fetch stats:', error);
+        const fallback: Stat[] = [
+          { label: 'E-Books', value: 0, suffix: '', icon: iconTemplates.books },
+          { label: 'Artikel Published', value: 0, suffix: '', icon: iconTemplates.articles },
+          { label: 'Total Events', value: 0, suffix: '', icon: iconTemplates.events },
+          { label: 'Tahun Berdiri', value: 2025, suffix: '', icon: iconTemplates.year },
+        ];
+        setStats(fallback);
+        setCounts(fallback.map(() => 0));
       }
     }
     fetchStats();
-  }, []);
+  }, [initialData]);
 
   useEffect(() => {
     if (hasAnimated) return;

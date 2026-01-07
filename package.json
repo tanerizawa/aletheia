@@ -15,7 +15,8 @@
     "db:seed": "npx tsx prisma/seed.ts",
     "db:studio": "npx prisma studio",
     "db:push": "npx prisma db push",
-    "prisma:generate": "npx prisma generate"
+    "prisma:generate": "npx prisma generate",
+    "gen:stats": "node ./scripts/generate-stats.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

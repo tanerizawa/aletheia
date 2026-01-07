@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { organization, library, units } from "@/data/organization";
 import StatsShowcase from "@/components/StatsShowcase";
+import StatsShowcaseServer from "@/components/StatsShowcaseServer";
 import { PlantIcon, BuildingIcon, BookIcon, LocationIcon } from "@/components/icons";
 import NavIcon from "@/components/NavIcon";
 import ScrollFadeIn from "@/components/ScrollFadeIn";
@@ -123,9 +124,6 @@ export default function Home() {
             <ScrollFadeIn direction="left" delay={100}>
               <div className="bg-[#1F4E4C] p-10 lg:p-12 border-l-4 border-[#2C5F5D] shadow-md hover:shadow-2xl transition-all hover:-translate-y-1 duration-300">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-full bg-[#2C5F5D]/30 flex items-center justify-center">
-                  <BuildingIcon className="w-6 h-6 text-[#D4A574]" />
-                </div>
                 <h3 className="font-serif text-2xl font-bold" style={{ color: '#E8E3DB' }}>
                   {organization.shortName}
                 </h3>
@@ -193,7 +191,9 @@ export default function Home() {
           </div>
           
           {/* Statistics Showcase */}
-          <StatsShowcase />
+          {/* Server component fetches DB counts and passes to client component */}
+          {/* @ts-expect-error Server Component */}
+          <StatsShowcaseServer />
           
           {/* Room Navigation - Explore the House */}
           <div className="mt-20">
