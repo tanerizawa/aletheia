@@ -16,13 +16,13 @@ export default function Home() {
           HALAMAN DEPAN - The Gate/Entrance
           First impression with gate metaphor
           ========================================== */}
-      <section 
-        className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#1A3D3B] via-[#2C5F5D] to-[#1F4E4C]"
+      <section
+        className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-teal-900 via-teal-700 to-teal-800"
         aria-label="Halaman Depan Rumah Aletheia"
       >
         {/* Decorative elements - gate pillars */}
-        <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-[#B05E3F] to-transparent opacity-30" aria-hidden="true"></div>
-        <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#B05E3F] to-transparent opacity-30" aria-hidden="true"></div>
+        <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-terra-700 to-transparent opacity-30" aria-hidden="true"></div>
+        <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-terra-700 to-transparent opacity-30" aria-hidden="true"></div>
         
         {/* Decorative pattern overlay */}
         <div className="absolute inset-0 opacity-5" style={{backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(240,235,227,0.1) 35px, rgba(240,235,227,0.1) 70px)'}} aria-hidden="true"></div>
@@ -101,18 +101,18 @@ export default function Home() {
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           {/* Room Indicator */}
-          <div className="inline-flex items-center gap-2 mb-6 text-gray-600">
-            <PlantIcon className="w-6 h-6 text-[#2C5F5D]" />
+          <div className="inline-flex items-center gap-2 mb-6 text-secondary">
+            <PlantIcon className="w-6 h-6 text-teal-700" />
             <span className="text-sm uppercase tracking-wider font-serif font-bold">Teras</span>
           </div>
-          
+
           {/* Heading */}
           <ScrollFadeIn direction="up">
-            <h2 id="teras-heading" className="font-serif text-4xl lg:text-6xl font-bold text-[#1F4E4C] mb-6">
+            <h2 id="teras-heading" className="font-serif text-4xl lg:text-6xl font-bold text-teal-900 mb-6">
               Sekilas Tentang Kami
             </h2>
-            
-            <p className="text-xl text-gray-600 mb-16 max-w-3xl leading-relaxed">
+
+            <p className="text-xl text-secondary mb-16 max-w-3xl leading-relaxed">
               {organization.name} menghadirkan beragam layanan untuk mendukung riset, literasi, dan pembelajaran masyarakat
             </p>
           </ScrollFadeIn>
@@ -169,7 +169,7 @@ export default function Home() {
           {/* Unit Layanan Showcase */}
           <div className="mb-20">
             <ScrollFadeIn direction="up">
-              <h3 className="font-serif text-3xl font-bold text-[#1F4E4C] mb-8 text-center">
+              <h3 className="font-serif text-3xl font-bold text-teal-900 mb-8 text-center">
                 Unit Layanan Kami
               </h3>
             </ScrollFadeIn>
@@ -199,10 +199,10 @@ export default function Home() {
           {/* Room Navigation - Explore the House */}
           <div className="mt-20">
             <ScrollFadeIn direction="up">
-              <h3 className="font-serif text-3xl font-bold text-[#1F4E4C] mb-8 text-center">
+              <h3 className="font-serif text-3xl font-bold text-teal-900 mb-8 text-center">
                 Jelajahi Ruangan
               </h3>
-              <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+              <p className="text-center text-secondary mb-12 max-w-2xl mx-auto">
                 Silakan masuk ke ruangan-ruangan untuk menemukan layanan dan sumber daya yang Anda butuhkan
               </p>
             </ScrollFadeIn>
@@ -383,9 +383,9 @@ export default function Home() {
       {/* ==========================================
           CTA Section - Invitation
           ========================================== */}
-      <section className="py-20 lg:py-24 bg-gradient-to-r from-[#2C5F5D] to-[#1F4E4C] relative overflow-hidden">
+      <section className="py-20 lg:py-24 bg-gradient-to-r from-teal-700 to-teal-800 relative overflow-hidden">
         {/* Decorative elements */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#B05E3F] opacity-10 rounded-full blur-3xl" aria-hidden="true"></div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-terra-700 opacity-10 rounded-full blur-3xl" aria-hidden="true"></div>
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-cream-soft-white opacity-5 rounded-full blur-3xl" aria-hidden="true"></div>
         
         <div className="relative z-10 max-w-4xl mx-auto px-6 lg:px-8 text-center">
@@ -428,12 +428,12 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Address Info */}
             <div>
-              <div className="inline-flex items-center gap-2 mb-4 text-gray-600">
-                <LocationIcon className="w-6 h-6 text-[#B05E3F]" />
+              <div className="inline-flex items-center gap-2 mb-4 text-secondary">
+                <LocationIcon className="w-6 h-6 text-terra-700" />
                 <span className="text-sm uppercase tracking-wider font-serif font-bold">Lokasi</span>
               </div>
-              
-              <h3 className="font-serif text-3xl font-bold text-[#1F4E4C] mb-6">
+
+              <h3 className="font-serif text-3xl font-bold text-teal-900 mb-6">
                 Temukan Kami
               </h3>
               
@@ -465,9 +465,9 @@ export default function Home() {
             </div>
             
             {/* Map Placeholder / Image */}
-            <div className="bg-cream-soft-white/50 border border-cream-warm/20 h-96 flex items-center justify-center shadow-inner">
-              <div className="text-center text-gray-600">
-                <svg className="w-16 h-16 mx-auto mb-4 text-[#2C5F5D] opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="bg-cream-soft-white/50 border border-cream-warm/20 h-96 flex items-center justify-center shadow-inner rounded-lg">
+              <div className="text-center text-secondary">
+                <svg className="w-16 h-16 mx-auto mb-4 text-teal-700 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                 </svg>
                 <p className="text-sm font-medium">Peta interaktif tersedia di halaman Kontak</p>
