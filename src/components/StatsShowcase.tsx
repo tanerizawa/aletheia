@@ -43,7 +43,7 @@ export default function StatsShowcase() {
         const res = await fetch('/api/public/stats');
         if (!res.ok) throw new Error('Failed to fetch stats');
         const data = await res.json();
-        
+
         const statsData: Stat[] = [
           {
             label: "E-Books",
@@ -70,11 +70,40 @@ export default function StatsShowcase() {
             icon: iconTemplates.year
           }
         ];
-        
+
         setStats(statsData);
         setCounts(statsData.map(() => 0));
       } catch (error) {
         console.error('Failed to fetch stats:', error);
+        // Fallback to default stats if API fails
+        const fallbackStats: Stat[] = [
+          {
+            label: "E-Books",
+            value: 0,
+            suffix: "",
+            icon: iconTemplates.books
+          },
+          {
+            label: "Artikel Published",
+            value: 0,
+            suffix: "",
+            icon: iconTemplates.articles
+          },
+          {
+            label: "Total Events",
+            value: 0,
+            suffix: "",
+            icon: iconTemplates.events
+          },
+          {
+            label: "Tahun Berdiri",
+            value: 2025,
+            suffix: "",
+            icon: iconTemplates.year
+          }
+        ];
+        setStats(fallbackStats);
+        setCounts(fallbackStats.map(() => 0));
       }
     }
     fetchStats();
@@ -122,22 +151,22 @@ export default function StatsShowcase() {
   }, [hasAnimated, stats]);
 
   return (
-    <section className="py-16 lg:py-20 bg-[#2C5F5D]" aria-labelledby="stats-heading">
+    <section className="py-16 lg:py-20 bg-teal-700" aria-labelledby="stats-heading">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <h2 id="stats-heading" className="sr-only">Statistik Perpustakaan</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {stats.map((stat, index) => (
             <div
               key={index}
-              className="text-center p-6 bg-[#1F4E4C] bg-opacity-50 rounded border-2 border-[#B05E3F] hover:bg-opacity-70 transition-all group"
+              className="text-center p-6 bg-teal-800 bg-opacity-50 rounded border-2 border-terra-700 hover:bg-opacity-70 transition-all group"
             >
-              <div className="text-[#B05E3F] mb-4 flex justify-center group-hover:scale-110 transition-transform">
+              <div className="text-terra-400 mb-4 flex justify-center group-hover:scale-110 transition-transform">
                 {stat.icon}
               </div>
-              <div className="font-serif text-5xl font-bold text-cream-soft-white mb-2">
+              <div className="font-serif text-5xl font-bold text-cream-50 mb-2">
                 {counts[index].toLocaleString()}{stat.suffix}
               </div>
-              <div className="text-cream-warm text-sm uppercase tracking-wider">
+              <div className="text-cream-100 text-sm uppercase tracking-wider">
                 {stat.label}
               </div>
             </div>
