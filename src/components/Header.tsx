@@ -87,7 +87,7 @@ export default function Header() {
                     href={item.href}
                     className={`px-5 py-2 rounded transition-all font-medium ${
                       isActive(item.href)
-                        ? 'bg-terra-700 text-cream-100'
+                        ? 'bg-terra-700 text-cream-50 hover:bg-terra-600 hover:text-white'
                         : 'text-cream-100 hover:text-terra-400 hover:bg-teal-800'
                     }`}
                   >

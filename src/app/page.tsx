@@ -412,7 +412,7 @@ export default function Home() {
             </Link>
             <Link
               href="/kontak"
-              className="btn-secondary inline-block px-10 py-4 text-lg rounded-lg font-serif bg-transparent text-white border-white hover:bg-white/10 hover:text-white"
+              className="inline-block px-10 py-4 text-lg rounded-lg font-serif bg-transparent text-white border-2 border-white hover:bg-white/10 transition-all duration-200"
             >
               Hubungi Kami
             </Link>
