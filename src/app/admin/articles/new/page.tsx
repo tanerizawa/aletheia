@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import ImageUpload from '@/components/ImageUpload';
+import AutoImageSelector from '@/components/AutoImageSelector';
 import 'easymde/dist/easymde.min.css';
 
 const SimpleMDE = dynamic(() => import('react-simplemde-editor'), { ssr: false });
@@ -208,6 +209,27 @@ export default function NewArticlePage() {
           {/* Media */}
           <div className="bg-white p-6 rounded-lg shadow">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Featured Image</h2>
+            
+            {/* Auto-Generate Option */}
+            <AutoImageSelector
+              title={formData.title}
+              type="article"
+              keywords={formData.category ? [formData.category] : []}
+              onImageSelect={(url) => setFormData(prev => ({ ...prev, coverImage: url }))}
+            />
+
+            {/* Separator */}
+            <div className="relative my-6">
+              <div className="absolute inset-x-0 top-1/2 transform -translate-y-1/2">
+                <div className="flex items-center">
+                  <div className="flex-grow border-t border-gray-300"></div>
+                  <span className="px-3 text-xs text-gray-500 bg-white">OR upload manually</span>
+                  <div className="flex-grow border-t border-gray-300"></div>
+                </div>
+              </div>
+            </div>
+
+            {/* Manual Upload Option */}
             <ImageUpload
               label="Cover Image"
               currentImageUrl={formData.coverImage}

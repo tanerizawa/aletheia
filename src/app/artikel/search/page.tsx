@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { articles, articleCategories, searchArticles } from "@/data/articles";
+import CategoryIcon from "@/components/CategoryIcon";
+import { ClockIcon, SearchIcon, HeartFilledIcon, DocumentIcon } from "@/components/icons";
 
 export const metadata: Metadata = {
   title: "Cari Artikel - Blog Rumah Aletheia",
@@ -11,19 +12,46 @@ interface SearchPageProps {
   searchParams: { q?: string };
 }
 
-export default function SearchArticlesPage({ searchParams }: SearchPageProps) {
+async function searchArticles(query: string) {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
+                    (process.env.PORT ? `http://localhost:${process.env.PORT}` : 'http://localhost:3001');
+    const res = await fetch(`${baseUrl}/api/public/articles?search=${encodeURIComponent(query)}&limit=100`, { next: { revalidate: 60 } });
+    if (!res.ok) return { articles: [] };
+    return await res.json();
+  } catch (error) {
+    console.error('Failed to search articles:', error);
+    return { articles: [] };
+  }
+}
+
+async function getCategories(): Promise<string[]> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
+                    (process.env.PORT ? `http://localhost:${process.env.PORT}` : 'http://localhost:3001');
+    const res = await fetch(`${baseUrl}/api/public/articles?limit=100`, { next: { revalidate: 60 } });
+    if (!res.ok) return [];
+    const { articles } = await res.json();
+    return Array.from(new Set(articles.map((a: any) => a.category))) as string[];
+  } catch (error) {
+    return [];
+  }
+}
+
+export default async function SearchArticlesPage({ searchParams }: SearchPageProps) {
   const query = searchParams.q || "";
-  const results = query ? searchArticles(query) : [];
+  const { articles: results } = query ? await searchArticles(query) : { articles: [] };
+  const articleCategories: string[] = await getCategories();
 
   return (
-    <main className="flex-grow bg-[#F5F1E8]">
+    <main className="flex-grow bg-cream-soft-white">
       {/* Hero */}
       <section className="bg-gradient-to-br from-[#1F4E4C] to-[#2C5F5D] py-12 border-b-4 border-[#B05E3F]">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <h1 className="font-serif text-4xl font-bold text-[#F5F1E8] mb-4">
+          <h1 className="font-serif text-4xl font-bold text-cream-soft-white mb-4">
             Hasil Pencarian Artikel
           </h1>
-          <p className="text-[#E8DED0]">
+          <p className="text-cream-warm">
             {query ? `Menampilkan hasil untuk: "${query}"` : "Masukkan kata kunci pencarian"}
           </p>
         </div>
@@ -40,7 +68,7 @@ export default function SearchArticlesPage({ searchParams }: SearchPageProps) {
                 name="q"
                 defaultValue={query}
                 placeholder="Cari artikel berdasarkan judul, topik, atau tag..."
-                className="w-full px-6 py-4 pr-14 rounded-lg border-2 border-[#D4C4B0] focus:outline-none focus:border-[#B05E3F] transition-all"
+                className="w-full px-6 py-4 pr-14 rounded-lg border-2 border-cream-beige focus:outline-none focus:border-[#B05E3F] transition-all"
               />
               <button
                 type="submit"
@@ -65,7 +93,7 @@ export default function SearchArticlesPage({ searchParams }: SearchPageProps) {
           {/* Results List */}
           {results.length > 0 ? (
             <div className="space-y-6">
-              {results.map((article) => (
+              {results.map((article: any) => (
                 <Link
                   key={article.slug}
                   href={`/artikel/${article.slug}`}
@@ -73,16 +101,7 @@ export default function SearchArticlesPage({ searchParams }: SearchPageProps) {
                 >
                   <div className="flex gap-4">
                     <div className="flex-shrink-0 w-32 h-32 bg-gradient-to-br from-[#2C5F5D] to-[#B05E3F] flex items-center justify-center">
-                      <span className="text-5xl">
-                        {article.category === "Literasi" && "📚"}
-                        {article.category === "Pendidikan" && "🎓"}
-                        {article.category === "Penelitian" && "🔬"}
-                        {article.category === "Budaya" && "🎭"}
-                        {article.category === "Teknologi" && "💻"}
-                        {article.category === "Sejarah" && "🏛️"}
-                        {article.category === "Opini" && "💭"}
-                        {article.category === "Tutorial" && "📖"}
-                      </span>
+                      <CategoryIcon category={article.category} className="w-16 h-16 text-white" />
                     </div>
                     
                     <div className="flex-1">
@@ -108,10 +127,10 @@ export default function SearchArticlesPage({ searchParams }: SearchPageProps) {
                       </p>
                       
                       <div className="flex items-center gap-4 text-xs text-[#7A7A7A]">
-                        <span>📖 {article.readTime}</span>
-                        <span>👁️ {article.views} views</span>
-                        <span>❤️ {article.likes} likes</span>
-                        <span>✍️ {article.author.name}</span>
+                        <span className="flex items-center gap-1"><ClockIcon className="w-4 h-4" /> {article.readTime}</span>
+                        <span>{article.views} views</span>
+                        <span className="flex items-center gap-1"><HeartFilledIcon className="w-4 h-4 text-red-500" /> {article.likes}</span>
+                        <span className="flex items-center gap-1"><DocumentIcon className="w-4 h-4" /> {article.author.name}</span>
                       </div>
                     </div>
                   </div>
@@ -120,7 +139,7 @@ export default function SearchArticlesPage({ searchParams }: SearchPageProps) {
             </div>
           ) : query ? (
             <div className="text-center py-20">
-              <div className="text-6xl mb-4">🔍</div>
+              <SearchIcon className="w-24 h-24 mx-auto mb-4 text-[#7A7A7A]" />
               <h3 className="font-serif text-2xl font-bold text-[#1F4E4C] mb-2">
                 Tidak Ditemukan
               </h3>
@@ -129,7 +148,7 @@ export default function SearchArticlesPage({ searchParams }: SearchPageProps) {
               </p>
               <Link
                 href="/artikel"
-                className="inline-block bg-[#B05E3F] text-[#F5F1E8] px-8 py-3 font-bold hover:bg-[#9A5035] transition-all"
+                className="inline-block bg-[#B05E3F] text-cream-soft-white px-8 py-3 font-bold hover:bg-[#9A5035] transition-all"
               >
                 Kembali ke Artikel
               </Link>
@@ -147,11 +166,11 @@ export default function SearchArticlesPage({ searchParams }: SearchPageProps) {
               <div className="max-w-2xl mx-auto">
                 <h4 className="font-bold text-[#1F4E4C] mb-4">Kategori Populer:</h4>
                 <div className="flex flex-wrap gap-2 justify-center">
-                  {articleCategories.map((cat) => (
+                  {articleCategories.map((cat: string) => (
                     <Link
                       key={cat}
                       href={`/artikel/kategori/${cat.toLowerCase()}`}
-                      className="px-4 py-2 bg-white border-2 border-[#D4C4B0] hover:border-[#2C5F5D] text-[#1F4E4C] font-bold text-sm transition-all"
+                      className="px-4 py-2 bg-white border-2 border-cream-beige hover:border-[#2C5F5D] text-[#1F4E4C] font-bold text-sm transition-all"
                     >
                       {cat}
                     </Link>

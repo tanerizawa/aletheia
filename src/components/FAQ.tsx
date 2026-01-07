@@ -31,15 +31,34 @@ const faqs: FAQItem[] = [
   {
     question: "Bagaimana cara mengikuti kegiatan perpustakaan?",
     answer: "Lihat jadwal kegiatan di halaman Kegiatan kami. Beberapa kegiatan gratis dan terbuka untuk umum, sedangkan yang lain mungkin memerlukan pendaftaran terlebih dahulu."
+  },
+  {
+    question: "Apakah koleksi buku dapat diakses secara digital?",
+    answer: "Sebagian koleksi kami tersedia dalam format digital untuk anggota terdaftar. Hubungi perpustakaan untuk informasi lebih lanjut."
+  },
+  {
+    question: "Apakah ada ruang diskusi atau meeting room?",
+    answer: "Ya, kami memiliki ruang diskusi yang dapat dipesan untuk kegiatan kelompok atau pertemuan. Reservasi dapat dilakukan melalui staf perpustakaan."
+  },
+  {
+    question: "Bagaimana cara menyumbang buku ke perpustakaan?",
+    answer: "Kami sangat menghargai donasi buku! Hubungi kami untuk mengetahui jenis buku yang sedang kami butuhkan dan prosedur donasi."
   }
 ];
 
+// Show first 5 FAQs by default
+const INITIAL_FAQ_COUNT = 5;
+
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [showAll, setShowAll] = useState(false);
 
   const toggleFAQ = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
+
+  const displayedFaqs = showAll ? faqs : faqs.slice(0, INITIAL_FAQ_COUNT);
+  const remainingCount = faqs.length - INITIAL_FAQ_COUNT;
 
   return (
     <section className="py-16 lg:py-20" aria-labelledby="faq-heading">
@@ -52,14 +71,14 @@ export default function FAQ() {
         </div>
 
         <div className="space-y-4">
-          {faqs.map((faq, index) => (
+          {displayedFaqs.map((faq, index) => (
             <div
               key={index}
               className="bg-white border-l-4 border-[#B05E3F] rounded-r overflow-hidden shadow-sm hover:shadow-md transition-shadow"
             >
               <button
                 onClick={() => toggleFAQ(index)}
-                className="w-full px-6 py-5 text-left flex justify-between items-center gap-4 hover:bg-[#F5F1E8] transition-colors"
+                className="w-full px-6 py-5 text-left flex justify-between items-center gap-4 hover:bg-cream-soft-white transition-colors"
                 aria-expanded={openIndex === index}
                 aria-controls={`faq-answer-${index}`}
               >
@@ -87,13 +106,46 @@ export default function FAQ() {
                 role="region"
                 aria-labelledby={`faq-question-${index}`}
               >
-                <div className="px-6 pb-5 text-[#5A5A5A] leading-relaxed">
+                <div className="px-6 pb-5 text-gray-500 leading-relaxed">
                   {faq.answer}
                 </div>
               </div>
             </div>
           ))}
         </div>
+
+        {/* Load More Button - Progressive Disclosure */}
+        {!showAll && remainingCount > 0 && (
+          <div className="text-center mt-8">
+            <button
+              onClick={() => setShowAll(true)}
+              className="inline-flex items-center gap-2 bg-white border-2 border-[#B05E3F] text-[#B05E3F] px-8 py-3 font-serif font-bold hover:bg-[#B05E3F] hover:text-white transition-all duration-200 hover:scale-105 active:scale-95"
+            >
+              <span>Tampilkan {remainingCount} Pertanyaan Lainnya</span>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          </div>
+        )}
+
+        {/* Show Less Button */}
+        {showAll && (
+          <div className="text-center mt-8">
+            <button
+              onClick={() => {
+                setShowAll(false);
+                setOpenIndex(null); // Close any open FAQ when collapsing
+              }}
+              className="inline-flex items-center gap-2 bg-white border-2 border-[#2C5F5D] text-[#2C5F5D] px-8 py-3 font-serif font-bold hover:bg-[#2C5F5D] hover:text-white transition-all duration-200 hover:scale-105 active:scale-95"
+            >
+              <span>Tampilkan Lebih Sedikit</span>
+              <svg className="w-5 h-5 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

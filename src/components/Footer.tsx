@@ -1,28 +1,26 @@
 import { organization, library } from '@/data/organization';
 import { footerNavigation, socialMedia } from '@/data/navigation';
+import { LocationIcon } from '@/components/icons';
+import Image from 'next/image';
 
 export default function Footer() {
   return (
-    <footer className="bg-[#1F4E4C] text-[#F5F1E8] mt-auto border-t-4 border-[#B05E3F]" role="contentinfo">
+    <footer className="bg-[#1F4E4C] text-cream-soft-white mt-auto border-t-4 border-[#B05E3F]" role="contentinfo">
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           {/* About Section */}
           <div className="md:col-span-1">
-            <div className="flex items-center space-x-2 mb-4">
-              <span className="text-3xl">🏛️</span>
-              <div>
-                <h3 className="font-serif text-xl font-bold text-[#F5F1E8]">Rumah Aletheia</h3>
-                <p className="text-xs text-[#E8DED0]">part of Academos</p>
-              </div>
+            <div className="mb-4">
+              <Image src="/logo.svg" alt="Rumah Aletheia - part of Academos" width={200} height={67} className="h-12 lg:h-14 w-auto" />
             </div>
-            <p className="text-[#E8DED0] leading-relaxed text-sm mb-4">
+            <p className="text-cream-beige leading-relaxed text-sm mb-4">
               Perpustakaan dan pusat literasi yang menyediakan berbagai koleksi buku serta layanan penelitian, penerbitan, dan pendidikan.
             </p>
             <div className="space-y-1 text-sm">
-              <p className="text-[#E8DED0]">
+              <p className="text-cream-beige">
                 <span className="font-semibold">NPP:</span> {library.npp}
               </p>
-              <p className="text-[#E8DED0]">
+              <p className="text-cream-warm opacity-95">
                 <span className="font-semibold">SK:</span> {library.sk}
               </p>
             </div>
@@ -30,9 +28,9 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-serif text-lg font-bold mb-6 text-[#F5F1E8]">Tentang</h3>
+            <h3 className="font-serif text-lg font-bold mb-6" style={{ color: '#F5DDD3' }}>Tentang</h3>
             <nav aria-label="Navigasi tentang">
-              <ul className="space-y-3 text-[#E8DED0]">
+              <ul className="space-y-3 text-cream-beige">
                 {footerNavigation.about.map((link) => (
                   <li key={link.href}>
                     <a 
@@ -49,9 +47,9 @@ export default function Footer() {
 
           {/* Explore Links */}
           <div>
-            <h3 className="font-serif text-lg font-bold mb-6 text-[#F5F1E8]">Jelajahi</h3>
+            <h3 className="font-serif text-lg font-bold mb-6" style={{ color: '#F5DDD3' }}>Jelajahi</h3>
             <nav aria-label="Navigasi jelajahi">
-              <ul className="space-y-3 text-[#E8DED0]">
+              <ul className="space-y-3 text-cream-beige">
                 {footerNavigation.explore.map((link) => (
                   <li key={link.href}>
                     <a 
@@ -68,11 +66,11 @@ export default function Footer() {
 
           {/* Contact Info */}
           <div>
-            <h3 className="font-serif text-lg font-bold mb-6 text-[#F5F1E8]">Kontak</h3>
+            <h3 className="font-serif text-lg font-bold mb-6" style={{ color: '#F5DDD3' }}>Kontak</h3>
             <address className="not-italic">
-              <ul className="space-y-3 text-[#E8DED0] text-sm">
+              <ul className="space-y-3 text-cream-beige text-sm">
                 <li className="flex items-start">
-                  <span className="text-[#B05E3F] mr-2" aria-hidden="true">📍</span>
+                  <LocationIcon className="w-5 h-5 text-terra-light mr-2 flex-shrink-0 mt-0.5" />
                   <span>
                     {organization.address.street}, {organization.address.village}<br />
                     {organization.address.district}, {organization.address.regency}<br />
@@ -80,20 +78,26 @@ export default function Footer() {
                   </span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-[#B05E3F] mr-2" aria-hidden="true">📱</span>
-                  <a href={`tel:${organization.contact.phone}`} className="hover:text-[#B05E3F] transition-colors hover:underline">
+                  <svg className="w-5 h-5 text-terra-light mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
+                  <a href={`tel:${organization.contact.phone}`} className="text-cream-beige hover:text-terra-light transition-colors hover:underline font-medium">
                     {organization.contact.phone}
                   </a>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-[#B05E3F] mr-2" aria-hidden="true">📧</span>
-                  <a href={`mailto:${organization.contact.email}`} className="hover:text-[#B05E3F] transition-colors hover:underline break-all">
+                  <svg className="w-5 h-5 text-terra-light mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <a href={`mailto:${organization.contact.email}`} className="hover:text-terra-warm transition-colors hover:underline break-all">
                     {organization.contact.email}
                   </a>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-[#B05E3F] mr-2" aria-hidden="true">🌐</span>
-                  <a href={`https://${organization.contact.website}`} className="hover:text-[#B05E3F] transition-colors hover:underline">
+                  <svg className="w-5 h-5 text-terra-light mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                  </svg>
+                  <a href={`https://${organization.contact.website}`} className="hover:text-terra-warm transition-colors hover:underline">
                     {organization.contact.website}
                   </a>
                 </li>
@@ -109,22 +113,22 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           {/* Copyright */}
           <div className="text-center md:text-left">
-            <p className="text-[#D4C4B0] text-sm">
+            <p className="text-cream-beige text-sm">
               &copy; {new Date().getFullYear()} {organization.name}
             </p>
-            <p className="text-[#D4C4B0] text-xs mt-1">
+            <p className="text-cream-beige text-xs mt-1">
               SK: {organization.sk}
             </p>
           </div>
 
           {/* Social Media */}
           <div className="flex items-center space-x-4">
-            <span className="text-[#E8DED0] text-sm mr-2">Ikuti Kami:</span>
+            <span className="text-cream-beige text-sm mr-2">Ikuti Kami:</span>
             {socialMedia.map((social) => (
               <a
                 key={social.name}
                 href={social.href}
-                className="bg-[#2C5F5D] hover:bg-[#B05E3F] text-[#F5F1E8] w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                className="bg-[#2C5F5D] hover:bg-[#B05E3F] text-cream-soft-white w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
                 aria-label={`Ikuti kami di ${social.name}`}
                 target="_blank"
                 rel="noopener noreferrer"

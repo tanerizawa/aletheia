@@ -14,15 +14,15 @@ export default function Home() {
                 Perpustakaan & Pusat Informasi
               </span>
             </div>
-            <h1 className="font-serif text-5xl md:text-7xl font-bold mb-8 text-[#F5F1E8] leading-[1.1]">
+            <h1 className="font-serif text-5xl md:text-7xl font-bold mb-8 text-cream-soft-white leading-[1.1]">
               Rumah Aletheia
             </h1>
-            <p className="text-xl md:text-2xl mb-10 text-[#E8DED0] leading-relaxed max-w-2xl">
+            <p className="text-xl md:text-2xl mb-10 text-cream-warm leading-relaxed max-w-2xl">
               Tempat di mana keberanian bertemu kebijaksanaan melalui pengetahuan dan pembelajaran
             </p>
             <Link
               href="/kegiatan"
-              className="inline-block bg-[#B05E3F] text-[#F5F1E8] px-10 py-4 font-semibold hover:bg-[#9A5035] transition-all border-2 border-[#B05E3F] hover:border-[#9A5035] shadow-lg hover:shadow-xl"
+              className="inline-block bg-[#B05E3F] text-cream-soft-white px-10 py-4 font-semibold hover:bg-[#9A5035] transition-all border-2 border-[#B05E3F] hover:border-[#9A5035] shadow-lg hover:shadow-xl"
             >
               Jelajahi Kegiatan
             </Link>
@@ -106,7 +106,7 @@ export default function Home() {
           </p>
           <Link
             href="/kontak"
-            className="inline-block bg-[#2C5F5D] text-[#F5F1E8] px-10 py-4 font-semibold hover:bg-[#1F4E4C] transition-all border-2 border-[#2C5F5D] hover:border-[#1F4E4C]"
+            className="inline-block bg-[#2C5F5D] text-cream-soft-white px-10 py-4 font-semibold hover:bg-[#1F4E4C] transition-all border-2 border-[#2C5F5D] hover:border-[#1F4E4C]"
             aria-label="Hubungi kami untuk informasi lebih lanjut"
           >
             Hubungi Kami

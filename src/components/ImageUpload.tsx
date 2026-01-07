@@ -157,18 +157,22 @@ export default function ImageUpload({
         {/* Manual URL Input (fallback) */}
         <div>
           <label className="block text-xs text-gray-500 mb-1">
-            Or paste image URL:
+            Or paste image URL (optional):
           </label>
           <input
-            type="url"
+            type="text"
             value={preview}
             onChange={(e) => {
-              setPreview(e.target.value);
-              onImageUploaded(e.target.value);
+              const url = e.target.value.trim();
+              setPreview(url);
+              onImageUploaded(url);
             }}
-            placeholder="https://..."
+            placeholder="https://... or /images/..."
             className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2C5F5D] focus:border-transparent"
           />
+          <p className="mt-1 text-xs text-gray-400">
+            Accepts both full URLs (https://...) and relative paths (/images/...)
+          </p>
         </div>
       </div>
     </div>

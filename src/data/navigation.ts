@@ -15,36 +15,36 @@ export const mainNavigation: NavItem[] = [
   {
     title: "Beranda",
     href: "/",
-    icon: "🏠",
+    icon: "home",
   },
   {
     title: "Tentang",
     href: "/tentang",
-    icon: "🛋️",
+    icon: "users",
     description: "Ruang Tamu - Mengenal Kami",
     children: [
       {
         title: "PT Academos",
         href: "/tentang/academos",
-        icon: "🏛️",
+        icon: "library",
         description: "Lembaga Induk",
       },
       {
         title: "Rumah Aletheia",
         href: "/tentang/aletheia",
-        icon: "📚",
+        icon: "book",
         description: "Perpustakaan",
       },
       {
         title: "Tim & Pengurus",
         href: "/tentang/tim",
-        icon: "👥",
+        icon: "users",
         description: "Kenali Kami",
       },
       {
         title: "Sejarah",
         href: "/tentang/sejarah",
-        icon: "📜",
+        icon: "history",
         description: "Perjalanan Kami",
       },
     ],
@@ -52,37 +52,37 @@ export const mainNavigation: NavItem[] = [
   {
     title: "Jelajahi",
     href: "#",
-    icon: "🗺️",
+    icon: "search",
     description: "Eksplorasi Rumah",
     children: [
       {
         title: "Taman",
         href: "/kegiatan",
-        icon: "🌳",
+        icon: "calendar",
         description: "Kegiatan & Event",
       },
       {
         title: "Galeri Koleksi",
         href: "/koleksi",
-        icon: "📚",
+        icon: "book",
         description: "Katalog Buku",
       },
       {
         title: "Ruang Baca",
         href: "/baca",
-        icon: "📖",
+        icon: "read",
         description: "E-Book & Digital",
       },
       {
         title: "Perpustakaan Artikel",
         href: "/artikel",
-        icon: "✍️",
+        icon: "document",
         description: "Artikel & Blog",
       },
       {
         title: "Ruang Belajar",
         href: "/belajar",
-        icon: "💡",
+        icon: "lightbulb",
         description: "Kursus & Tutorial",
       },
     ],
@@ -90,19 +90,19 @@ export const mainNavigation: NavItem[] = [
   {
     title: "Layanan",
     href: "#",
-    icon: "⚙️",
+    icon: "shield",
     description: "Layanan Academos",
     children: [
       {
         title: "Studio Riset",
         href: "/penelitian",
-        icon: "🔬",
+        icon: "research",
         description: "Penelitian",
       },
       {
         title: "Toko Buku",
         href: "/penerbitan",
-        icon: "📕",
+        icon: "publish",
         description: "Penerbitan",
       },
     ],
@@ -110,7 +110,7 @@ export const mainNavigation: NavItem[] = [
   {
     title: "Kontak",
     href: "/kontak",
-    icon: "📞",
+    icon: "location",
   },
 ];
 

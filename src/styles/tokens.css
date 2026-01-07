@@ -29,7 +29,7 @@
   --terra-700: #B05E3F;
   --terra-600: #BB6B4A;
   --terra-500: #C67B5D;
-  --terra-400: #D29272;
+  --terra-400: #D4A574;  /* Was #D29272 - NOW WARMER, LESS ORANGE */
   --terra-300: #DBA68F;
   --terra-200: #E8C4B3;
   --terra-100: #F5DDD3;
@@ -41,11 +41,11 @@
   --cream-700: #C4B8A6;
   --cream-600: #D0C5B5;
   --cream-500: #E0D6C8;
-  --cream-400: #E8DED0;
-  --cream-300: #F0EBE3;
-  --cream-200: #F5F1E8;
-  --cream-100: #FAF8F5;
-  --cream-50: #FDFCFB;
+  --cream-400: #C4BDB2;  /* Was #E8DED0 - NOW MUCH SOFTER */
+  --cream-300: #D4CFC4;  /* Was #F0EBE3 - NOW WARMER */
+  --cream-200: #E8E3DB;  /* Was #F5F1E8 - NOW DARKER */
+  --cream-100: #F0EBE3;  /* Was #FAF8F5 - SHIFTED DOWN */
+  --cream-50: #FAF8F5;   /* Was #FDFCFB - SHIFTED DOWN */
 
   /* ============================================
      SEMANTIC COLORS
@@ -63,20 +63,20 @@
   --color-surface: var(--cream-100);
   --color-surface-hover: var(--cream-50);
   
-  --color-text-primary: #2A2A2A;
-  --color-text-secondary: #5A5A5A;
-  --color-text-tertiary: #8A8A8A;
-  --color-text-inverse: var(--cream-100);
+  --color-text-primary: #1A1A1A;      /* Was #2A2A2A - NOW DARKER for better contrast */
+  --color-text-secondary: #4A4A4A;    /* Was #5A5A5A - NOW DARKER for readability */
+  --color-text-tertiary: #6A6A6A;     /* Was #8A8A8A - NOW DARKER */
+  --color-text-inverse: #FAF8F5;      /* Was var(--cream-100) - NOW BRIGHTER for dark backgrounds */
   
   --color-border: var(--cream-400);
   --color-border-light: var(--cream-300);
   --color-border-dark: var(--cream-700);
   
   /* Status Colors */
-  --color-success: #4A8B5C;
-  --color-warning: #E8A438;
-  --color-error: #C24B4B;
-  --color-info: var(--teal-500);
+  --color-success: #2D6B3F;          /* Was #4A8B5C - NOW DARKER for better contrast */
+  --color-warning: #D49020;          /* Was #E8A438 - NOW DARKER */
+  --color-error: #A83838;            /* Was #C24B4B - NOW DARKER */
+  --color-info: var(--teal-700);     /* Was teal-500 - NOW DARKER */
 
   /* ============================================
      ROOM ATMOSPHERES

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -45,11 +46,13 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-md">
         {/* Logo/Header */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-block mb-4 text-6xl">📚</Link>
-          <h1 className="text-3xl font-serif font-bold text-[#F5F1E8] mb-2">
+          <Link href="/" className="inline-block mb-4">
+            <Image src="/logo.svg" alt="Rumah Aletheia Logo" width={64} height={64} className="mx-auto" />
+          </Link>
+          <h1 className="text-3xl font-serif font-bold text-cream-soft-white mb-2">
             Admin Panel
           </h1>
-          <p className="text-[#E8DED0]/80">
+          <p className="text-cream-warm/80">
             Rumah Aletheia - PT Academos Pustaka Demokrasi
           </p>
         </div>
@@ -112,7 +115,7 @@ export default function AdminLoginPage() {
         </div>
 
         {/* Dev Note */}
-        <div className="mt-6 text-center text-xs text-[#E8DED0]/60">
+        <div className="mt-6 text-center text-xs text-cream-warm/60">
           <p>Default credentials: admin@academos.or.id / admin123</p>
           <p className="mt-1">⚠️ Ganti password di production!</p>
         </div>

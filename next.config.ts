@@ -8,8 +8,8 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   compress: true,
   
-  // Output configuration
-  output: 'standalone',
+  // Production optimizations (removed standalone mode - use default)
+  // Static files from /public are served automatically by Next.js
   
   // Security headers
   async headers() {

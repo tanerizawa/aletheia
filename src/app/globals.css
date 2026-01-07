@@ -2,6 +2,11 @@
 @import "../styles/tokens.css";
 
 :root {
+  /* Font Variables - Next.js optimized fonts */
+  --font-display: var(--font-playfair), 'Playfair Display', serif;
+  --font-body: var(--font-source-sans), 'Source Sans 3', var(--font-inter), sans-serif;
+  --font-accent: var(--font-lora), 'Lora', serif;
+  
   /* Legacy support - will be deprecated */
   --color-teal: var(--teal-700);
   --color-teal-dark: var(--teal-900);
@@ -50,6 +55,13 @@
   --color-secondary: var(--terra-700);
   --color-secondary-dark: var(--terra-900);
   --color-neutral: var(--cream-200);
+  
+  /* Soft Cream Palette - MUCH SOFTER & WARMER colors */
+  --color-cream-soft-white: #E8E3DB;  /* Was #FAF8F5 - Now much darker, warmer */
+  --color-cream-warm: #D4CFC4;        /* Was #F0EBE3 - Now softer */
+  --color-cream-beige: #C4BDB2;       /* Was #E8DED0 - Now muted */
+  --color-terra-light: #D4A574;       /* Was #E8A87C - Now warmer, less bright */
+  --color-terra-warm: #B8825A;        /* Was #C67B5D - Now deeper */
 }
 
 /* ============================================
@@ -213,7 +225,7 @@ article:hover,
    ============================================ */
 
 a {
-  color: var(--teal-700);
+  color: inherit;  /* Inherit color from parent or component classes */
   text-decoration: none;
   transition: color var(--duration-fast) var(--ease-in-out);
 }
@@ -289,3 +301,27 @@ a[class*="hover:border"] {
 .group:hover .animate-bounce-subtle {
   animation: bounce-subtle 0.6s ease-in-out;
 }
+
+/* Toast Animations */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+

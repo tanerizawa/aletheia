@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import ImageUpload from '@/components/ImageUpload';
+import AutoImageSelector from '@/components/AutoImageSelector';
 
 export default function EditEbookPage() {
   const router = useRouter();
@@ -13,6 +14,9 @@ export default function EditEbookPage() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [isbnLoading, setIsbnLoading] = useState(false);
+  const [isbnError, setIsbnError] = useState('');
+  const [categories, setCategories] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     title: '',
     author: '',
@@ -36,6 +40,22 @@ export default function EditEbookPage() {
   useEffect(() => {
     fetchEbook();
   }, [id]);
+
+  useEffect(() => {
+    // fetch existing categories for suggestions
+    async function loadCategories() {
+      try {
+        const res = await fetch('/api/public/ebooks?limit=200');
+        if (!res.ok) return;
+        const data = await res.json();
+        const cats = Array.from(new Set(data.ebooks.map((e: any) => e.category).filter(Boolean))) as string[];
+        setCategories(cats);
+      } catch (e) {
+        // ignore
+      }
+    }
+    loadCategories();
+  }, []);
 
   const fetchEbook = async () => {
     try {
@@ -170,6 +190,54 @@ export default function EditEbookPage() {
             </div>
           </div>
         </div>
+                <div className="mt-2 flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      if (!formData.title) return;
+                      setIsbnLoading(true); setIsbnError('');
+                      try {
+                        const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=intitle:${encodeURIComponent(formData.title)}`);
+                        const data = await res.json();
+                        if (!data.items || data.items.length === 0) {
+                          setIsbnError('Tidak ditemukan berdasarkan judul');
+                        } else {
+                          const book = data.items[0].volumeInfo;
+                          // try to find ISBN identifier
+                          const ids = book.industryIdentifiers || [];
+                          const isbn13 = ids.find((i: any) => i.type === 'ISBN_13')?.identifier;
+                          const isbn10 = ids.find((i: any) => i.type === 'ISBN_10')?.identifier;
+                          const foundIsbn = isbn13 || isbn10 || '';
+                          if (!foundIsbn) {
+                            setIsbnError('ISBN tidak ditemukan pada hasil pertama');
+                          }
+                          setFormData(prev => ({
+                            ...prev,
+                            isbn: foundIsbn || prev.isbn,
+                            title: book.title || prev.title,
+                            author: (book.authors && book.authors.join(', ')) || prev.author,
+                             category: (book.categories && book.categories[0]) || prev.category,
+                             description: book.description || prev.description,
+                             publisher: book.publisher || prev.publisher,
+                             publishYear: book.publishedDate ? parseInt(book.publishedDate.substring(0,4)) || prev.publishYear : prev.publishYear,
+                             pages: book.pageCount || prev.pages,
+                             language: book.language ? book.language : prev.language,
+                             coverImage: book.imageLinks?.thumbnail?.replace('http://','https://') || prev.coverImage,
+                          }));
+                        }
+                      } catch (err) {
+                        setIsbnError('Gagal mencari berdasarkan judul');
+                      } finally {
+                        setIsbnLoading(false);
+                      }
+                    }}
+                    className="px-3 py-1 bg-[#2C5F5D] text-white rounded hover:bg-[#1A3D3B] disabled:opacity-50"
+                    disabled={isbnLoading}
+                  >
+                    {isbnLoading ? 'Mencari...' : 'Find ISBN by Title'}
+                  </button>
+                  {isbnError && <p className="text-sm text-red-600">{isbnError}</p>}
+                </div>
       </header>
 
       {/* Main Content */}
@@ -200,7 +268,7 @@ export default function EditEbookPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Author <span className="text-red-500">*</span>
@@ -219,23 +287,20 @@ export default function EditEbookPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Category <span className="text-red-500">*</span>
                   </label>
-                  <select
+                  <input
+                    list="category-list"
                     name="category"
                     value={formData.category}
                     onChange={handleChange}
                     required
+                    placeholder="Type or pick a category"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2C5F5D] focus:border-transparent"
-                  >
-                    <option value="">Select category</option>
-                    <option value="Fiksi">Fiksi</option>
-                    <option value="Non-Fiksi">Non-Fiksi</option>
-                    <option value="Sains">Sains</option>
-                    <option value="Sejarah">Sejarah</option>
-                    <option value="Filsafat">Filsafat</option>
-                    <option value="Sosial">Sosial</option>
-                    <option value="Pendidikan">Pendidikan</option>
-                    <option value="Teknologi">Teknologi</option>
-                  </select>
+                  />
+                  <datalist id="category-list">
+                    {categories.map(cat => (
+                      <option key={cat} value={cat} />
+                    ))}
+                  </datalist>
                 </div>
               </div>
 
@@ -293,6 +358,44 @@ export default function EditEbookPage() {
                   onChange={handleChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2C5F5D] focus:border-transparent"
                 />
+                <div className="mt-2 flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      if (!formData.isbn) { setIsbnError('Masukkan ISBN terlebih dahulu'); return; }
+                      setIsbnLoading(true); setIsbnError('');
+                      try {
+                        const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${formData.isbn}`);
+                        const data = await res.json();
+                        if (!data.items || data.items.length === 0) {
+                          setIsbnError('Data ISBN tidak ditemukan di Google Books.');
+                        } else {
+                          const book = data.items[0].volumeInfo;
+                          setFormData(prev => ({
+                            ...prev,
+                            title: book.title || prev.title,
+                            author: (book.authors && book.authors.join(', ')) || prev.author,
+                            description: book.description || prev.description,
+                            publisher: book.publisher || prev.publisher,
+                            publishYear: book.publishedDate ? parseInt(book.publishedDate.substring(0,4)) || prev.publishYear : prev.publishYear,
+                            pages: book.pageCount || prev.pages,
+                            language: book.language ? book.language : prev.language,
+                            coverImage: book.imageLinks?.thumbnail?.replace('http://','https://') || prev.coverImage,
+                          }));
+                        }
+                      } catch (err) {
+                        setIsbnError('Gagal fetch data ISBN.');
+                      } finally {
+                        setIsbnLoading(false);
+                      }
+                    }}
+                    className="px-3 py-1 bg-[#B05E3F] text-white rounded hover:bg-[#9A5035] disabled:opacity-50"
+                    disabled={isbnLoading}
+                  >
+                    {isbnLoading ? 'Memeriksa...' : 'Fetch ISBN'}
+                  </button>
+                  {isbnError && <p className="text-sm text-red-600">{isbnError}</p>}
+                </div>
               </div>
 
               <div>
@@ -342,15 +445,35 @@ export default function EditEbookPage() {
             
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">File URL</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">File URL or Path</label>
                 <input
-                  type="url"
+                  type="text"
                   name="fileUrl"
                   value={formData.fileUrl}
                   onChange={handleChange}
-                  placeholder="https://..."
+                  placeholder="https://... or /reader/book-slug"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2C5F5D] focus:border-transparent"
                 />
+                <p className="mt-1 text-xs text-gray-500">Enter full URL (https://...) or relative path (/reader/...)</p>
+              </div>
+
+              {/* Auto-Generate Cover Image */}
+              <AutoImageSelector
+                title={formData.title}
+                type="book"
+                keywords={formData.category ? [formData.category, formData.author] : [formData.author]}
+                onImageSelect={(url) => setFormData(prev => ({ ...prev, coverImage: url }))}
+              />
+
+              {/* Separator */}
+              <div className="relative my-6">
+                <div className="absolute inset-x-0 top-1/2 transform -translate-y-1/2">
+                  <div className="flex items-center">
+                    <div className="flex-grow border-t border-gray-300"></div>
+                    <span className="px-3 text-xs text-gray-500 bg-white">OR upload manually</span>
+                    <div className="flex-grow border-t border-gray-300"></div>
+                  </div>
+                </div>
               </div>
 
               <ImageUpload

@@ -1,14 +1,46 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { getArticleBySlug, getRelatedArticles, type Article } from '@/data/articles';
+import { DocumentIcon, UsersIcon } from '@/components/icons';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
+async function getArticle(slug: string) {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
+                    (process.env.PORT ? `http://localhost:${process.env.PORT}` : 'http://localhost:3001');
+    const res = await fetch(`${baseUrl}/api/public/articles/${slug}`, {
+      next: { revalidate: 60 },
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.article;
+  } catch (error) {
+    console.error('Failed to fetch article:', error);
+    return null;
+  }
+}
+
+async function getRelatedArticles(category: string, currentSlug: string) {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
+                    (process.env.PORT ? `http://localhost:${process.env.PORT}` : 'http://localhost:3001');
+    const res = await fetch(`${baseUrl}/api/public/articles?category=${category}&limit=3`, {
+      next: { revalidate: 60 },
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.articles.filter((a: any) => a.slug !== currentSlug).slice(0, 3);
+  } catch (error) {
+    console.error('Failed to fetch related articles:', error);
+    return [];
+  }
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const article = getArticleBySlug(slug);
+  const article = await getArticle(slug);
   
   if (!article) {
     return {
@@ -107,17 +139,17 @@ function MarkdownContent({ content }: { content: string }) {
 
 export default async function ArtikelDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const article = getArticleBySlug(slug);
+  const article = await getArticle(slug);
 
   if (!article) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#2C5F5D] via-[#1F4E4C] to-[#1A3D3B] pt-32 pb-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="text-8xl mb-6">📄</div>
-          <h1 className="text-4xl font-serif font-bold text-[#F5F1E8] mb-4">
+          <DocumentIcon className="w-32 h-32 mx-auto mb-6 text-cream-soft-white/60" />
+          <h1 className="text-4xl font-serif font-bold text-cream-soft-white mb-4">
             Artikel Tidak Ditemukan
           </h1>
-          <p className="text-xl text-[#E8DED0]/80 mb-8">
+          <p className="text-xl text-cream-warm/80 mb-8">
             Maaf, artikel yang Anda cari tidak tersedia.
           </p>
           <Link
@@ -131,7 +163,7 @@ export default async function ArtikelDetailPage({ params }: PageProps) {
     );
   }
 
-  const relatedArticles = getRelatedArticles(article.id, 3);
+  const relatedArticles = await getRelatedArticles(article.category, article.slug);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#F5F1E8] to-[#E8DED0] pt-24 pb-20">
@@ -139,12 +171,12 @@ export default async function ArtikelDetailPage({ params }: PageProps) {
       <div className="bg-gradient-to-br from-[#2C5F5D] via-[#1F4E4C] to-[#1A3D3B] pt-12 pb-16 mb-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
-          <div className="flex items-center gap-2 text-sm text-[#E8DED0]/60 mb-6">
-            <Link href="/" className="hover:text-[#F5F1E8] transition-colors">Beranda</Link>
-            <span>/</span>
-            <Link href="/artikel" className="hover:text-[#F5F1E8] transition-colors">Artikel</Link>
-            <span>/</span>
-            <span className="text-[#F5F1E8]">{article.category}</span>
+          <div className="flex items-center gap-2 text-sm mb-6">
+            <Link href="/" className="text-[#4A4A4A] hover:text-[#B05E3F] transition-colors">Beranda</Link>
+            <span className="text-[#4A4A4A]">/</span>
+            <Link href="/artikel" className="text-[#4A4A4A] hover:text-[#B05E3F] transition-colors">Artikel</Link>
+            <span className="text-[#4A4A4A]">/</span>
+            <span className="text-[#1A1A1A] font-semibold">{article.category}</span>
           </div>
 
           {/* Category Badge */}
@@ -155,17 +187,17 @@ export default async function ArtikelDetailPage({ params }: PageProps) {
           </div>
 
           {/* Title */}
-          <h1 className="text-4xl md:text-5xl font-serif font-bold text-[#F5F1E8] mb-6 leading-tight">
+          <h1 className="text-4xl md:text-5xl font-serif font-bold text-cream-soft-white mb-6 leading-tight">
             {article.title}
           </h1>
 
           {/* Metadata */}
-          <div className="flex flex-wrap items-center gap-6 text-[#E8DED0]/80">
+          <div className="flex flex-wrap items-center gap-6 text-cream-warm/80">
             <div className="flex items-center gap-2">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
-              <span>{article.author.name}</span>
+              <span>{article.author?.name || 'Anonymous'}</span>
             </div>
             <div className="flex items-center gap-2">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -212,10 +244,10 @@ export default async function ArtikelDetailPage({ params }: PageProps) {
             <div className="mt-12 pt-8 border-t border-gray-200">
               <h3 className="text-sm font-semibold text-gray-500 mb-3">TAG:</h3>
               <div className="flex flex-wrap gap-2">
-                {article.tags.map((tag) => (
+                {article.tags.map((tag: string) => (
                   <span
                     key={tag}
-                    className="px-3 py-1 bg-[#F5F1E8] text-gray-700 rounded-full text-sm hover:bg-[#E8DED0] transition-colors cursor-pointer"
+                    className="px-3 py-1 bg-cream-soft-white text-gray-700 rounded-full text-sm hover:bg-cream-warm transition-colors cursor-pointer"
                   >
                     #{tag}
                   </span>
@@ -227,8 +259,8 @@ export default async function ArtikelDetailPage({ params }: PageProps) {
           {/* Author Bio */}
           <div className="mt-12 pt-8 border-t border-gray-200">
             <div className="flex items-start gap-4">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#2C5F5D] to-[#B05E3F] flex items-center justify-center text-3xl flex-shrink-0">
-                👤
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#2C5F5D] to-[#B05E3F] flex items-center justify-center flex-shrink-0">
+                <UsersIcon className="w-8 h-8 text-white" />
               </div>
               <div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">{article.author.name}</h3>
@@ -261,7 +293,7 @@ export default async function ArtikelDetailPage({ params }: PageProps) {
           <div className="mb-12">
             <h2 className="text-3xl font-serif font-bold text-gray-900 mb-8">Artikel Terkait</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {relatedArticles.map((related) => (
+              {relatedArticles.map((related: any) => (
                 <Link
                   key={related.id}
                   href={`/artikel/${related.slug}`}

@@ -1,22 +1,28 @@
-import type { Metadata } from "next";
-import FAQ from "@/components/FAQ";
-import { organization, library } from "@/data/organization";
+'use client';
 
-export const metadata: Metadata = {
-  title: "Kontak - Rumah Aletheia | PT Academos Pustaka Demokrasi",
-  description: `Hubungi Rumah Aletheia di ${organization.address.regency}, ${organization.address.province}. Telepon: ${organization.contact.phone}, Email: ${organization.contact.email}`,
-};
+import { useState } from 'react';
+import FAQ from "@/components/FAQ";
+import ContactForm from "@/components/ContactForm";
+import Toast from "@/components/Toast";
+import { organization, library } from "@/data/organization";
+import { LocationIcon } from "@/components/icons";
+
+interface ToastMessage {
+  message: string;
+  type: 'success' | 'error' | 'info' | 'warning';
+}
 
 export default function KontakPage() {
+  const [toast, setToast] = useState<ToastMessage | null>(null);
   return (
-    <main className="flex-grow bg-[#F5F1E8]">
+    <main className="flex-grow bg-cream-soft-white">
       <div className="bg-[#2C5F5D] py-16 border-b-4 border-[#B05E3F]">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="inline-block mb-4">
             <span className="text-[#B05E3F] text-sm uppercase tracking-[0.3em] font-serif font-bold">Resepsionis</span>
           </div>
-          <h1 className="font-serif text-5xl lg:text-6xl font-bold text-[#F5F1E8] mb-6">Hubungi Kami</h1>
-          <p className="text-xl text-[#E8DED0] max-w-3xl leading-relaxed">
+          <h1 className="font-serif text-5xl lg:text-6xl font-bold text-cream-soft-white mb-6">Hubungi Kami</h1>
+          <p className="text-xl text-cream-warm max-w-3xl leading-relaxed">
             Kami siap membantu Anda dengan pertanyaan dan kebutuhan informasi
           </p>
         </div>
@@ -32,21 +38,21 @@ export default function KontakPage() {
               {/* Address */}
               <div className="flex items-start">
                 <div className="bg-[#2C5F5D] p-4 mr-6 flex-shrink-0">
-                  <svg className="w-7 h-7 text-[#F5F1E8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-7 h-7 text-cream-soft-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                 </div>
                 <div>
                   <h3 className="font-serif text-xl font-bold text-[#1F4E4C] mb-2">Alamat</h3>
-                  <p className="text-[#5A5A5A] leading-relaxed">
+                  <p className="text-gray-500 leading-relaxed">
                     {organization.address.street}<br />
                     Desa {organization.address.village}, Kec. {organization.address.district}<br />
                     {organization.address.regency}, {organization.address.province} {organization.address.postalCode}<br />
                     Indonesia
                   </p>
-                  <p className="text-xs text-[#7A7A7A] mt-2">
-                    📍 {organization.address.coordinates.lat}, {organization.address.coordinates.lng}
+                  <p className="text-xs text-gray-400 mt-2 flex items-center gap-1">
+                    <LocationIcon className="w-4 h-4" /> {organization.address.coordinates.lat}, {organization.address.coordinates.lng}
                   </p>
                 </div>
               </div>
@@ -54,7 +60,7 @@ export default function KontakPage() {
               {/* Email */}
               <div className="flex items-start">
                 <div className="bg-[#2C5F5D] p-4 mr-6 flex-shrink-0">
-                  <svg className="w-7 h-7 text-[#F5F1E8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-7 h-7 text-cream-soft-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                 </div>
@@ -62,7 +68,7 @@ export default function KontakPage() {
                   <h3 className="font-serif text-xl font-bold text-[#1F4E4C] mb-2">Email</h3>
                   <a 
                     href={`mailto:${organization.contact.email}`}
-                    className="text-[#5A5A5A] hover:text-[#B05E3F] transition-colors hover:underline"
+                    className="text-gray-500 hover:text-[#B05E3F] transition-colors hover:underline"
                   >
                     {organization.contact.email}
                   </a>
@@ -72,7 +78,7 @@ export default function KontakPage() {
               {/* Phone */}
               <div className="flex items-start">
                 <div className="bg-[#2C5F5D] p-4 mr-6 flex-shrink-0">
-                  <svg className="w-7 h-7 text-[#F5F1E8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-7 h-7 text-cream-soft-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                   </svg>
                 </div>
@@ -80,7 +86,7 @@ export default function KontakPage() {
                   <h3 className="font-serif text-xl font-bold text-[#1F4E4C] mb-2">Telepon</h3>
                   <a 
                     href={`tel:${organization.contact.phone}`}
-                    className="text-[#5A5A5A] hover:text-[#B05E3F] transition-colors hover:underline"
+                    className="text-gray-500 hover:text-[#B05E3F] transition-colors hover:underline"
                   >
                     {organization.contact.phone}
                   </a>
@@ -90,13 +96,13 @@ export default function KontakPage() {
               {/* Operating Hours */}
               <div className="flex items-start">
                 <div className="bg-[#2C5F5D] p-4 mr-6 flex-shrink-0">
-                  <svg className="w-7 h-7 text-[#F5F1E8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-7 h-7 text-cream-soft-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
                 <div>
                   <h3 className="font-serif text-xl font-bold text-[#1F4E4C] mb-2">Jam Operasional</h3>
-                  <p className="text-[#5A5A5A] leading-relaxed">
+                  <p className="text-gray-500 leading-relaxed">
                     Senin - Jumat: 08:00 - 20:00<br />
                     Sabtu - Minggu: 09:00 - 17:00<br />
                     Hari Libur Nasional: Tutup
@@ -107,7 +113,7 @@ export default function KontakPage() {
               {/* Website */}
               <div className="flex items-start">
                 <div className="bg-[#2C5F5D] p-4 mr-6 flex-shrink-0">
-                  <svg className="w-7 h-7 text-[#F5F1E8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-7 h-7 text-cream-soft-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
                   </svg>
                 </div>
@@ -115,7 +121,7 @@ export default function KontakPage() {
                   <h3 className="font-serif text-xl font-bold text-[#1F4E4C] mb-2">Website</h3>
                   <a 
                     href={`https://${organization.contact.website}`}
-                    className="text-[#5A5A5A] hover:text-[#B05E3F] transition-colors hover:underline"
+                    className="text-gray-500 hover:text-[#B05E3F] transition-colors hover:underline"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -151,90 +157,19 @@ export default function KontakPage() {
           {/* Contact Form */}
           <div>
             <h2 className="font-serif text-3xl font-bold mb-6 text-[#1F4E4C]">Kirim Pesan</h2>
-            <form className="space-y-6">
-              <div>
-                <label htmlFor="name" className="block text-sm font-serif font-bold text-[#1F4E4C] mb-2">
-                  Nama Lengkap
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  className="w-full px-4 py-3 border-2 border-[#D4C4B0] bg-white text-[#2A2A2A] rounded focus:outline-none focus:border-[#B05E3F] focus:ring-2 focus:ring-[#B05E3F] focus:ring-opacity-20 transition-all"
-                  placeholder="Masukkan nama Anda"
-                  required
-                  aria-required="true"
-                  aria-label="Nama lengkap Anda"
-                  autoComplete="name"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="email" className="block text-sm font-serif font-bold text-[#1F4E4C] mb-2">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  className="w-full px-4 py-3 border-2 border-[#D4C4B0] bg-white text-[#2A2A2A] rounded focus:outline-none focus:border-[#B05E3F] focus:ring-2 focus:ring-[#B05E3F] focus:ring-opacity-20 transition-all"
-                  placeholder="nama@email.com"
-                  required
-                  aria-required="true"
-                  aria-label="Alamat email Anda"
-                  autoComplete="email"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="subject" className="block text-sm font-serif font-bold text-[#1F4E4C] mb-2">
-                  Subjek
-                </label>
-                <input
-                  type="text"
-                  id="subject"
-                  name="subject"
-                  className="w-full px-4 py-3 border-2 border-[#D4C4B0] bg-white text-[#2A2A2A] rounded focus:outline-none focus:border-[#B05E3F] focus:ring-2 focus:ring-[#B05E3F] focus:ring-opacity-20 transition-all"
-                  placeholder="Subjek pesan"
-                  required
-                  aria-required="true"
-                  aria-label="Subjek pesan Anda"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="message" className="block text-sm font-serif font-bold text-[#1F4E4C] mb-2">
-                  Pesan
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={6}
-                  className="w-full px-4 py-3 border-2 border-[#D4C4B0] bg-white text-[#2A2A2A] rounded resize-none focus:outline-none focus:border-[#B05E3F] focus:ring-2 focus:ring-[#B05E3F] focus:ring-opacity-20 transition-all"
-                  placeholder="Tulis pesan Anda di sini"
-                  required
-                  aria-required="true"
-                  aria-label="Isi pesan Anda"
-                ></textarea>
-              </div>
-
-              <button
-                type="submit"
-                className="w-full bg-[#B05E3F] text-[#F5F1E8] px-8 py-4 font-serif font-bold text-lg hover:bg-[#9A5035] hover:shadow-xl transition-all duration-300 border-2 border-[#B05E3F] hover:border-[#9A5035] active:transform active:scale-95"
-                aria-label="Kirim pesan kontak"
-              >
-                Kirim Pesan
-              </button>
-            </form>
+            <ContactForm
+              onSuccess={(message) => setToast({ message, type: 'success' })}
+              onError={(message) => setToast({ message, type: 'error' })}
+            />
           </div>
         </div>
 
         {/* Organization Info */}
-        <div className="mt-16 bg-gradient-to-r from-[#2C5F5D]/10 to-[#B05E3F]/10 border-2 border-[#D4C4B0] rounded-lg p-8">
+        <div className="mt-16 bg-gradient-to-r from-[#2C5F5D]/10 to-[#B05E3F]/10 border-2 border-cream-beige rounded-lg p-8">
           <h3 className="font-serif text-2xl font-bold text-[#1F4E4C] mb-4">
             {organization.name}
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-[#5A5A5A]">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-500">
             <div>
               <p><span className="font-bold">SK Pendirian:</span> {organization.sk}</p>
               <p><span className="font-bold">Kepala Lembaga:</span> {organization.director}</p>
@@ -253,7 +188,7 @@ export default function KontakPage() {
             </svg>
             <div>
               <h3 className="font-serif font-bold text-[#1F4E4C] mb-2">Catatan Penting</h3>
-              <p className="text-[#5A5A5A]">
+              <p className="text-gray-500">
                 Untuk pertanyaan mendesak atau bantuan langsung, silakan hubungi kami melalui telepon atau 
                 kunjungi perpustakaan kami langsung. Tim kami siap membantu Anda.
               </p>
@@ -264,6 +199,15 @@ export default function KontakPage() {
 
       {/* FAQ Section */}
       <FAQ />
+      
+      {/* Toast Notification */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
     </main>
   );
 }

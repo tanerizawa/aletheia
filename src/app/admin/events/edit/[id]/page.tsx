@@ -4,6 +4,7 @@ import { useState, useEffect, FormEvent } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import ImageUpload from '@/components/ImageUpload';
+import AutoImageSelector from '@/components/AutoImageSelector';
 
 export default function EditEventPage() {
   const router = useRouter();
@@ -344,6 +345,26 @@ export default function EditEventPage() {
           {/* Media */}
           <div className="bg-white p-6 rounded-lg shadow">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Cover Image</h2>
+            
+            {/* Auto-Generate Cover Image */}
+            <AutoImageSelector
+              title={formData.title}
+              type="event"
+              keywords={formData.type ? [formData.type] : []}
+              onImageSelect={(url) => setFormData(prev => ({ ...prev, coverImage: url }))}
+            />
+
+            {/* Separator */}
+            <div className="relative my-6">
+              <div className="absolute inset-x-0 top-1/2 transform -translate-y-1/2">
+                <div className="flex items-center">
+                  <div className="flex-grow border-t border-gray-300"></div>
+                  <span className="px-3 text-xs text-gray-500 bg-white">OR upload manually</span>
+                  <div className="flex-grow border-t border-gray-300"></div>
+                </div>
+              </div>
+            </div>
+
             <ImageUpload
               label="Event Cover"
               currentImageUrl={formData.coverImage}

@@ -2,14 +2,23 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { mainNavigation } from '@/data/navigation';
+import NavIcon from '@/components/NavIcon';
+import Image from 'next/image';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const pathname = usePathname();
 
   const toggleDropdown = (title: string) => {
     setOpenDropdown(openDropdown === title ? null : title);
+  };
+
+  const isActive = (href: string) => {
+    if (href === '/') return pathname === '/';
+    return pathname.startsWith(href);
   };
 
   return (
@@ -18,16 +27,8 @@ export default function Header() {
         <div className="flex justify-between items-center h-20">
           {/* Logo & Brand */}
           <div className="flex items-center space-x-3">
-            <Link href="/" className="group flex items-center space-x-3 hover:opacity-90 transition-opacity" aria-label="Rumah Aletheia - Kembali ke beranda">
-              <div className="text-4xl">🏛️</div>
-              <div className="flex flex-col">
-                <span className="font-serif text-2xl font-bold text-[#F5F1E8] tracking-tight">
-                  Rumah Aletheia
-                </span>
-                <span className="text-xs text-[#E8DED0] tracking-wide">
-                  part of Academos
-                </span>
-              </div>
+            <Link href="/" className="group hover:opacity-90 transition-opacity" aria-label="Rumah Aletheia - Kembali ke beranda">
+              <Image src="/logo.svg" alt="Rumah Aletheia - part of Academos" width={240} height={80} className="h-14 lg:h-16 w-auto" priority />
             </Link>
           </div>
 
@@ -38,7 +39,7 @@ export default function Header() {
                 {item.children ? (
                   <>
                     <button
-                      className="px-5 py-2 text-[#F5F1E8] hover:text-[#B05E3F] hover:bg-[#1F4E4C] rounded transition-all font-medium flex items-center space-x-1"
+                      className="px-5 py-2 text-cream-soft-white hover:text-[#B05E3F] hover:bg-[#1F4E4C] rounded transition-all font-medium flex items-center space-x-1"
                       onClick={() => toggleDropdown(item.title)}
                       aria-haspopup="true"
                       aria-expanded={openDropdown === item.title}
@@ -52,7 +53,7 @@ export default function Header() {
                     {/* Dropdown Menu */}
                     <div className={`absolute left-0 top-full mt-2 w-64 bg-white rounded-lg shadow-xl border-2 border-[#B05E3F] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50`}>
                       {item.description && (
-                        <div className="px-4 py-3 border-b border-[#E8DED0] bg-[#F5F1E8]">
+                        <div className="px-4 py-3 border-b border-cream-warm bg-cream-soft-white">
                           <p className="text-sm font-semibold text-[#2C5F5D]">{item.description}</p>
                         </div>
                       )}
@@ -61,15 +62,17 @@ export default function Header() {
                           <Link
                             key={child.href}
                             href={child.href}
-                            className="flex items-start px-4 py-3 hover:bg-[#F5F1E8] transition-colors group/item"
+                            className="flex items-start px-4 py-3 hover:bg-cream-soft-white transition-colors group/item"
                           >
-                            <span className="text-xl mr-3 mt-0.5">{child.icon}</span>
+                            <div className="mr-3 mt-0.5 text-[#B05E3F]">
+                              {child.icon && <NavIcon icon={child.icon} className="w-5 h-5" />}
+                            </div>
                             <div className="flex-1">
-                              <div className="font-semibold text-[#2C5F5D] group-hover/item:text-[#B05E3F] transition-colors">
+                              <div className="font-semibold text-[#1F4E4C] group-hover/item:text-[#B05E3F] transition-colors">
                                 {child.title}
                               </div>
                               {child.description && (
-                                <div className="text-xs text-[#5A5A5A] mt-0.5">
+                                <div className="text-xs text-gray-500 mt-0.5">
                                   {child.description}
                                 </div>
                               )}
@@ -82,7 +85,11 @@ export default function Header() {
                 ) : (
                   <Link
                     href={item.href}
-                    className="px-5 py-2 text-[#F5F1E8] hover:text-[#B05E3F] hover:bg-[#1F4E4C] rounded transition-all font-medium"
+                    className={`px-5 py-2 rounded transition-all font-medium ${
+                      isActive(item.href)
+                        ? 'bg-[#B05E3F] text-cream-soft-white'
+                        : 'text-cream-soft-white hover:text-[#B05E3F] hover:bg-[#1F4E4C]'
+                    }`}
                   >
                     {item.title}
                   </Link>
@@ -95,7 +102,7 @@ export default function Header() {
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-[#F5F1E8] hover:text-[#B05E3F] focus:outline-none focus:ring-2 focus:ring-[#B05E3F] focus:ring-offset-2 focus:ring-offset-[#2C5F5D] rounded p-2"
+              className="text-cream-soft-white hover:text-[#B05E3F] focus:outline-none focus:ring-2 focus:ring-[#B05E3F] focus:ring-offset-2 focus:ring-offset-[#2C5F5D] rounded p-2"
               aria-label={isMenuOpen ? "Tutup menu" : "Buka menu"}
               aria-expanded={isMenuOpen}
               aria-controls="mobile-menu"
@@ -120,10 +127,10 @@ export default function Header() {
                   <>
                     <button
                       onClick={() => toggleDropdown(item.title)}
-                      className="w-full text-left py-3 px-4 text-[#F5F1E8] hover:bg-[#1F4E4C] hover:text-[#B05E3F] rounded transition-all font-medium flex items-center justify-between"
+                      className="w-full text-left py-3 px-4 text-cream-soft-white hover:bg-[#1F4E4C] hover:text-[#B05E3F] rounded transition-all font-medium flex items-center justify-between"
                     >
                       <span className="flex items-center space-x-2">
-                        <span>{item.icon}</span>
+                        {item.icon && <NavIcon icon={item.icon} className="w-5 h-5" />}
                         <span>{item.title}</span>
                       </span>
                       <svg 
@@ -141,11 +148,11 @@ export default function Header() {
                           <Link
                             key={child.href}
                             href={child.href}
-                            className="block py-2 px-4 text-[#E8DED0] hover:bg-[#1F4E4C] hover:text-[#B05E3F] rounded transition-all text-sm"
+                            className="flex items-center gap-2 py-2 px-4 text-cream-soft-white hover:bg-[#1F4E4C] hover:text-[#B05E3F] rounded transition-all text-sm"
                             onClick={() => setIsMenuOpen(false)}
                           >
-                            <span className="mr-2">{child.icon}</span>
-                            {child.title}
+                            {child.icon && <NavIcon icon={child.icon} className="w-4 h-4" />}
+                            <span>{child.title}</span>
                           </Link>
                         ))}
                       </div>
@@ -154,10 +161,10 @@ export default function Header() {
                 ) : (
                   <Link
                     href={item.href}
-                    className="flex items-center space-x-2 py-3 px-4 text-[#F5F1E8] hover:bg-[#1F4E4C] hover:text-[#B05E3F] rounded transition-all font-medium"
+                    className="flex items-center space-x-2 py-3 px-4 text-cream-soft-white hover:bg-[#1F4E4C] hover:text-[#B05E3F] rounded transition-all font-medium"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    <span>{item.icon}</span>
+                    {item.icon && <NavIcon icon={item.icon} className="w-5 h-5" />}
                     <span>{item.title}</span>
                   </Link>
                 )}

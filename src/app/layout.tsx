@@ -1,13 +1,42 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-// import "./globals.css"; // Using Tailwind CDN instead
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import { Inter, Playfair_Display, Source_Sans_3, Lora } from "next/font/google";
+import "./globals.css";
+import ConditionalLayout from "@/components/ConditionalLayout";
 
+// Optimized font loading with display=swap for faster rendering
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600"],
+  display: "swap",
+  preload: true,
+});
+
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
+  subsets: ["latin"],
+  weight: ["400", "700", "800"],
+  display: "swap",
+  preload: true,
+  style: ["normal", "italic"],
+});
+
+const sourceSans = Source_Sans_3({
+  variable: "--font-source-sans",
+  subsets: ["latin"],
+  weight: ["300", "400", "600", "700"],
+  display: "swap",
+  preload: true,
+  style: ["normal", "italic"],
+});
+
+const lora = Lora({
+  variable: "--font-lora",
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+  display: "swap",
+  preload: false, // Secondary font, load on demand
+  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -49,23 +78,20 @@ export default function RootLayout({
     <html lang="id" className="scroll-smooth">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <script src="https://cdn.tailwindcss.com"></script>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,800;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+        {/* Preconnect to external resources for faster loading */}
+        <link rel="preconnect" href="https://res.cloudinary.com" />
+        <link rel="dns-prefetch" href="https://images.unsplash.com" />
       </head>
       <body
-        className={`${inter.variable} antialiased flex flex-col min-h-screen bg-[#F5F1E8]`}
-        style={{ fontFamily: "'Source Sans Pro', 'Inter', sans-serif" }}
+        className={`${inter.variable} ${playfair.variable} ${sourceSans.variable} ${lora.variable} antialiased flex flex-col min-h-screen bg-cream-soft-white`}
+        style={{ fontFamily: "var(--font-source-sans), var(--font-inter), sans-serif" }}
       >
         <a href="#main-content" className="skip-to-content">
           Langsung ke konten utama
         </a>
-        <Header />
-        <main id="main-content">
+        <ConditionalLayout>
           {children}
-        </main>
-        <Footer />
+        </ConditionalLayout>
       </body>
     </html>
   );

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ebooks, ebookCategories, searchEbooks } from "@/data/ebooks";
+import { BookIcon, SearchIcon } from "@/components/icons";
 
 export const metadata: Metadata = {
   title: "Cari E-Book - Perpustakaan Digital",
@@ -11,19 +11,46 @@ interface SearchPageProps {
   searchParams: { q?: string };
 }
 
-export default function SearchEbooksPage({ searchParams }: SearchPageProps) {
+async function searchEbooks(query: string) {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
+                    (process.env.PORT ? `http://localhost:${process.env.PORT}` : 'http://localhost:3001');
+    const res = await fetch(`${baseUrl}/api/public/ebooks?search=${encodeURIComponent(query)}&limit=100`, { next: { revalidate: 60 } });
+    if (!res.ok) return { ebooks: [] };
+    return await res.json();
+  } catch (error) {
+    console.error('Failed to search ebooks:', error);
+    return { ebooks: [] };
+  }
+}
+
+async function getCategories(): Promise<string[]> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
+                    (process.env.PORT ? `http://localhost:${process.env.PORT}` : 'http://localhost:3001');
+    const res = await fetch(`${baseUrl}/api/public/ebooks?limit=100`, { next: { revalidate: 60 } });
+    if (!res.ok) return [];
+    const { ebooks } = await res.json();
+    return Array.from(new Set(ebooks.map((e: any) => e.category))) as string[];
+  } catch (error) {
+    return [];
+  }
+}
+
+export default async function SearchEbooksPage({ searchParams }: SearchPageProps) {
   const query = searchParams.q || "";
-  const results = query ? searchEbooks(query) : [];
+  const { ebooks: results } = query ? await searchEbooks(query) : { ebooks: [] };
+  const ebookCategories: string[] = await getCategories();
 
   return (
-    <main className="flex-grow bg-[#F5F1E8]">
+    <main className="flex-grow bg-cream-soft-white">
       {/* Hero */}
       <section className="bg-gradient-to-br from-[#2C5F5D] to-[#1F4E4C] py-12 border-b-4 border-[#B05E3F]">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <h1 className="font-serif text-4xl font-bold text-[#F5F1E8] mb-4">
+          <h1 className="font-serif text-4xl font-bold text-cream-soft-white mb-4">
             Hasil Pencarian E-Book
           </h1>
-          <p className="text-[#E8DED0]">
+          <p className="text-cream-warm">
             {query ? `Menampilkan hasil untuk: "${query}"` : "Masukkan kata kunci pencarian"}
           </p>
         </div>
@@ -40,7 +67,7 @@ export default function SearchEbooksPage({ searchParams }: SearchPageProps) {
                 name="q"
                 defaultValue={query}
                 placeholder="Cari judul, penulis, atau kategori..."
-                className="w-full px-6 py-4 pr-14 rounded-lg border-2 border-[#D4C4B0] focus:outline-none focus:border-[#B05E3F] transition-all"
+                className="w-full px-6 py-4 pr-14 rounded-lg border-2 border-cream-beige focus:outline-none focus:border-[#B05E3F] transition-all"
               />
               <button
                 type="submit"
@@ -65,14 +92,14 @@ export default function SearchEbooksPage({ searchParams }: SearchPageProps) {
           {/* Results Grid */}
           {results.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {results.map((ebook) => (
+              {results.map((ebook: any) => (
                 <Link
                   key={ebook.id}
-                  href={`/baca/${ebook.id}`}
-                  className="group bg-white p-4 border-2 border-[#D4C4B0] hover:border-[#B05E3F] hover:shadow-lg transition-all"
+                  href={`/baca/${ebook.slug}`}
+                  className="group bg-white p-4 border-2 border-cream-beige hover:border-[#B05E3F] hover:shadow-lg transition-all"
                 >
                   <div className="bg-gradient-to-br from-[#2C5F5D] to-[#B05E3F] h-48 mb-3 flex items-center justify-center group-hover:scale-105 transition-transform">
-                    <span className="text-5xl">📚</span>
+                    <BookIcon className="w-20 h-20 text-white/80" />
                   </div>
                   
                   <div className="mb-2">
@@ -100,7 +127,7 @@ export default function SearchEbooksPage({ searchParams }: SearchPageProps) {
             </div>
           ) : query ? (
             <div className="text-center py-20">
-              <div className="text-6xl mb-4">🔍</div>
+              <SearchIcon className="w-24 h-24 mx-auto mb-4 text-[#7A7A7A]" />
               <h3 className="font-serif text-2xl font-bold text-[#1F4E4C] mb-2">
                 Tidak Ditemukan
               </h3>
@@ -109,14 +136,14 @@ export default function SearchEbooksPage({ searchParams }: SearchPageProps) {
               </p>
               <Link
                 href="/baca"
-                className="inline-block bg-[#B05E3F] text-[#F5F1E8] px-8 py-3 font-bold hover:bg-[#9A5035] transition-all"
+                className="inline-block bg-[#B05E3F] text-cream-soft-white px-8 py-3 font-bold hover:bg-[#9A5035] transition-all"
               >
                 Kembali ke Perpustakaan Digital
               </Link>
             </div>
           ) : (
             <div className="text-center py-20">
-              <div className="text-6xl mb-4">📚</div>
+              <BookIcon className="w-24 h-24 mx-auto mb-4 text-[#B05E3F]" />
               <h3 className="font-serif text-2xl font-bold text-[#1F4E4C] mb-2">
                 Mulai Pencarian
               </h3>
@@ -127,11 +154,11 @@ export default function SearchEbooksPage({ searchParams }: SearchPageProps) {
               <div className="max-w-2xl mx-auto">
                 <h4 className="font-bold text-[#1F4E4C] mb-4">Kategori Populer:</h4>
                 <div className="flex flex-wrap gap-2 justify-center">
-                  {ebookCategories.slice(0, 6).map((cat) => (
+                  {ebookCategories.slice(0, 6).map((cat: string) => (
                     <Link
                       key={cat}
                       href={`/baca/kategori/${cat.toLowerCase()}`}
-                      className="px-4 py-2 bg-white border-2 border-[#D4C4B0] hover:border-[#2C5F5D] text-[#1F4E4C] font-bold text-sm transition-all"
+                      className="px-4 py-2 bg-white border-2 border-cream-beige hover:border-[#2C5F5D] text-[#1F4E4C] font-bold text-sm transition-all"
                     >
                       {cat}
                     </Link>

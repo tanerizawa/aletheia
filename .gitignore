@@ -42,3 +42,55 @@ yarn-error.log*
 next-env.d.ts
 
 /src/generated/prisma
+/src/generated/prisma
+
+# Logs
+logs
+*.log
+npm-debug.log*
+# Runtime data
+/pids
+*.pid
+*.seed
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor directories and files
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# Build outputs
+dist/
+build/
+/.next
+/out
+
+# Dependency directories
+/node_modules/
+
+# Bundler / lock files (keep lockfile if you prefer to track it)
+# package-lock.json
+# yarn.lock
+
+# Environment files
+.env
+.env.*
+
+# Temporary files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Misc
+.cache/
+.turbo/
+coverage/
+public/static/
+/.parcel-cache/
+
+# IDE
+.idea/

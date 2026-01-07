@@ -4,6 +4,7 @@ import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ImageUpload from '@/components/ImageUpload';
+import AutoImageSelector from '@/components/AutoImageSelector';
 
 export default function NewEbookPage() {
   const router = useRouter();
@@ -33,12 +34,46 @@ export default function NewEbookPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
-    
     if (type === 'checkbox') {
       const checked = (e.target as HTMLInputElement).checked;
       setFormData(prev => ({ ...prev, [name]: checked }));
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
+    }
+  };
+
+  // Fetch metadata from Google Books API by ISBN
+  const fetchISBN = async () => {
+    if (!formData.isbn) {
+      setError('Masukkan ISBN terlebih dahulu!');
+      return;
+    }
+    setLoading(true);
+    setError('');
+    try {
+      const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${formData.isbn}`);
+      const data = await res.json();
+      if (!data.items || data.items.length === 0) {
+        setError('Data ISBN tidak ditemukan di Google Books.');
+        setLoading(false);
+        return;
+      }
+      const book = data.items[0].volumeInfo;
+      setFormData(prev => ({
+        ...prev,
+        title: book.title || prev.title,
+        author: (book.authors && book.authors.join(', ')) || prev.author,
+        description: book.description || prev.description,
+        publisher: book.publisher || prev.publisher,
+        publishYear: (book.publishedDate ? book.publishedDate.substring(0,4) : prev.publishYear),
+        pages: book.pageCount || prev.pages,
+        language: book.language ? book.language : prev.language,
+        coverImage: book.imageLinks?.thumbnail?.replace('http://','https://') || prev.coverImage,
+      }));
+    } catch (err) {
+      setError('Gagal fetch data ISBN.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -55,35 +90,29 @@ export default function NewEbookPage() {
     e.preventDefault();
     setLoading(true);
     setError('');
-
     try {
-      // Prepare data
       const submitData = {
         ...formData,
-        publishYear: formData.publishYear ? parseInt(formData.publishYear) : null,
-        pages: formData.pages ? parseInt(formData.pages) : null,
-        tags: formData.tags ? formData.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
+        publishYear: formData.publishYear ? parseInt(String(formData.publishYear)) : null,
+        pages: formData.pages ? parseInt(String(formData.pages)) : null,
+        tags: formData.tags ? String(formData.tags).split(',').map((t: string) => t.trim()).filter(Boolean) : [],
       };
 
       const response = await fetch('/api/admin/ebooks', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(submitData),
       });
 
       const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to create ebook');
-      }
+      if (!response.ok) throw new Error(data.error || 'Failed to create ebook');
 
       // Success - redirect to ebooks list
       router.push('/admin/ebooks?success=created');
       router.refresh();
     } catch (err: any) {
-      setError(err.message || 'An error occurred');
+      setError(err?.message || 'An error occurred');
+    } finally {
       setLoading(false);
     }
   };
@@ -138,22 +167,7 @@ export default function NewEbookPage() {
                     value={formData.title}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B05E3F] focus:border-transparent"
-                    placeholder="Enter book title"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Author *
-                  </label>
-                  <input
-                    type="text"
-                    name="author"
-                    value={formData.author}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B05E3F] focus:border-transparent"
-                    placeholder="Author name"
+                    placeholder="Book title"
                     required
                   />
                 </div>
@@ -301,9 +315,28 @@ export default function NewEbookPage() {
             <div className="border-b border-gray-200 pb-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">File & Access</h2>
               
-              <div className="space-y-4">
+              <div className="space-y-6">
+                {/* Auto Image Generator */}
+                <AutoImageSelector
+                  title={formData.title}
+                  type="book"
+                  keywords={formData.author ? [formData.author, formData.category] : [formData.category]}
+                  onImageSelect={(url) => setFormData(prev => ({ ...prev, coverImage: url }))}
+                />
+
+                {/* Manual Upload (Alternative) */}
+                <div className="relative">
+                  <div className="absolute inset-x-0 top-1/2 transform -translate-y-1/2">
+                    <div className="flex items-center">
+                      <div className="flex-grow border-t border-gray-300"></div>
+                      <span className="px-3 text-xs text-gray-500 bg-white">OR upload manually</span>
+                      <div className="flex-grow border-t border-gray-300"></div>
+                    </div>
+                  </div>
+                </div>
+
                 <ImageUpload
-                  label="Cover Image"
+                  label="Upload Cover Image"
                   currentImageUrl={formData.coverImage}
                   onImageUploaded={(url) => setFormData(prev => ({ ...prev, coverImage: url }))}
                   folder="academos/ebooks/covers"
@@ -311,16 +344,17 @@ export default function NewEbookPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    File URL
+                    File URL or Path
                   </label>
                   <input
-                    type="url"
+                    type="text"
                     name="fileUrl"
                     value={formData.fileUrl}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B05E3F] focus:border-transparent"
-                    placeholder="https://example.com/book.pdf"
+                    placeholder="https://... or /reader/book-slug"
                   />
+                  <p className="mt-1 text-xs text-gray-500">Enter full URL (https://...) or relative path (/reader/...)</p>
                 </div>
 
                 <div>

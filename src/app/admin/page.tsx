@@ -1,255 +1,311 @@
-import { requireAuth } from '@/lib/auth';
 import Link from 'next/link';
+import { requireAuth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 
-async function handleLogout() {
-  'use server';
-  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001'}/api/admin/logout`, {
-    method: 'POST',
-  });
-  if (response.ok) {
-    redirect('/admin/login');
-  }
-}
-
 export default async function AdminDashboard() {
+  // Require authentication - will redirect to /admin/login if not authenticated
   const user = await requireAuth();
-
+  
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link href="/" className="text-4xl">📚</Link>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Admin Panel</h1>
-                <p className="text-sm text-gray-600">Rumah Aletheia</p>
+    <div className="min-h-screen bg-[#F0EBE3]">
+      {/* MAIN CONTENT AREA */}
+      <main className="max-w-7xl mx-auto px-6 py-6">
+        
+        {/* PRIMARY ACTION - Compact & Elegant */}
+        <div className="mb-6">
+          <Link
+            href="/admin/articles/new"
+            className="group relative block bg-gradient-to-br from-[#B05E3F] to-[#944A2F] hover:from-[#944A2F] hover:to-[#7A3D26] rounded-xl p-5 shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-cream-soft-white/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div className="relative z-10 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-cream-soft-white/20 rounded-lg group-hover:scale-105 transition-transform">
+                  <svg className="w-7 h-7 text-cream-soft-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-base font-serif font-semibold text-cream-soft-white mb-0.5">Write New Article</h3>
+                  <p className="text-sm text-cream-warm/90">Share knowledge with your community</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-medium text-cream-soft-white/90 bg-cream-soft-white/20 px-3 py-1.5 rounded-md">
+                  Most Used
+                </span>
+                <svg className="w-5 h-5 text-cream-soft-white group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
               </div>
             </div>
-            <div className="flex items-center gap-4">
-              <div className="text-right">
-                <p className="text-sm font-semibold text-gray-900">{user.username}</p>
-                <p className="text-xs text-gray-500 capitalize">{user.role}</p>
+          </Link>
+        </div>
+
+        {/* SECONDARY ACTIONS */}
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <Link
+            href="/admin/ebooks/new"
+            className="group bg-[#FAF8F5] hover:bg-[#D4E5E4] rounded-lg p-4 shadow-sm hover:shadow-md border border-cream-warm/50 hover:border-[#2C5F5D] transition-all duration-300 hover:-translate-y-0.5"
+          >
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 bg-[#D4E5E4] rounded-lg group-hover:scale-105 transition-transform">
+                <svg className="w-6 h-6 text-[#2C5F5D]" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
+                </svg>
               </div>
-              <form action={handleLogout}>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium"
-                >
-                  Logout
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Welcome Section */}
-        <div className="bg-gradient-to-br from-[#2C5F5D] to-[#1F4E4C] rounded-2xl p-8 mb-8 text-white">
-          <h2 className="text-3xl font-bold mb-2">Selamat Datang, Admin! 👋</h2>
-          <p className="text-[#E8DED0]/90">
-            Kelola konten website Rumah Aletheia dari dashboard ini.
-          </p>
-        </div>
-
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-            <div className="flex items-center justify-between mb-4">
-              <div className="text-3xl">📚</div>
-              <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded">ACTIVE</span>
-            </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-1">5</h3>
-            <p className="text-sm text-gray-600">E-books</p>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-            <div className="flex items-center justify-between mb-4">
-              <div className="text-3xl">📝</div>
-              <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded">ACTIVE</span>
-            </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-1">3</h3>
-            <p className="text-sm text-gray-600">Articles</p>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-            <div className="flex items-center justify-between mb-4">
-              <div className="text-3xl">📅</div>
-              <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded">ACTIVE</span>
-            </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-1">5</h3>
-            <p className="text-sm text-gray-600">Events</p>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-            <div className="flex items-center justify-between mb-4">
-              <div className="text-3xl">🖼️</div>
-              <span className="text-xs font-semibold text-yellow-600 bg-yellow-50 px-2 py-1 rounded">PENDING</span>
-            </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-1">0</h3>
-            <p className="text-sm text-gray-600">Images</p>
-          </div>
-        </div>
-
-        {/* Management Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* E-books Management */}
-          <Link
-            href="/admin/ebooks"
-            className="bg-white rounded-xl shadow-sm p-6 border border-gray-200 hover:shadow-lg hover:border-[#B05E3F] transition-all group"
-          >
-            <div className="flex items-start justify-between mb-4">
-              <div className="text-5xl">📚</div>
-              <svg className="w-6 h-6 text-gray-400 group-hover:text-[#B05E3F] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex-1">
+                <h4 className="text-sm font-serif font-semibold text-[#2A2A2A] mb-0.5">Add E-book</h4>
+                <p className="text-xs text-[#6A6A6A]">Digital library collection</p>
+              </div>
+              <svg className="w-4 h-4 text-[#8A8A8A] group-hover:text-[#2C5F5D] group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">E-books</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              Kelola perpustakaan digital, tambah/edit/hapus buku elektronik
-            </p>
-            <div className="text-xs text-gray-500">5 items</div>
           </Link>
 
-          {/* Articles Management */}
           <Link
-            href="/admin/articles"
-            className="bg-white rounded-xl shadow-sm p-6 border border-gray-200 hover:shadow-lg hover:border-[#B05E3F] transition-all group"
+            href="/admin/events/new"
+            className="group bg-[#FAF8F5] hover:bg-[#FBF1ED] rounded-lg p-4 shadow-sm hover:shadow-md border border-cream-warm/50 hover:border-[#B05E3F] transition-all duration-300 hover:-translate-y-0.5"
           >
-            <div className="flex items-start justify-between mb-4">
-              <div className="text-5xl">📝</div>
-              <svg className="w-6 h-6 text-gray-400 group-hover:text-[#B05E3F] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 bg-[#F5DDD3] rounded-lg group-hover:scale-105 transition-transform">
+                <svg className="w-6 h-6 text-[#B05E3F]" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h4 className="text-sm font-serif font-semibold text-[#2A2A2A] mb-0.5">Create Event</h4>
+                <p className="text-xs text-[#6A6A6A]">Workshops & seminars</p>
+              </div>
+              <svg className="w-4 h-4 text-[#8A8A8A] group-hover:text-[#B05E3F] group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Articles</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              Tulis dan publikasikan artikel, kelola kategori dan tags
-            </p>
-            <div className="text-xs text-gray-500">3 items</div>
-          </Link>
-
-          {/* Events Management */}
-          <Link
-            href="/admin/events"
-            className="bg-white rounded-xl shadow-sm p-6 border border-gray-200 hover:shadow-lg hover:border-[#B05E3F] transition-all group"
-          >
-            <div className="flex items-start justify-between mb-4">
-              <div className="text-5xl">📅</div>
-              <svg className="w-6 h-6 text-gray-400 group-hover:text-[#B05E3F] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Events</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              Atur kegiatan, workshop, seminar, dan dokumentasi foto
-            </p>
-            <div className="text-xs text-gray-500">5 items</div>
-          </Link>
-
-          {/* Images Management */}
-          <Link
-            href="/admin/images"
-            className="bg-white rounded-xl shadow-sm p-6 border border-gray-200 hover:shadow-lg hover:border-[#B05E3F] transition-all group"
-          >
-            <div className="flex items-start justify-between mb-4">
-              <div className="text-5xl">🖼️</div>
-              <svg className="w-6 h-6 text-gray-400 group-hover:text-[#B05E3F] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Images</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              Upload dan kelola gambar untuk cover buku, artikel, dan events
-            </p>
-            <div className="text-xs text-yellow-600">Upload required</div>
-          </Link>
-
-          {/* Settings */}
-          <Link
-            href="/admin/settings"
-            className="bg-white rounded-xl shadow-sm p-6 border border-gray-200 hover:shadow-lg hover:border-[#B05E3F] transition-all group"
-          >
-            <div className="flex items-start justify-between mb-4">
-              <div className="text-5xl">⚙️</div>
-              <svg className="w-6 h-6 text-gray-400 group-hover:text-[#B05E3F] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Settings</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              Pengaturan website, user management, dan konfigurasi
-            </p>
-            <div className="text-xs text-gray-500">System config</div>
-          </Link>
-
-          {/* Coming Soon Pages */}
-          <Link
-            href="/admin/pages"
-            className="bg-white rounded-xl shadow-sm p-6 border border-gray-200 hover:shadow-lg hover:border-[#B05E3F] transition-all group"
-          >
-            <div className="flex items-start justify-between mb-4">
-              <div className="text-5xl">📄</div>
-              <svg className="w-6 h-6 text-gray-400 group-hover:text-[#B05E3F] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Pages</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              Kelola konten halaman: Belajar, Penelitian, Penerbitan, Tim, Sejarah
-            </p>
-            <div className="text-xs text-yellow-600">5 pages pending</div>
           </Link>
         </div>
 
-        {/* Quick Actions */}
-        <div className="mt-8 bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-          <h3 className="text-lg font-bold text-gray-900 mb-4">Quick Actions</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Link
-              href="/admin/ebooks/new"
-              className="flex items-center gap-3 p-4 rounded-lg border border-gray-200 hover:border-[#B05E3F] hover:bg-[#F5F1E8] transition-all"
-            >
-              <span className="text-2xl">➕</span>
-              <span className="text-sm font-medium text-gray-700">Add E-book</span>
-            </Link>
-            <Link
-              href="/admin/articles/new"
-              className="flex items-center gap-3 p-4 rounded-lg border border-gray-200 hover:border-[#B05E3F] hover:bg-[#F5F1E8] transition-all"
-            >
-              <span className="text-2xl">✍️</span>
-              <span className="text-sm font-medium text-gray-700">Write Article</span>
-            </Link>
-            <Link
-              href="/admin/events/new"
-              className="flex items-center gap-3 p-4 rounded-lg border border-gray-200 hover:border-[#B05E3F] hover:bg-[#F5F1E8] transition-all"
-            >
-              <span className="text-2xl">🎫</span>
-              <span className="text-sm font-medium text-gray-700">Create Event</span>
-            </Link>
-            <Link
-              href="/admin/images"
-              className="flex items-center gap-3 p-4 rounded-lg border border-gray-200 hover:border-[#B05E3F] hover:bg-[#F5F1E8] transition-all"
-            >
-              <span className="text-2xl">📤</span>
-              <span className="text-sm font-medium text-gray-700">Upload Image</span>
-            </Link>
+        {/* MIGRATION TOOL */}
+        <div className="mb-6">
+          <Link
+            href="/admin/migrate"
+            className="group relative block bg-gradient-to-br from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 rounded-xl p-5 shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div className="relative z-10 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-white/20 rounded-lg group-hover:scale-105 transition-transform">
+                  <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M8 2a1 1 0 000 2h2a1 1 0 100-2H8z" />
+                    <path d="M3 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v6h-4.586l1.293-1.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L10.414 13H15v3a2 2 0 01-2 2H5a2 2 0 01-2-2V5z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-base font-serif font-semibold text-white mb-0.5">Migrate Ebooks</h3>
+                  <p className="text-sm text-white/90">Import ebook dari sistem lama (168 buku)</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-medium text-white/90 bg-white/20 px-3 py-1.5 rounded-md">
+                  Tool
+                </span>
+                <svg className="w-5 h-5 text-white group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+          </Link>
+        </div>
+
+        {/* CONTENT OVERVIEW */}
+        <div className="grid grid-cols-3 gap-4 mb-6">
+          
+          <Link href="/admin/ebooks" className="group bg-[#FAF8F5] rounded-lg p-4 shadow-sm hover:shadow-md border border-cream-warm/50 hover:border-[#2C5F5D] transition-all duration-300 hover:-translate-y-0.5">
+            <div className="flex items-start justify-between mb-3">
+              <div className="p-2 bg-[#EAF4F3] rounded-lg">
+                <svg className="w-6 h-6 text-[#2C5F5D]" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
+                </svg>
+              </div>
+              <svg className="w-4 h-4 text-[#8A8A8A] group-hover:text-[#2C5F5D] group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+            <h4 className="text-sm font-serif font-semibold text-[#2A2A2A] mb-1">E-books</h4>
+            <p className="text-xs text-[#6A6A6A] mb-2">Digital library</p>
+            <div className="flex items-center gap-1.5 text-xs text-[#8A8A8A]">
+              <span className="flex items-center gap-1">
+                <span className="w-1.5 h-1.5 bg-[#4A8B5C] rounded-full"></span>
+                5 items
+              </span>
+            </div>
+          </Link>
+
+          <Link href="/admin/articles" className="group bg-[#FAF8F5] rounded-lg p-4 shadow-sm hover:shadow-md border border-cream-warm/50 hover:border-[#B05E3F] transition-all duration-300 hover:-translate-y-0.5">
+            <div className="flex items-start justify-between mb-3">
+              <div className="p-2 bg-[#FBF1ED] rounded-lg">
+                <svg className="w-6 h-6 text-[#B05E3F]" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <svg className="w-4 h-4 text-[#8A8A8A] group-hover:text-[#B05E3F] group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+            <h4 className="text-sm font-serif font-semibold text-[#2A2A2A] mb-1">Articles</h4>
+            <p className="text-xs text-[#6A6A6A] mb-2">Blog posts</p>
+            <div className="flex items-center gap-1.5 text-xs text-[#8A8A8A]">
+              <span className="flex items-center gap-1">
+                <span className="w-1.5 h-1.5 bg-[#4A8B5C] rounded-full"></span>
+                3 published
+              </span>
+            </div>
+          </Link>
+
+          <Link href="/admin/events" className="group bg-[#FAF8F5] rounded-lg p-4 shadow-sm hover:shadow-md border border-cream-warm/50 hover:border-[#3A7A77] transition-all duration-300 hover:-translate-y-0.5">
+            <div className="flex items-start justify-between mb-3">
+              <div className="p-2 bg-[#D4E5E4] rounded-lg">
+                <svg className="w-6 h-6 text-[#3A7A77]" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <svg className="w-4 h-4 text-[#8A8A8A] group-hover:text-[#3A7A77] group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+            <h4 className="text-sm font-serif font-semibold text-[#2A2A2A] mb-1">Events</h4>
+            <p className="text-xs text-[#6A6A6A] mb-2">Activities</p>
+            <div className="flex items-center gap-1.5 text-xs text-[#8A8A8A]">
+              <span className="flex items-center gap-1">
+                <span className="w-1.5 h-1.5 bg-[#4A8B5C] rounded-full"></span>
+                5 upcoming
+              </span>
+            </div>
+          </Link>
+        </div>
+
+        {/* COMMUNICATION MANAGEMENT */}
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <Link href="/admin/messages" className="group bg-gradient-to-br from-[#3A7A77] to-[#2C5F5D] rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-0.5">
+            <div className="flex items-start justify-between mb-3">
+              <div className="p-2 bg-white/20 rounded-lg">
+                <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                  <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                </svg>
+              </div>
+              <svg className="w-4 h-4 text-white/80 group-hover:text-white group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+            <h4 className="text-sm font-serif font-semibold text-white mb-1">Contact Messages</h4>
+            <p className="text-xs text-white/80 mb-2">Visitor messages</p>
+            <div className="flex items-center gap-1.5 text-xs text-white/70">
+              <span className="flex items-center gap-1">
+                <span className="w-1.5 h-1.5 bg-red-400 rounded-full animate-pulse"></span>
+                Check new
+              </span>
+            </div>
+          </Link>
+
+          <Link href="/admin/newsletters" className="group bg-gradient-to-br from-[#B05E3F] to-[#944A2F] rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-0.5">
+            <div className="flex items-start justify-between mb-3">
+              <div className="p-2 bg-white/20 rounded-lg">
+                <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z" />
+                  <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z" />
+                </svg>
+              </div>
+              <svg className="w-4 h-4 text-white/80 group-hover:text-white group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+            <h4 className="text-sm font-serif font-semibold text-white mb-1">Newsletter Subscribers</h4>
+            <p className="text-xs text-white/80 mb-2">Mailing list</p>
+            <div className="flex items-center gap-1.5 text-xs text-white/70">
+              <span className="flex items-center gap-1">
+                <span className="w-1.5 h-1.5 bg-green-400 rounded-full"></span>
+                Export CSV
+              </span>
+            </div>
+          </Link>
+        </div>
+
+        {/* RECENT ACTIVITY */}
+        <div className="bg-[#FAF8F5] rounded-lg shadow-sm p-4 border border-cream-warm/50 mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-sm font-serif font-semibold text-[#2A2A2A]">Recent Activity</h3>
+            <span className="text-xs text-[#6A6A6A] bg-[#F0EBE3] px-2.5 py-1 rounded-full">Last 7 days</span>
+          </div>
+          
+          <div className="space-y-3">
+            {/* Activity Item 1 */}
+            <div className="flex items-start gap-3 pb-3 border-b border-[#F0EBE3] last:border-0">
+              <div className="p-1.5 bg-[#D4E5E4] rounded-lg">
+                <svg className="w-5 h-5 text-[#4A8B5C]" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-[#2A2A2A]">Published new article</p>
+                <p className="text-xs text-[#8A8A8A] mt-0.5">Article about democracy and freedom - 2 hours ago</p>
+              </div>
+              <span className="text-xs font-medium text-[#2C5F5D] bg-[#D4E5E4] px-2 py-0.5 rounded">Success</span>
+            </div>
+
+            {/* Activity Item 2 */}
+            <div className="flex items-start gap-3 pb-3 border-b border-[#F0EBE3] last:border-0">
+              <div className="p-1.5 bg-[#EAF4F3] rounded-lg">
+                <svg className="w-5 h-5 text-[#2C5F5D]" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <p className="text-xs font-semibold text-[#2A2A2A]">Added new e-book</p>
+                <p className="text-xs text-[#8A8A8A] mt-0.5">"Thinking, Fast and Slow" - Yesterday</p>
+              </div>
+              <span className="text-xs font-medium text-[#2C5F5D] bg-[#EAF4F3] px-2 py-0.5 rounded">Created</span>
+            </div>
+
+            {/* Activity Item 3 */}
+            <div className="flex items-start gap-3">
+              <div className="p-1.5 bg-[#F5DDD3] rounded-lg">
+                <svg className="w-5 h-5 text-[#B05E3F]" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <p className="text-xs font-semibold text-[#2A2A2A]">Upcoming event</p>
+                <p className="text-xs text-[#8A8A8A] mt-0.5">Book Discussion - In 3 days</p>
+              </div>
+              <span className="text-xs font-medium text-[#B05E3F] bg-[#F5DDD3] px-2 py-0.5 rounded">Scheduled</span>
+            </div>
           </div>
         </div>
 
-        {/* Footer Note */}
-        <div className="mt-8 text-center text-sm text-gray-500">
-          <p>Admin Panel v1.0 - Rumah Aletheia</p>
-          <p className="mt-1">
-            <Link href="/" className="text-[#B05E3F] hover:underline">
-              View Website
-            </Link>
-          </p>
+        {/* System Status Footer */}
+        <div className="bg-gradient-to-r from-[#1A3D3B] to-[#2C5F5D] rounded-lg p-4">
+          <div className="flex items-center justify-between text-cream-soft-white">
+            <div>
+              <h4 className="text-xs font-medium text-cream-warm mb-0.5">System Status</h4>
+              <p className="text-sm font-serif font-semibold">All Systems Operational</p>
+            </div>
+            <div className="flex items-center gap-6">
+              <div className="text-center">
+                <p className="text-xs text-[#D4E5E4] mb-0.5">Database</p>
+                <p className="text-sm font-semibold flex items-center justify-center gap-1">
+                  <span className="w-1.5 h-1.5 bg-[#4A8B5C] rounded-full animate-pulse"></span>
+                  Active
+                </p>
+              </div>
+              <div className="text-center">
+                <p className="text-xs text-[#D4E5E4] mb-0.5">Uptime</p>
+                <p className="text-sm font-serif font-semibold">100%</p>
+              </div>
+            </div>
+          </div>
         </div>
+
       </main>
     </div>
   );
