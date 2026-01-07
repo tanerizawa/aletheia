@@ -147,9 +147,6 @@ export default function Home() {
             <ScrollFadeIn direction="right" delay={200}>
               <div className="bg-[#1F4E4C] p-10 lg:p-12 border-l-4 border-[#B05E3F] shadow-md hover:shadow-2xl transition-all hover:-translate-y-1 duration-300">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-full bg-[#B05E3F]/30 flex items-center justify-center">
-                  <BookIcon className="w-6 h-6 text-[#D4A574]" />
-                </div>
                 <Image src="/logo.svg" alt="Rumah Aletheia - part of Academos" width={200} height={67} className="h-10 lg:h-12 w-auto" />
               </div>
               <div className="space-y-3 text-cream-beige">

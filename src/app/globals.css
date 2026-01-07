@@ -101,7 +101,7 @@ h6 { font-size: var(--text-lg); }   /* Least important */
 p {
   margin-bottom: var(--space-4);
   line-height: 1.6; /* Neuroscience: Optimal for reading comprehension */
-  max-width: 65ch; /* Neuroscience: 50-75 characters = optimal reading width */
+  max-width: 100%; /* Neuroscience: 50-75 characters = optimal reading width */
 }
 
 /* Body text optimization for readability */
@@ -235,7 +235,6 @@ article:hover,
    ============================================ */
 
 a {
-  color: inherit;  /* Inherit color from parent or component classes */
   text-decoration: none;
   transition: color var(--duration-fast) var(--ease-in-out);
 }
