@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter, Playfair_Display, Source_Sans_3, Lora } from "next/font/google";
 import "./globals.css";
 import ConditionalLayout from "@/components/ConditionalLayout";
+import { JsonLd } from "@/lib/seo/json-ld";
+import { generateOrganizationSchema } from "@/lib/seo/schemas/organization";
 
 // Optimized font loading with display=swap for faster rendering
 const inter = Inter({
@@ -40,6 +42,7 @@ const lora = Lora({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://academos.or.id'),
   title: "Rumah Aletheia - Perpustakaan & Pusat Informasi",
   description: "Rumah Aletheia adalah perpustakaan yang menyediakan informasi kegiatan, koleksi buku, dan berbagai layanan perpustakaan. Kunjungi academos.or.id untuk informasi lebih lanjut.",
   keywords: ["perpustakaan", "rumah aletheia", "academos", "buku", "koleksi buku", "kegiatan perpustakaan", "literasi", "membaca"],
@@ -81,6 +84,8 @@ export default function RootLayout({
         {/* Preconnect to external resources for faster loading */}
         <link rel="preconnect" href="https://res.cloudinary.com" />
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
+        {/* JSON-LD Structured Data for SEO */}
+        <JsonLd data={generateOrganizationSchema()} />
       </head>
       <body
         className={`${inter.variable} ${playfair.variable} ${sourceSans.variable} ${lora.variable} antialiased flex flex-col min-h-screen bg-cream-soft-white`}

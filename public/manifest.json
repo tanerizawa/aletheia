@@ -1,0 +1,105 @@
+{
+  "name": "Rumah Aletheia - Perpustakaan Komunitas",
+  "short_name": "Aletheia",
+  "description": "Perpustakaan komunitas dengan 8,000+ koleksi buku, layanan penelitian, penerbitan, dan program literasi di Karawang",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F5F1E8",
+  "theme_color": "#1F4E4C",
+  "orientation": "portrait-primary",
+  "categories": ["education", "books", "library"],
+  "lang": "id",
+  "dir": "ltr",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Beranda Rumah Aletheia"
+    },
+    {
+      "src": "/screenshot-narrow.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Katalog Buku Mobile"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Katalog Buku",
+      "short_name": "Katalog",
+      "description": "Jelajahi koleksi buku kami",
+      "url": "/koleksi",
+      "icons": [{ "src": "/icon-book-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Artikel",
+      "short_name": "Artikel",
+      "description": "Baca artikel terbaru",
+      "url": "/artikel",
+      "icons": [{ "src": "/icon-article-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Kegiatan",
+      "short_name": "Kegiatan",
+      "description": "Lihat kegiatan terbaru",
+      "url": "/kegiatan",
+      "icons": [{ "src": "/icon-event-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}
