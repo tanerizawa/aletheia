@@ -79,26 +79,36 @@ body {
   transition: background-color var(--duration-normal) var(--ease-in-out);
 }
 
-/* Typography */
+/* Typography - Neuroscience Optimized */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   font-weight: var(--font-bold);
-  line-height: var(--leading-tight);
+  line-height: 1.2; /* Neuroscience: Tighter for headings - better hierarchy */
   color: var(--teal-900);
   letter-spacing: -0.02em;
   margin-bottom: var(--space-4);
+  max-width: 45ch; /* Neuroscience: Shorter for headings */
 }
 
-h1 { font-size: var(--text-5xl); }
-h2 { font-size: var(--text-4xl); }
-h3 { font-size: var(--text-3xl); }
-h4 { font-size: var(--text-2xl); }
-h5 { font-size: var(--text-xl); }
-h6 { font-size: var(--text-lg); }
+/* Font size hierarchy - Major Third scale (1.25 ratio) for clear distinction */
+h1 { font-size: var(--text-5xl); }  /* Most important */
+h2 { font-size: var(--text-4xl); }  /* Section headers */
+h3 { font-size: var(--text-3xl); }  /* Subsections */
+h4 { font-size: var(--text-2xl); }  /* Minor sections */
+h5 { font-size: var(--text-xl); }   /* Supporting headers */
+h6 { font-size: var(--text-lg); }   /* Least important */
 
 p {
   margin-bottom: var(--space-4);
-  line-height: var(--leading-relaxed);
+  line-height: 1.6; /* Neuroscience: Optimal for reading comprehension */
+  max-width: 65ch; /* Neuroscience: 50-75 characters = optimal reading width */
+}
+
+/* Body text optimization for readability */
+article p,
+.prose p {
+  max-width: 65ch;
+  line-height: 1.6;
 }
 
 /* Utility Classes */
@@ -323,5 +333,353 @@ a[class*="hover:border"] {
     transform: translateX(100%);
     opacity: 0;
   }
+}
+
+/* ============================================
+   NEUROSCIENCE UI/UX ENHANCEMENTS
+   ============================================ */
+
+/* Error State - Shake Animation (Emotional Feedback) */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+  20%, 40%, 60%, 80% { transform: translateX(8px); }
+}
+
+.error-shake,
+.input-error {
+  animation: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  border-color: var(--color-error) !important;
+}
+
+/* Success State - Checkmark Animation */
+@keyframes successPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.success-pulse {
+  animation: successPulse 0.3s ease-out;
+}
+
+/* Loading Spinner (Feedback: 300ms+ delays) */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-spinner {
+  border: 2px solid var(--cream-400);
+  border-top-color: var(--terra-700);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 0.8s linear infinite;
+}
+
+/* Button Loading State */
+.btn-loading {
+  pointer-events: none;
+  opacity: 0.7;
+  position: relative;
+}
+
+.btn-loading::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  border: 2px solid white;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* Skeleton Loading (Reduces perceived wait time) */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--cream-300) 0%,
+    var(--cream-200) 50%,
+    var(--cream-300) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius-md);
+}
+
+/* Button Enhancements - Instant Feedback (<100ms) */
+.btn-primary {
+  background: var(--terra-700);
+  color: var(--color-text-inverse);
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  font-weight: var(--font-semibold);
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1); /* Fast transition */
+  transform-origin: center;
+  box-shadow: 0 4px 12px rgba(176, 94, 63, 0.2);
+}
+
+.btn-primary:hover {
+  background: var(--terra-600);
+  transform: translateY(-2px) scale(1.02); /* Von Restorff Effect */
+  box-shadow: 0 8px 20px rgba(176, 94, 63, 0.3);
+}
+
+.btn-primary:active {
+  transform: translateY(0) scale(0.98); /* Instant feedback */
+  box-shadow: 0 2px 8px rgba(176, 94, 63, 0.2);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--teal-700);
+  padding: 12px 24px;
+  border: 2px solid var(--teal-700);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-semibold);
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-secondary:hover {
+  background: var(--teal-50);
+  border-color: var(--teal-600);
+  transform: translateY(-2px);
+}
+
+.btn-secondary:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Form Input States - Clear Feedback */
+.form-input {
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid var(--cream-400);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  font-size: 16px; /* Minimum for accessibility */
+}
+
+.form-input:focus {
+  border-color: var(--terra-700);
+  box-shadow: 0 0 0 3px rgba(176, 94, 63, 0.1);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.form-input.success {
+  border-color: var(--color-success);
+}
+
+.form-input.success::after {
+  content: '✓';
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-success);
+  font-size: 20px;
+}
+
+.form-input.error {
+  border-color: var(--color-error);
+}
+
+/* Progressive Disclosure */
+.progressive-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progressive-content.open {
+  max-height: 2000px;
+}
+
+/* Tooltip - Recognition over Recall */
+.tooltip {
+  position: absolute;
+  background: var(--teal-900);
+  color: white;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  white-space: nowrap;
+  z-index: var(--z-tooltip);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 200ms, transform 200ms;
+}
+
+.tooltip.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Focus Rings - Enhanced Accessibility */
+*:focus-visible {
+  outline: 3px solid var(--terra-700);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Cognitive Load Reduction - Card Grouping (Law of Common Region) */
+.card-group {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--cream-400);
+}
+
+/* Gestalt Principles - Proximity */
+.form-group {
+  margin-bottom: var(--space-6); /* Separation between groups */
+}
+
+.form-label {
+  margin-bottom: var(--space-2); /* Close to input (related) */
+  font-weight: var(--font-medium);
+  color: var(--color-text-primary);
+}
+
+.form-error {
+  margin-top: var(--space-1); /* Immediately related to input */
+  color: var(--color-error);
+  font-size: var(--text-sm);
+}
+
+/* Visual Hierarchy - Color Contrast */
+.text-primary {
+  color: var(--teal-900); /* 7:1 contrast - critical info */
+}
+
+.text-secondary {
+  color: var(--teal-700); /* 4.5:1 contrast - body text */
+}
+
+.text-tertiary {
+  color: var(--teal-500); /* Lower contrast - supporting */
+}
+
+/* Attention - Von Restorff Effect (Isolation Effect) */
+.highlight-important {
+  background: linear-gradient(
+    120deg,
+    rgba(176, 94, 63, 0.1) 0%,
+    rgba(176, 94, 63, 0.05) 100%
+  );
+  border-left: 4px solid var(--terra-700);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+}
+
+/* Micro-interactions - Delight */
+.hover-lift {
+  transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+}
+
+/* Badge - Status Indicators */
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.badge-success {
+  background: rgba(45, 107, 63, 0.1);
+  color: var(--color-success);
+}
+
+.badge-warning {
+  background: rgba(212, 144, 32, 0.1);
+  color: var(--color-warning);
+}
+
+.badge-error {
+  background: rgba(168, 56, 56, 0.1);
+  color: var(--color-error);
+}
+
+/* Empty State - Friendly & Helpful */
+.empty-state {
+  text-align: center;
+  padding: var(--space-16) var(--space-6);
+  color: var(--color-text-tertiary);
+}
+
+.empty-state-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto var(--space-4);
+  opacity: 0.5;
+}
+
+/* Feedback Toast - Success/Error Messages */
+.toast {
+  position: fixed;
+  bottom: var(--space-6);
+  right: var(--space-6);
+  background: white;
+  padding: var(--space-4) var(--space-6);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  z-index: var(--z-notification);
+  animation: slideIn 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  max-width: 400px;
+}
+
+.toast-success {
+  border-left: 4px solid var(--color-success);
+}
+
+.toast-error {
+  border-left: 4px solid var(--color-error);
+}
+
+.toast-warning {
+  border-left: 4px solid var(--color-warning);
+}
+
+/* Breadcrumb - Visual Wayfinding */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-text-tertiary);
+}
+
+.breadcrumb-separator {
+  color: var(--color-text-tertiary);
+  opacity: 0.5;
+}
+
+.breadcrumb-current {
+  color: var(--color-text-primary);
+  font-weight: var(--font-medium);
 }
 

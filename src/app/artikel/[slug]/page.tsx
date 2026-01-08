@@ -94,21 +94,21 @@ function MarkdownContent({ content }: { content: string }) {
       if (trimmed.startsWith('### ')) {
         flushList();
         elements.push(
-          <h3 key={`h3-${key++}`} className="text-xl font-semibold mt-8 mb-4 text-gray-900 dark:text-white">
+          <h3 key={`h3-${key++}`} className="text-xl font-semibold mt-8 mb-4 text-teal-900 dark:text-white">
             {trimmed.substring(4)}
           </h3>
         );
       } else if (trimmed.startsWith('## ')) {
         flushList();
         elements.push(
-          <h2 key={`h2-${key++}`} className="text-2xl font-bold mt-10 mb-5 text-gray-900 dark:text-white">
+          <h2 key={`h2-${key++}`} className="text-2xl font-bold mt-10 mb-5 text-teal-900 dark:text-white">
             {trimmed.substring(3)}
           </h2>
         );
       } else if (trimmed.startsWith('# ')) {
         flushList();
         elements.push(
-          <h1 key={`h1-${key++}`} className="text-3xl font-bold mt-12 mb-6 text-gray-900 dark:text-white">
+          <h1 key={`h1-${key++}`} className="text-3xl font-bold mt-12 mb-6 text-teal-900 dark:text-white">
             {trimmed.substring(2)}
           </h1>
         );
@@ -257,14 +257,14 @@ export default async function ArtikelDetailPage({ params }: PageProps) {
           )}
 
           {/* Author Bio */}
-          <div className="mt-12 pt-8 border-t border-gray-200">
+          <div className="mt-12 pt-8 border-t border-cream-400">
             <div className="flex items-start gap-4">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#2C5F5D] to-[#B05E3F] flex items-center justify-center flex-shrink-0">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-teal-700 to-terra-700 flex items-center justify-center flex-shrink-0">
                 <UsersIcon className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">{article.author.name}</h3>
-                <p className="text-gray-600">
+                <h3 className="text-xl font-semibold text-teal-900 mb-2">{article.author.name}</h3>
+                <p className="text-secondary">
                   {article.author.role} - Kontributor aktif di Rumah Aletheia, passionate tentang {article.category.toLowerCase()} dan pengembangan masyarakat.
                 </p>
               </div>
@@ -273,13 +273,13 @@ export default async function ArtikelDetailPage({ params }: PageProps) {
 
           {/* Like & Share Buttons */}
           <div className="mt-8 flex items-center gap-4">
-            <button className="flex items-center gap-2 px-6 py-3 bg-[#B05E3F] text-white rounded-lg hover:bg-[#9A5035] transition-colors">
+            <button className="btn-primary flex items-center gap-2 px-6 py-3 rounded-lg">
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" />
               </svg>
               <span>{article.likes.toLocaleString('id-ID')}</span>
             </button>
-            <button className="flex items-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+            <button className="btn-secondary flex items-center gap-2 px-6 py-3 rounded-lg">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
               </svg>
@@ -291,7 +291,7 @@ export default async function ArtikelDetailPage({ params }: PageProps) {
         {/* Related Articles */}
         {relatedArticles.length > 0 && (
           <div className="mb-12">
-            <h2 className="text-3xl font-serif font-bold text-gray-900 mb-8">Artikel Terkait</h2>
+            <h2 className="text-3xl font-serif font-bold text-teal-900 mb-8">Artikel Terkait</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {relatedArticles.map((related: any) => (
                 <Link
@@ -299,16 +299,16 @@ export default async function ArtikelDetailPage({ params }: PageProps) {
                   href={`/artikel/${related.slug}`}
                   className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 group"
                 >
-                  <div className="aspect-video bg-gradient-to-br from-[#2C5F5D] to-[#1F4E4C] flex items-center justify-center text-6xl group-hover:scale-105 transition-transform">
+                  <div className="aspect-video bg-gradient-to-br from-teal-700 to-teal-900 flex items-center justify-center text-6xl group-hover:scale-105 transition-transform">
                     {related.coverImage}
                   </div>
                   <div className="p-6">
-                    <div className="text-xs text-[#B05E3F] font-semibold mb-2">{related.category}</div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-[#B05E3F] transition-colors">
+                    <div className="text-xs text-terra-700 font-semibold mb-2">{related.category}</div>
+                    <h3 className="text-lg font-semibold text-teal-900 mb-2 line-clamp-2 group-hover:text-terra-700 transition-colors">
                       {related.title}
                     </h3>
-                    <p className="text-sm text-gray-600 line-clamp-2">{related.excerpt}</p>
-                    <div className="flex items-center gap-4 mt-4 text-xs text-gray-500">
+                    <p className="text-sm text-secondary line-clamp-2">{related.excerpt}</p>
+                    <div className="flex items-center gap-4 mt-4 text-xs text-tertiary">
                       <span>{related.readTime}</span>
                       <span>•</span>
                       <span>{related.views.toLocaleString('id-ID')} views</span>

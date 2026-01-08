@@ -64,29 +64,29 @@ export default function FAQ() {
     <section className="py-16 lg:py-20" aria-labelledby="faq-heading">
       <div className="max-w-4xl mx-auto px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 id="faq-heading" className="font-serif text-4xl lg:text-5xl font-bold text-[#1F4E4C] mb-4">
+          <h2 id="faq-heading" className="font-serif text-4xl lg:text-5xl font-bold text-teal-900 mb-4">
             Pertanyaan Umum
           </h2>
-          <div className="w-24 h-1 bg-[#B05E3F] mx-auto" aria-hidden="true"></div>
+          <div className="w-24 h-1 bg-terra-700 mx-auto" aria-hidden="true"></div>
         </div>
 
         <div className="space-y-4">
           {displayedFaqs.map((faq, index) => (
             <div
               key={index}
-              className="bg-white border-l-4 border-[#B05E3F] rounded-r overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+              className="card-group hover-lift border-l-4 border-terra-700 rounded-r overflow-hidden"
             >
               <button
                 onClick={() => toggleFAQ(index)}
-                className="w-full px-6 py-5 text-left flex justify-between items-center gap-4 hover:bg-cream-soft-white transition-colors"
+                className="w-full px-6 py-5 text-left flex justify-between items-center gap-4 hover:bg-cream-50 transition-colors"
                 aria-expanded={openIndex === index}
                 aria-controls={`faq-answer-${index}`}
               >
-                <span className="font-serif font-bold text-lg text-[#1F4E4C] pr-4">
+                <span className="font-serif font-bold text-lg text-teal-900 pr-4">
                   {faq.question}
                 </span>
                 <svg
-                  className={`w-6 h-6 text-[#B05E3F] flex-shrink-0 transition-transform duration-300 ${
+                  className={`w-6 h-6 text-terra-700 flex-shrink-0 transition-transform duration-300 ${
                     openIndex === index ? 'rotate-180' : ''
                   }`}
                   fill="none"
@@ -97,7 +97,7 @@ export default function FAQ() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              
+
               <div
                 id={`faq-answer-${index}`}
                 className={`overflow-hidden transition-all duration-300 ${
@@ -106,7 +106,7 @@ export default function FAQ() {
                 role="region"
                 aria-labelledby={`faq-question-${index}`}
               >
-                <div className="px-6 pb-5 text-gray-500 leading-relaxed">
+                <div className="px-6 pb-5 text-secondary leading-relaxed">
                   {faq.answer}
                 </div>
               </div>
@@ -119,7 +119,7 @@ export default function FAQ() {
           <div className="text-center mt-8">
             <button
               onClick={() => setShowAll(true)}
-              className="inline-flex items-center gap-2 bg-white border-2 border-[#B05E3F] text-[#B05E3F] px-8 py-3 font-serif font-bold hover:bg-[#B05E3F] hover:text-white transition-all duration-200 hover:scale-105 active:scale-95"
+              className="inline-flex items-center gap-2 bg-white border-2 border-terra-700 text-terra-700 px-8 py-3 rounded-lg font-serif font-bold hover:bg-terra-700 hover:text-white transition-all duration-200 hover:scale-105 active:scale-95"
             >
               <span>Tampilkan {remainingCount} Pertanyaan Lainnya</span>
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -137,7 +137,7 @@ export default function FAQ() {
                 setShowAll(false);
                 setOpenIndex(null); // Close any open FAQ when collapsing
               }}
-              className="inline-flex items-center gap-2 bg-white border-2 border-[#2C5F5D] text-[#2C5F5D] px-8 py-3 font-serif font-bold hover:bg-[#2C5F5D] hover:text-white transition-all duration-200 hover:scale-105 active:scale-95"
+              className="inline-flex items-center gap-2 bg-white border-2 border-teal-700 text-teal-700 px-8 py-3 rounded-lg font-serif font-bold hover:bg-teal-700 hover:text-white transition-all duration-200 hover:scale-105 active:scale-95"
             >
               <span>Tampilkan Lebih Sedikit</span>
               <svg className="w-5 h-5 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
