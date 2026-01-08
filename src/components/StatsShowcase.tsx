@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { organization } from '@/data/organization';
 
 interface Stat {
   label: string;
@@ -65,7 +66,7 @@ export default function StatsShowcase() {
           },
           {
             label: "Tahun Berdiri",
-            value: 2025,
+            value: organization.established,
             suffix: "",
             icon: iconTemplates.year
           }
@@ -97,7 +98,7 @@ export default function StatsShowcase() {
           },
           {
             label: "Tahun Berdiri",
-            value: 2025,
+            value: organization.established,
             suffix: "",
             icon: iconTemplates.year
           }
