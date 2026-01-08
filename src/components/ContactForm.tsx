@@ -131,7 +131,7 @@ export default function ContactForm({ onSuccess, onError }: ContactFormProps) {
     <form onSubmit={handleSubmit} className="space-y-6" noValidate>
       {/* Name Field */}
       <div>
-        <label htmlFor="name" className="block text-sm font-serif font-bold text-[#1F4E4C] mb-2">
+        <label htmlFor="name" className="block text-sm font-serif font-bold text-teal-800 mb-2">
           Nama Lengkap <span className="text-red-500">*</span>
         </label>
         <div className="relative">
@@ -145,7 +145,7 @@ export default function ContactForm({ onSuccess, onError }: ContactFormProps) {
             className={`w-full px-4 py-3 border-2 bg-white text-gray-800 rounded transition-all ${
               errors.name && touched.name
                 ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                : 'border-cream-beige focus:border-[#B05E3F] focus:ring-[#B05E3F]'
+                : 'border-cream-beige focus:border-terra-700 focus:ring-terra-700'
             } focus:outline-none focus:ring-2 focus:ring-opacity-20`}
             placeholder="Masukkan nama Anda"
             aria-required="true"
@@ -172,7 +172,7 @@ export default function ContactForm({ onSuccess, onError }: ContactFormProps) {
 
       {/* Email Field */}
       <div>
-        <label htmlFor="email" className="block text-sm font-serif font-bold text-[#1F4E4C] mb-2">
+        <label htmlFor="email" className="block text-sm font-serif font-bold text-teal-800 mb-2">
           Email <span className="text-red-500">*</span>
         </label>
         <div className="relative">
@@ -186,7 +186,7 @@ export default function ContactForm({ onSuccess, onError }: ContactFormProps) {
             className={`w-full px-4 py-3 border-2 bg-white text-gray-800 rounded transition-all ${
               errors.email && touched.email
                 ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                : 'border-cream-beige focus:border-[#B05E3F] focus:ring-[#B05E3F]'
+                : 'border-cream-beige focus:border-terra-700 focus:ring-terra-700'
             } focus:outline-none focus:ring-2 focus:ring-opacity-20`}
             placeholder="nama@email.com"
             aria-required="true"
@@ -213,7 +213,7 @@ export default function ContactForm({ onSuccess, onError }: ContactFormProps) {
 
       {/* Subject Field */}
       <div>
-        <label htmlFor="subject" className="block text-sm font-serif font-bold text-[#1F4E4C] mb-2">
+        <label htmlFor="subject" className="block text-sm font-serif font-bold text-teal-800 mb-2">
           Subjek <span className="text-red-500">*</span>
         </label>
         <div className="relative">
@@ -227,7 +227,7 @@ export default function ContactForm({ onSuccess, onError }: ContactFormProps) {
             className={`w-full px-4 py-3 border-2 bg-white text-gray-800 rounded transition-all ${
               errors.subject && touched.subject
                 ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                : 'border-cream-beige focus:border-[#B05E3F] focus:ring-[#B05E3F]'
+                : 'border-cream-beige focus:border-terra-700 focus:ring-terra-700'
             } focus:outline-none focus:ring-2 focus:ring-opacity-20`}
             placeholder="Subjek pesan"
             aria-required="true"
@@ -254,7 +254,7 @@ export default function ContactForm({ onSuccess, onError }: ContactFormProps) {
 
       {/* Message Field */}
       <div>
-        <label htmlFor="message" className="block text-sm font-serif font-bold text-[#1F4E4C] mb-2">
+        <label htmlFor="message" className="block text-sm font-serif font-bold text-teal-800 mb-2">
           Pesan <span className="text-red-500">*</span>
         </label>
         <textarea
@@ -267,7 +267,7 @@ export default function ContactForm({ onSuccess, onError }: ContactFormProps) {
           className={`w-full px-4 py-3 border-2 bg-white text-gray-800 rounded resize-none transition-all ${
             errors.message && touched.message
               ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-              : 'border-cream-beige focus:border-[#B05E3F] focus:ring-[#B05E3F]'
+              : 'border-cream-beige focus:border-terra-700 focus:ring-terra-700'
           } focus:outline-none focus:ring-2 focus:ring-opacity-20`}
           placeholder="Tulis pesan Anda di sini"
           aria-required="true"
@@ -288,7 +288,7 @@ export default function ContactForm({ onSuccess, onError }: ContactFormProps) {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full bg-[#B05E3F] text-cream-soft-white px-8 py-4 font-serif font-bold text-lg hover:bg-[#9A5035] hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-200 border-2 border-[#B05E3F] hover:border-[#9A5035] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+        className="w-full bg-terra-700 text-cream-soft-white px-8 py-4 font-serif font-bold text-lg hover:bg-terra-800 hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-200 border-2 border-terra-700 hover:border-terra-800 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
         aria-label="Kirim pesan kontak"
       >
         {isSubmitting ? (

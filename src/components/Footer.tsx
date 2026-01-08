@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 export default function Footer() {
   return (
-    <footer className="bg-[#1F4E4C] text-cream-soft-white mt-auto border-t-4 border-[#B05E3F]" role="contentinfo">
+    <footer className="bg-teal-800 text-cream-soft-white mt-auto border-t-4 border-terra-700" role="contentinfo">
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           {/* About Section */}
@@ -28,14 +28,14 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-serif text-lg font-bold mb-6" style={{ color: '#F5DDD3' }}>Tentang</h3>
+            <h3 className="font-serif text-lg font-bold mb-6 text-cream-warm">Tentang</h3>
             <nav aria-label="Navigasi tentang">
               <ul className="space-y-3 text-cream-beige">
                 {footerNavigation.about.map((link) => (
                   <li key={link.href}>
-                    <a 
-                      href={link.href} 
-                      className="hover:text-[#B05E3F] transition-colors border-b border-transparent hover:border-[#B05E3F] inline-block text-sm"
+                    <a
+                      href={link.href}
+                      className="hover:text-terra-700 transition-colors border-b border-transparent hover:border-terra-700 inline-block text-sm"
                     >
                       {link.title}
                     </a>
@@ -47,14 +47,14 @@ export default function Footer() {
 
           {/* Explore Links */}
           <div>
-            <h3 className="font-serif text-lg font-bold mb-6" style={{ color: '#F5DDD3' }}>Jelajahi</h3>
+            <h3 className="font-serif text-lg font-bold mb-6 text-cream-warm">Jelajahi</h3>
             <nav aria-label="Navigasi jelajahi">
               <ul className="space-y-3 text-cream-beige">
                 {footerNavigation.explore.map((link) => (
                   <li key={link.href}>
-                    <a 
-                      href={link.href} 
-                      className="hover:text-[#B05E3F] transition-colors border-b border-transparent hover:border-[#B05E3F] inline-block text-sm"
+                    <a
+                      href={link.href}
+                      className="hover:text-terra-700 transition-colors border-b border-transparent hover:border-terra-700 inline-block text-sm"
                     >
                       {link.title}
                     </a>
@@ -66,7 +66,7 @@ export default function Footer() {
 
           {/* Contact Info */}
           <div>
-            <h3 className="font-serif text-lg font-bold mb-6" style={{ color: '#F5DDD3' }}>Kontak</h3>
+            <h3 className="font-serif text-lg font-bold mb-6 text-cream-warm">Kontak</h3>
             <address className="not-italic">
               <ul className="space-y-3 text-cream-beige text-sm">
                 <li className="flex items-start">
@@ -107,7 +107,7 @@ export default function Footer() {
         </div>
 
         {/* Divider */}
-        <div className="border-t border-[#3A736F] my-8"></div>
+        <div className="border-t border-teal-700/50 my-8"></div>
 
         {/* Bottom Section */}
         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
@@ -128,7 +128,7 @@ export default function Footer() {
               <a
                 key={social.name}
                 href={social.href}
-                className="bg-[#2C5F5D] hover:bg-[#B05E3F] text-cream-soft-white w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                className="bg-teal-700 hover:bg-terra-700 text-cream-soft-white w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
                 aria-label={`Ikuti kami di ${social.name}`}
                 target="_blank"
                 rel="noopener noreferrer"
