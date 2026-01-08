@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { organization } from '@/data/organization';
 
-// GET /api/public/stats - Get site statistics
+// GET /api/stats - simple public stats endpoint
 export async function GET(request: NextRequest) {
   try {
     const [
@@ -21,20 +21,8 @@ export async function GET(request: NextRequest) {
       prisma.event.count({ where: { status: 'COMPLETED' } }),
     ]);
 
-    // Get total views and likes
-    const articlesStats = await prisma.article.aggregate({
-      _sum: {
-        views: true,
-        likes: true,
-      },
-    });
-
-    const ebooksStats = await prisma.ebook.aggregate({
-      _sum: {
-        views: true,
-        downloads: true,
-      },
-    });
+    const articlesStats = await prisma.article.aggregate({ _sum: { views: true, likes: true } });
+    const ebooksStats = await prisma.ebook.aggregate({ _sum: { views: true, downloads: true } });
 
     return NextResponse.json({
       articles: {
@@ -58,10 +46,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error: any) {
-    console.error('Stats fetch error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch stats' },
-      { status: 500 }
-    );
+    console.error('Stats /api/stats error:', error);
+    return NextResponse.json({ error: 'Failed to fetch stats' }, { status: 500 });
   }
 }
